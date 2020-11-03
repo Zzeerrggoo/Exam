@@ -1,20 +1,21 @@
-import { REFRESH_TOKEN_KEY } from '../../constants';
+import {REFRESH_TOKEN_KEY} from '../../constants';
 
 class AuthApi {
   #_client;
   #_token;
-  constructor({ client }) {
+
+  constructor({client}) {
     this.#_client = client;
     this.#_token = null;
     this.url = '/auth';
 
-     this.#_client.interceptors.request.use(
-       this.interceptRequest,
-       err => Promise.reject(err));
-    // this.#_client.interceptors.response.use(
-    //   this.interceptResponse,
-    //   this.interceptResponseError
-    // );
+    this.#_client.interceptors.request.use(
+        this.interceptRequest,
+        err => Promise.reject(err));
+    this.#_client.interceptors.response.use(
+        this.interceptResponse,
+        this.interceptResponseError,
+    );
   }
 
   /**
@@ -69,14 +70,14 @@ class AuthApi {
 
   interceptResponse = response => {
     const {
-      config: { url },
+      config: {url},
       data,
     } = response;
 
     if (url.indexOf(this.url) === 0) {
       const {
         data: {
-          tokenPair: { accessToken, refreshToken },
+          tokenPair: {accessToken, refreshToken},
         },
       } = data;
       this.#_token = accessToken;
@@ -86,18 +87,18 @@ class AuthApi {
   };
 
   interceptResponseError = async error => {
-    const { response, config } = error;
-    const { url } = config;
-    const { status } = response;
+    const {response, config} = error;
+    const {url} = config;
+    const {status} = response;
 
     if (status !== 401) {
       throw error;
     }
 
     if (
-      status === 401 &&
-      url !== `${this.url}/refresh` &&
-      localStorage.getItem(REFRESH_TOKEN_KEY)
+        status === 401 &&
+        url !== `${this.url}/refresh` &&
+        localStorage.getItem(REFRESH_TOKEN_KEY)
     ) {
       try {
         await this.refresh({
