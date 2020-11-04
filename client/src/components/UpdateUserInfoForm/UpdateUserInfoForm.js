@@ -10,9 +10,9 @@ import Schems from '../../validators/validationSchems';
 import Error from '../../components/Error/Error';
 
 const UpdateUserInfoForm = (props) => {
-  const {handleSubmit, submitting, error, clearUserError} = props;
+  const {onSubmit, submitting, error, clearUserError} = props;
   return (
-      <form onSubmit={handleSubmit}
+      <form onSubmit={onSubmit}
             className={styles.updateContainer}>
         {error && (
             <Error

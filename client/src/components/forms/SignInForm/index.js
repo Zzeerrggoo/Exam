@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import {Formik, Form, Field, ErrorMessage} from 'formik';
 
 const initialValues = {
   email: '',
@@ -14,32 +14,32 @@ const validationSchema = Yup.object({
 });
 
 function SignInForm(props) {
-  const { onSubmit } = props;
+  const {onSubmit} = props;
 
   const handleSubmit = useCallback(
-    (values, formikBag) => {
-      onSubmit(values);
-    },
-    [onSubmit]
+      (values, formikBag) => {
+        onSubmit(values);
+      },
+      [onSubmit],
   );
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-      validationSchema={validationSchema}
-    >
-      {() => (
-        <Form>
-          <Field name="email" />
-          <ErrorMessage name="email" />
-          <Field name="password" />
-          <ErrorMessage name="password" />
+      <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
+      >
+        {() => (
+            <Form>
+              <Field name="email"/>
+              <ErrorMessage name="email"/>
+              <Field name="password"/>
+              <ErrorMessage name="password"/>
 
-          <button type="submit">Sign Up</button>
-        </Form>
-      )}
-    </Formik>
+              <button type="submit">Sign Up</button>
+            </Form>
+        )}
+      </Formik>
   );
 }
 

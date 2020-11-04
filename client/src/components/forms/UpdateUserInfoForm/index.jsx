@@ -65,9 +65,10 @@ function UpdateUserInfoForm(props) {
                          inputContainer: styles.uploadInputContainer,
                          imgStyle: styles.imgStyle,
                        }}/>
-          <button type="submit">Submit
-          </button>
+
+          <button type="submit">Submit</button>
         </Form>
+
       </Formik>
   );
 }
