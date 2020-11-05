@@ -4,11 +4,11 @@ import { Link, Redirect, useLocation } from 'react-router-dom';
 import { loginRequest, signUpRequest } from '../../actions/authActionCreators';
 import SignInForm from '../../components/forms/SignInForm';
 import SignUpForm from '../../components/forms/SignUpForm';
-import { userSelector } from '../../selectors';
+import { authUserSelector } from '../../selectors';
 
 function AuthPage() {
   const [isLogin, setIsLogin] = useState();
-  const user = useSelector(userSelector);
+  const user = useSelector(authUserSelector);
   const dispatch = useDispatch();
   const location = useLocation();
 
