@@ -1,6 +1,8 @@
 const yup = require('yup');
 const {
-  permissions: { roles },
+  permissions: {
+    roles,
+  },
 } = require('../configs/config');
 
 const passwordRule = [
@@ -18,18 +20,18 @@ exports.signUpSchema = yup.object().shape({
   lastName: yup.string().trim().required(),
   displayName: yup.string().trim().required(),
   email: yup.string().trim().email().required(),
-  password: yup
-    .string()
-    .matches(...passwordRule)
-    .required(),
+  password: yup.string().matches(...passwordRule).required(),
   role: yup.string().oneOf(roles).required(),
 });
 
+exports.updateUserSchema = yup.object({
+  firstName: yup.string().trim().required(),
+  lastName: yup.string().trim().required(),
+  displayName: yup.string().trim().required(),
+});
+
 exports.contestSchema = yup.object().shape({
-  contestType: yup
-    .string()
-    .matches(/(name|logo|tagline)/)
-    .required(),
+  contestType: yup.string().matches(/(name|logo|tagline)/).required(),
   fileName: yup.string().min(1),
   originalFileName: yup.string().min(1),
   title: yup.string().required().min(1),
