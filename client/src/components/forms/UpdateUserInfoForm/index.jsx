@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Formik, Form} from 'formik';
 import validationSchema from '../../../validators/validationSchems';
@@ -8,10 +8,13 @@ import styles from './UpdateUserInfoForm.module.sass';
 
 function UpdateUserInfoForm(props) {
 
-  const {onSubmit, initialValues} = props;
+  const [file, setFile] = useState('');
+  const {onSubmit, initialValues, user} = props;
 
   const handleSubmit = useCallback((values) => {
-    onSubmit(values);
+    const userValues = {...user, ...values};
+    userValues.file = file;
+    onSubmit(userValues);
   }, [onSubmit]);
 
   return (
@@ -60,6 +63,7 @@ function UpdateUserInfoForm(props) {
           </div>
 
           <ImageUpload name="file"
+                       onChange={setFile}
                        classes={{
                          uploadContainer: styles.imageUploadContainer,
                          inputContainer: styles.uploadInputContainer,

@@ -2,11 +2,11 @@ import React from 'react';
 import UpdateUserInfoForm
   from '../../components/forms/UpdateUserInfoForm';
 
-/*Import it from custom class later !!!*/
-import * as UserActionCreators from '../../actions/actionCreator';
+import * as UserActionCreators from '../../actions/userActionCreators';
+import * as ActionCreators from '../../actions/actionCreator';
 import {bindActionCreators} from 'redux';
 import {useDispatch, useSelector} from 'react-redux';
-import {userSelector} from '../../selectors';
+import {authUserSelector} from '../../selectors';
 import CONSTANTS from '../../constants';
 import styles from './UserInfo.module.sass';
 
@@ -15,11 +15,14 @@ const UserInfo = () => {
   const dispatch = useDispatch();
   const {
     changeEditModeOnUserProfile,
-    updateUserData,
+  } = bindActionCreators(ActionCreators, dispatch);
+
+  const {
+    userUpdate,
   } = bindActionCreators(UserActionCreators, dispatch);
 
   const {isEdit} = useSelector(state => state.userProfile);
-  const user = useSelector(userSelector);
+  const user = useSelector(authUserSelector);
 
   const {
     avatar,
@@ -41,8 +44,9 @@ const UserInfo = () => {
   return (
       <div className={styles.mainContainer}>
         {isEdit ? (
-            <UpdateUserInfoForm onSubmit={updateUserData}
-                                initialValues={initialValues}/>
+            <UpdateUserInfoForm onSubmit={userUpdate}
+                                initialValues={initialValues}
+                                user={user}/>
         ) : (
             <div className={styles.infoContainer}>
               <img

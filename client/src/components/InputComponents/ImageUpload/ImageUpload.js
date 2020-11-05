@@ -10,13 +10,13 @@ const ImageUpload = (props) => {
 
   const onChange = (e) => {
     const node = window.document.getElementById('imagePreview');
+    const {onChange} = props;
     const file = e.target.files[0];
-    const {onChange} = field;
     const imageType = /image.*/;
     if (!file.type.match(imageType)) {
       e.target.value = '';
     } else {
-      onChange(e);
+      onChange(file);
       const reader = new FileReader();
       reader.onload = () => {
         node.src = reader.result;
