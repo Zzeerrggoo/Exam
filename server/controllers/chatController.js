@@ -15,15 +15,15 @@ module.exports.addMessage = async (req, res, next) => {
       {
         participants,
       },
-      { participants, blackList: [false, false], favoriteList: [false, false] },
-      {
-        upsert: true,
-        new: true,
-        setDefaultsOnInsert: true,
-        useFindAndModify: false,
-      },
+        {participants, blackList: [false, false], favoriteList: [false, false]},
+        {
+          upsert: true,
+          new: true,
+          setDefaultsOnInsert: true,
+          useFindAndModify: false,
+        },
     );
-    const conversationId = newConversation._id
+    const conversationId = newConversation._id;
     const message = new Message({
       sender: req.tokenData.userId,
       body: req.body.messageBody,
@@ -189,16 +189,18 @@ module.exports.getPreview = async (req, res, next) => {
 };
 
 module.exports.blackList = async (req, res, next) => {
-  const predicate = `blackList.${req.body.participants.indexOf(req.tokenData.userId)}`;
+  const predicate = `blackList.${req.body.participants.indexOf(
+      req.tokenData.userId,
+  )}`;
   try {
     const chat = await Conversation.findOneAndUpdate(
-      { participants: req.body.participants },
-      { $set: { [predicate]: req.body.blackListFlag } },
-      { new: true },
+        {participants: req.body.participants},
+        {$set: {[predicate]: req.body.blackListFlag}},
+        {new: true},
     );
     res.send(chat);
     const interlocutorId = req.body.participants.filter(
-      (participant) => participant !== req.tokenData.userId,
+        (participant) => participant !== req.tokenData.userId,
     )[0];
     controller.getChatController().emitChangeBlockStatus(interlocutorId, chat);
   } catch (err) {
@@ -207,12 +209,14 @@ module.exports.blackList = async (req, res, next) => {
 };
 
 module.exports.favoriteChat = async (req, res, next) => {
-  const predicate = `favoriteList.${req.body.participants.indexOf(req.tokenData.userId)}`;
+  const predicate = `favoriteList.${req.body.participants.indexOf(
+      req.tokenData.userId,
+  )}`;
   try {
     const chat = await Conversation.findOneAndUpdate(
-      { participants: req.body.participants },
-      { $set: { [predicate]: req.body.favoriteFlag } },
-      { new: true },
+        {participants: req.body.participants},
+        {$set: {[predicate]: req.body.favoriteFlag}},
+        {new: true},
     );
     res.send(chat);
   } catch (err) {

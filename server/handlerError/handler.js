@@ -40,8 +40,9 @@ exports.httpErrorHandler = (err, req, res, next) => {
 
 exports.errorHandler = (err, req, res, next) => {
   res.sendStatus(500).send({
-    errors: [{
-      title: err?.message || 'Internal server error',
-    }],
+    errors: [
+      {
+        title: err?.message || 'Internal server error',
+      }],
   });
 };
