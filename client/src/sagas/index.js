@@ -1,8 +1,8 @@
-import { takeLatest, takeLeading, takeEvery } from 'redux-saga/effects';
+import {takeLatest, takeLeading, takeEvery} from 'redux-saga/effects';
 import ACTION from '../actions/actionTypes';
 import * as AuthSagas from './authSagas';
 
-import { paymentSaga, cashoutSaga } from './paymentSaga';
+import {paymentSaga, cashoutSaga} from './paymentSaga';
 import {
   activeContestsSaga,
   customerContestsSaga,
@@ -11,7 +11,7 @@ import {
   getContestByIdSaga,
   downloadContestFileSaga,
 } from './contestsSagas';
-import { changeMarkSaga, setOfferStatusSaga, addOfferSaga } from './offerSagas';
+import {changeMarkSaga, setOfferStatusSaga, addOfferSaga} from './offerSagas';
 import {
   previewSaga,
   getDialog,
@@ -26,15 +26,20 @@ import {
   changeCatalogName,
 } from './chatSagas';
 import AUTH_ACTION_TYPES from '../actions/authActionTypes';
+import USER_ACTION_TYPES from '../actions/userActionTypes';
 
 function* rootSaga() {
+  // my super-duper cool code
+
+  yield takeLatest(USER_ACTION_TYPES.USER_UPDATE, AuthSagas.updateUserSaga);
+
   // my super cool code
   // AUTH
   yield takeLatest(AUTH_ACTION_TYPES.LOGIN_REQUEST, AuthSagas.loginSaga);
   yield takeLatest(AUTH_ACTION_TYPES.SIGNUP_REQUEST, AuthSagas.signUpSaga);
   yield takeLatest(
-    AUTH_ACTION_TYPES.REFRESH_AUTH_REQUEST,
-    AuthSagas.refreshAuthSaga
+      AUTH_ACTION_TYPES.REFRESH_AUTH_REQUEST,
+      AuthSagas.refreshAuthSaga,
   );
   yield takeLatest(AUTH_ACTION_TYPES.LOGOUT_REQUEST, AuthSagas.logoutSaga);
   // legacy
@@ -45,8 +50,8 @@ function* rootSaga() {
   yield takeLatest(ACTION.GET_CONTEST_BY_ID_ACTION, getContestByIdSaga);
   yield takeEvery(ACTION.GET_CONTESTS_FOR_CREATIVE, activeContestsSaga);
   yield takeLatest(
-    ACTION.DOWNLOAD_CONTEST_FILE_ACTION,
-    downloadContestFileSaga
+      ACTION.DOWNLOAD_CONTEST_FILE_ACTION,
+      downloadContestFileSaga,
   );
   yield takeLatest(ACTION.UPDATE_CONTEST_ACTION, updateContestSaga);
   yield takeEvery(ACTION.SET_OFFER_ACTION, addOfferSaga);
@@ -62,8 +67,8 @@ function* rootSaga() {
   yield takeLatest(ACTION.CREATE_CATALOG_REQUEST, createCatalog);
   yield takeLatest(ACTION.DELETE_CATALOG_REQUEST, deleteCatalog);
   yield takeLatest(
-    ACTION.REMOVE_CHAT_FROM_CATALOG_REQUEST,
-    removeChatFromCatalogSaga
+      ACTION.REMOVE_CHAT_FROM_CATALOG_REQUEST,
+      removeChatFromCatalogSaga,
   );
   yield takeLatest(ACTION.CHANGE_CATALOG_NAME_REQUEST, changeCatalogName);
 }
