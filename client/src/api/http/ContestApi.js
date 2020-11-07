@@ -17,7 +17,7 @@ class ContestApi {
 
     const url = `${this.url}/user/${data.id}`;
 
-    return this.#_client.post(url, data, config);
+    return this.#_client.get(url, config);
   };
 
 }
