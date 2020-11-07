@@ -5,9 +5,10 @@ const contestController = require('./controllers/contestController');
 const chatController = require('./controllers/chatController');
 const upload = require('./utils/fileUpload');
 const authRouter = require('./routes/auth');
+const contestsRouter = require('./routes/contests');
 const checkAuthorization = require('./middlewares/checkAuthorization');
 const validateBody = require('./middlewares/validateBody');
-const { contestSchema } = require('./validation/schemas');
+const {contestSchema} = require('./validation/schemas');
 
 const router = express.Router();
 
@@ -15,18 +16,18 @@ router.use('/auth', authRouter);
 
 router.use(checkAuthorization);
 
+router.use('/contests', contestsRouter);
+
 router.post('/dataForContest', contestController.dataForContest);
 
 router.post(
-  '/pay',
-  basicMiddlewares.onlyForCustomer,
-  upload.uploadContestFiles,
-  basicMiddlewares.parseBody,
-  validateBody(contestSchema),
-  userController.payment,
+    '/pay',
+    basicMiddlewares.onlyForCustomer,
+    upload.uploadContestFiles,
+    basicMiddlewares.parseBody,
+    validateBody(contestSchema),
+    userController.payment,
 );
-
-router.post('/getCustomersContests', contestController.getCustomersContests);
 
 router.get(
   '/getContestById',
