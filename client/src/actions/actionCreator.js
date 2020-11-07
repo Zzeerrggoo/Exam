@@ -76,12 +76,6 @@ export const getContestsForCreative = (data) => {
   };
 };
 
-export const getContestsForCustomer = (data) => {
-  return {
-    type: ACTION.GET_CONTESTS_FOR_CUSTOMER,
-    data: data,
-  };
-};
 
 export const getContestById = (data) => {
   return {

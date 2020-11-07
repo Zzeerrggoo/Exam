@@ -1,7 +1,6 @@
 const contestsRouter = require('express').Router();
-const contestsController = require('../controllers/contestController');
+const controller = require('../controllers/contestController');
 
-contestsRouter.route('/user/:userId').
-    get(contestsController.getCustomersContests);
+contestsRouter.route('/user/:userId').get(controller.getCustomersContests);
 
 module.exports = contestsRouter;
