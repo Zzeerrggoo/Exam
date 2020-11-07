@@ -1,11 +1,11 @@
-import {takeLatest, takeLeading, takeEvery} from 'redux-saga/effects';
+import {takeLatest, takeEvery} from 'redux-saga/effects';
 import ACTION from '../actions/actionTypes';
 import * as AuthSagas from './authSagas';
+import * as ContestsSagas from './contestsSagas';
 
 import {paymentSaga, cashoutSaga} from './paymentSaga';
 import {
   activeContestsSaga,
-  customerContestsSaga,
   updateContestSaga,
   dataForContestSaga,
   getContestByIdSaga,
@@ -27,14 +27,16 @@ import {
 } from './chatSagas';
 import AUTH_ACTION_TYPES from '../actions/authActionTypes';
 import USER_ACTION_TYPES from '../actions/userActionTypes';
+import CONTEST_ACTION_TYPES from '../actions/contestActionTypes';
 
 function* rootSaga() {
-  // my super-duper cool code
+  // CONTESTS
 
-  yield takeLatest(USER_ACTION_TYPES.USER_UPDATE, AuthSagas.updateUserSaga);
+  yield takeLatest(CONTEST_ACTION_TYPES.GET_CONTESTS,
+      ContestsSagas.getContestsSaga);
 
-  // my super cool code
   // AUTH
+  yield takeLatest(USER_ACTION_TYPES.USER_UPDATE, AuthSagas.updateUserSaga);
   yield takeLatest(AUTH_ACTION_TYPES.LOGIN_REQUEST, AuthSagas.loginSaga);
   yield takeLatest(AUTH_ACTION_TYPES.SIGNUP_REQUEST, AuthSagas.signUpSaga);
   yield takeLatest(
@@ -46,7 +48,7 @@ function* rootSaga() {
   yield takeEvery(ACTION.GET_DATA_FOR_CONTEST_ACTION, dataForContestSaga);
   yield takeLatest(ACTION.PAYMENT_ACTION, paymentSaga);
   yield takeLatest(ACTION.CASHOUT_ACTION, cashoutSaga);
-  yield takeLeading(ACTION.GET_CONTESTS_FOR_CUSTOMER, customerContestsSaga);
+
   yield takeLatest(ACTION.GET_CONTEST_BY_ID_ACTION, getContestByIdSaga);
   yield takeEvery(ACTION.GET_CONTESTS_FOR_CREATIVE, activeContestsSaga);
   yield takeLatest(
