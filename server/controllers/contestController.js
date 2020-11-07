@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const createHttpError = require('http-errors');
 const {
   sequelize,
   Sequelize,
@@ -14,6 +15,32 @@ const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
 const UtilFunctions = require('../utils/functions');
 const CONSTANTS = require('../constants');
+
+module.exports.getCustomersContests = async (req, res, next) => {
+  try {
+    const contests = await Contest.findAll({
+      where: {status: req.headers.status, userId: req.params.userId},
+      limit: req.body.limit,
+      offset: req.body.offset ? req.body.offset : 0,
+      order: [['id', 'DESC']],
+      include: [
+        {
+          model: Offer,
+        },
+      ],
+    });
+
+    contests.forEach(
+        (contest) => { contest.dataValues.count = contest.dataValues.Offers.length; },
+    );
+
+    const haveMore = !(contests.length === 0);
+
+    res.status(200).send({data: {contests, haveMore}});
+  } catch (error) {
+    next(createHttpError(404, 'No contests found'));
+  }
+};
 
 module.exports.dataForContest = async (req, res, next) => {
   const response = {};
@@ -63,10 +90,10 @@ module.exports.getContestById = async (req, res, next) => {
           model: Offer,
           required: false,
           where:
-            req.tokenData.role === CONSTANTS.CREATOR
-              ? { userId: req.tokenData.userId }
-              : {},
-          attributes: { exclude: ['userId', 'contestId'] },
+              req.tokenData.role === CONSTANTS.CREATOR
+                  ? {userId: req.tokenData.userId}
+                  : {},
+          attributes: {exclude: ['userId', 'contestId']},
           include: [
             {
               model: User,
@@ -135,8 +162,7 @@ module.exports.setNewOffer = async (req, res, next) => {
     const result = await contestQueries.createOffer(obj);
     delete result.contestId;
     delete result.userId;
-    controller
-      .getNotificationController()
+    controller.getNotificationController()
       .emitEntryCreated(req.body.customerId);
     const user = { ...req.tokenData, id: req.tokenData.userId };
     res.send({ ...result, User: user });
@@ -147,16 +173,14 @@ module.exports.setNewOffer = async (req, res, next) => {
 
 const rejectOffer = async (offerId, creatorId, contestId) => {
   const rejectedOffer = await contestQueries.updateOffer(
-    { status: CONSTANTS.OFFER_STATUS_REJECTED },
-    { id: offerId },
+      {status: CONSTANTS.OFFER_STATUS_REJECTED},
+      {id: offerId},
   );
-  controller
-    .getNotificationController()
-    .emitChangeOfferStatus(
+  controller.getNotificationController().emitChangeOfferStatus(
       creatorId,
       'Someone of yours offers was rejected',
       contestId,
-    );
+  );
   return rejectedOffer;
 };
 
@@ -206,22 +230,19 @@ const resolveOffer = async (
   const arrayRoomsId = [];
   updatedOffers.forEach((offer) => {
     if (
-      offer.status === CONSTANTS.OFFER_STATUS_REJECTED
-      && creatorId !== offer.userId
+        offer.status === CONSTANTS.OFFER_STATUS_REJECTED
+        && creatorId !== offer.userId
     ) {
       arrayRoomsId.push(offer.userId);
     }
   });
-  controller
-    .getNotificationController()
-    .emitChangeOfferStatus(
+  controller.getNotificationController().emitChangeOfferStatus(
       arrayRoomsId,
       'Someone of yours offers was rejected',
       contestId,
-    );
-  controller
-    .getNotificationController()
-    .emitChangeOfferStatus(creatorId, 'Someone of your offers WIN', contestId);
+  );
+  controller.getNotificationController().
+      emitChangeOfferStatus(creatorId, 'Someone of your offers WIN', contestId);
   return updatedOffers[0].dataValues;
 };
 
@@ -257,33 +278,6 @@ module.exports.setOfferStatus = async (req, res, next) => {
   }
 };
 
-module.exports.getCustomersContests = (req, res, next) => {
-  Contest.findAll({
-    where: { status: req.headers.status, userId: req.tokenData.userId },
-    limit: req.body.limit,
-    offset: req.body.offset ? req.body.offset : 0,
-    order: [['id', 'DESC']],
-    include: [
-      {
-        model: Offer,
-        required: false,
-        attributes: ['id'],
-      },
-    ],
-  })
-    .then((contests) => {
-      contests.forEach(
-        (contest) => { contest.dataValues.count = contest.dataValues.Offers.length; },
-      );
-      let haveMore = true;
-      if (contests.length === 0) {
-        haveMore = false;
-      }
-      res.send({ contests, haveMore });
-    })
-    .catch((err) => next(new ServerError(err)));
-};
-
 module.exports.getContests = (req, res, next) => {
   const predicates = UtilFunctions.createWhereForAllContests(
     req.body.typeIndex,
@@ -300,22 +294,20 @@ module.exports.getContests = (req, res, next) => {
       {
         model: Offer,
         required: req.body.ownEntries,
-        where: req.body.ownEntries ? { userId: req.tokenData.userId } : {},
+        where: req.body.ownEntries ? {userId: req.tokenData.userId} : {},
         attributes: ['id'],
       },
     ],
-  })
-    .then((contests) => {
-      contests.forEach(
+  }).then((contests) => {
+    contests.forEach(
         (contest) => (contest.dataValues.count = contest.dataValues.Offers.length),
-      );
-      let haveMore = true;
-      if (contests.length === 0) {
-        haveMore = false;
-      }
-      res.send({ contests, haveMore });
-    })
-    .catch((err) => {
-      next(new ServerError());
-    });
+    );
+    let haveMore = true;
+    if (contests.length === 0) {
+      haveMore = false;
+    }
+    res.send({contests, haveMore});
+  }).catch((err) => {
+    next(new ServerError());
+  });
 };
