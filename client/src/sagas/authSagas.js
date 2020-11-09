@@ -34,6 +34,7 @@ export const updateUserSaga = function* (action) {
 
   try {
     const {payload: {values}} = action;
+
     const {data: {data}} = yield Api.auth.updateUser(values);
 
     yield put(UserActionCreators.userUpdateSuccess(data));
