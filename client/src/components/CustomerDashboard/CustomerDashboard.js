@@ -1,8 +1,7 @@
 import React, {useEffect} from 'react';
-import {bindActionCreators} from 'redux';
 import {authUserSelector, contestsSelector} from '../../selectors';
 import {useSelector, useDispatch} from 'react-redux';
-import * as ContestActionCreators from '../../actions/contestActionCreators';
+import {getContestsData} from '../../actions/contestActionCreators';
 import CONSTANTS from '../../constants';
 import ContestsContainer
   from '../../components/ContestsContainer/ContestsContainer';
@@ -15,20 +14,17 @@ const CustomerDashboard = (props) => {
 
   const contestsList = useSelector(contestsSelector);
   const dispatch = useDispatch();
-  const {
-    getContestsData: getContests,
-  } = bindActionCreators(ContestActionCreators, dispatch);
 
   const {id} = useSelector(authUserSelector);
   const {isFetching, error, haveMore, customerFilter} = contestsList;
 
   const getContestsDashboard = (values) => {
-    getContests({
+    dispatch(getContestsData({
       id,
       limit: 8,
       contestStatus: customerFilter,
       ...values,
-    });
+    }));
   };
 
   const loadMore = (startFrom) => {
