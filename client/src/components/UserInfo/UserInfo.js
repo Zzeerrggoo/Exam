@@ -1,17 +1,18 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React, {useState} from 'react';
 import UpdateUserInfoForm
   from '../../components/UpdateUserInfoForm/UpdateUserInfoForm';
-import {
-  changeEditModeOnUserProfile,
-} from '../../actions/actionCreator';
 import {userUpdate} from '../../actions/userActionCreators';
 import CONSTANTS from '../../constants';
 import styles from './UserInfo.module.sass';
+import {useDispatch, useSelector} from 'react-redux';
+import {authUserSelector} from '../../selectors';
 
-const UserInfo = (props) => {
+const UserInfo = () => {
 
-  const {isEdit, changeEditMode, user} = props;
+  const user = useSelector(authUserSelector);
+  const dispatch = useDispatch();
+
+  const [isEdit, setIsEdit] = useState(false);
   const {avatar, firstName, lastName, displayName, email, role, balance, id} = user;
 
   const updateUserData = (values) => {
@@ -20,7 +21,7 @@ const UserInfo = (props) => {
     formData.append('firstName', values.firstName);
     formData.append('lastName', values.lastName);
     formData.append('displayName', values.displayName);
-    props.updateUser({id, formData});
+    dispatch(userUpdate(({id, formData})));
   };
 
   return (
@@ -62,23 +63,10 @@ const UserInfo = (props) => {
               </div>
             </div>
         }
-        <div onClick={() => changeEditMode(!isEdit)}
+        <div onClick={() => setIsEdit(!isEdit)}
              className={styles.buttonEdit}>{isEdit ? 'Cancel' : 'Edit'}</div>
       </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  const {user} = state.auth;
-  const {isEdit} = state.userProfile;
-  return {user, isEdit};
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateUser: (data) => dispatch(userUpdate(data)),
-    changeEditMode: (data) => dispatch(changeEditModeOnUserProfile(data)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);
+export default UserInfo;
