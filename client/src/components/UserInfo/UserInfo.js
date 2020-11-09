@@ -1,63 +1,38 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import UpdateUserInfoForm
-  from '../../components/forms/UpdateUserInfoForm';
-
-import * as UserActionCreators from '../../actions/userActionCreators';
-import * as ActionCreators from '../../actions/actionCreator';
-import {bindActionCreators} from 'redux';
-import {useDispatch, useSelector} from 'react-redux';
-import {authUserSelector} from '../../selectors';
+  from '../../components/UpdateUserInfoForm/UpdateUserInfoForm';
+import {
+  changeEditModeOnUserProfile,
+} from '../../actions/actionCreator';
+import {userUpdate} from '../../actions/userActionCreators';
 import CONSTANTS from '../../constants';
 import styles from './UserInfo.module.sass';
 
-const UserInfo = () => {
+const UserInfo = (props) => {
 
-  const dispatch = useDispatch();
-  const {
-    changeEditModeOnUserProfile,
-  } = bindActionCreators(ActionCreators, dispatch);
+  const {isEdit, changeEditMode, user} = props;
+  const {avatar, firstName, lastName, displayName, email, role, balance, id} = user;
 
-  const {
-    userUpdate,
-  } = bindActionCreators(UserActionCreators, dispatch);
-
-  const {isEdit} = useSelector(state => state.userProfile);
-  const user = useSelector(authUserSelector);
-
-  const {
-    avatar,
-    firstName,
-    lastName,
-    displayName,
-    email,
-    role,
-    balance,
-  } = user;
-
-  const initialValues = {
-    firstName,
-    lastName,
-    displayName,
-    avatar,
+  const updateUserData = (values) => {
+    const formData = new FormData();
+    formData.append('file', values.file);
+    formData.append('firstName', values.firstName);
+    formData.append('lastName', values.lastName);
+    formData.append('displayName', values.displayName);
+    props.updateUser({id, formData});
   };
 
   return (
       <div className={styles.mainContainer}>
-        {isEdit ? (
-            <UpdateUserInfoForm onSubmit={userUpdate}
-                                initialValues={initialValues}
-                                user={user}/>
-        ) : (
+        {isEdit ? <UpdateUserInfoForm onSubmit={updateUserData}/>
+            :
             <div className={styles.infoContainer}>
-              <img
-                  src={
-                    avatar === 'anon.png'
-                        ? CONSTANTS.ANONYM_IMAGE_PATH
-                        : `${CONSTANTS.publicURL}${avatar}`
-                  }
-                  className={styles.avatar}
-                  alt="user"
-              />
+              <img src={avatar === 'anon.png'
+                  ? CONSTANTS.ANONYM_IMAGE_PATH
+                  : `${CONSTANTS.publicURL}${avatar}`}
+                   className={styles.avatar}
+                   alt='user'/>
               <div className={styles.infoContainer}>
                 <div className={styles.infoBlock}>
                   <span className={styles.label}>First Name</span>
@@ -79,23 +54,31 @@ const UserInfo = () => {
                   <span className={styles.label}>Role</span>
                   <span className={styles.info}>{role}</span>
                 </div>
-                {role === CONSTANTS.CREATOR && (
-                    <div className={styles.infoBlock}>
-                      <span className={styles.label}>Balance</span>
-                      <span className={styles.info}>{`${balance}$`}</span>
-                    </div>
-                )}
+                {role === CONSTANTS.CREATOR &&
+                <div className={styles.infoBlock}>
+                  <span className={styles.label}>Balance</span>
+                  <span className={styles.info}>{`${balance}$`}</span>
+                </div>}
               </div>
             </div>
-        )}
-        <div
-            onClick={() => changeEditModeOnUserProfile(!isEdit)}
-            className={styles.buttonEdit}
-        >
-          {isEdit ? 'Cancel' : 'Edit'}
-        </div>
+        }
+        <div onClick={() => changeEditMode(!isEdit)}
+             className={styles.buttonEdit}>{isEdit ? 'Cancel' : 'Edit'}</div>
       </div>
   );
 };
 
-export default UserInfo;
+const mapStateToProps = (state) => {
+  const {user} = state.auth;
+  const {isEdit} = state.userProfile;
+  return {user, isEdit};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateUser: (data) => dispatch(userUpdate(data)),
+    changeEditMode: (data) => dispatch(changeEditModeOnUserProfile(data)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);

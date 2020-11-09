@@ -2,7 +2,9 @@ const multer = require('multer');
 const ServerError = require('../errors/ServerError');
 
 const env = process.env.NODE_ENV || 'development';
-const filePath = env === 'production' ? '/var/www/html/images/' : 'public/images/';
+const filePath = env === 'production'
+  ? '/var/www/html/images/'
+  : 'public/images';
 
 const storageContestFiles = multer.diskStorage({
   destination(req, file, cb) {

@@ -4,6 +4,7 @@ const ValidationSchemas = require('../validation/schemas');
 const AuthController = require('../controllers/authController');
 const UsersController = require('../controllers/userController');
 const checkAuthorization = require('../middlewares/checkAuthorization');
+const { uploadAvatar } = require('../utils/fileUpload');
 
 authRouter.post(
   '/login',
@@ -19,7 +20,8 @@ authRouter.post('/refresh', AuthController.refresh);
 authRouter.patch(
   '/user/:userId',
   checkAuthorization,
-  validateBody(ValidationSchemas.updateUserSchema),
+  // validateBody(ValidationSchemas.updateUserSchema),
+  uploadAvatar,
   UsersController.updateUser,
 );
 module.exports = authRouter;

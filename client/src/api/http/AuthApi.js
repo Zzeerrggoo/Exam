@@ -60,11 +60,12 @@ class AuthApi {
     localStorage.removeItem(REFRESH_TOKEN_KEY);
   };
 
-  updateUser = (data) => {
-    return this.#_client.patch(`${this.url}/user/${data.id}`, data);
+  updateUser = ({id, formData}) => {
+    return this.#_client.patch(`${this.url}/user/${id}`, formData);
   };
 
   interceptRequest = config => {
+
     if (this.#_token) {
       config.headers['Authorization'] = `Bearer ${this.#_token}`;
     }
@@ -73,7 +74,6 @@ class AuthApi {
   };
 
   interceptResponse = response => {
-
     const {
       config: {url},
       data,

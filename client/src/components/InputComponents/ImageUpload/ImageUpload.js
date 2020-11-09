@@ -1,16 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
-import {useField} from 'formik';
 
 const ImageUpload = (props) => {
-
-  const [field, meta] = useField(props);
-  const {value} = meta;
-  const {uploadContainer, inputContainer, imgStyle} = props.classes;
-
   const onChange = (e) => {
     const node = window.document.getElementById('imagePreview');
-    const {onChange} = props;
+    const {input: {onChange}} = props;
     const file = e.target.files[0];
     const imageType = /image.*/;
     if (!file.type.match(imageType)) {
@@ -25,28 +19,24 @@ const ImageUpload = (props) => {
     }
   };
 
+  const {input: {value}} = props;
+  const {uploadContainer, inputContainer, imgStyle} = props.classes;
   return (
       <div className={uploadContainer}>
         <div className={inputContainer}>
-          <span>Support only images (*.png, *.jpg, *.jpeg)</span>
+          <span>Support only images (*.png, *.gif, *.jpeg)</span>
           <input
-              {...field}
-              id="fileInput"
-              type="file"
-              accept=".jpg, .png, .jpeg"
+              id='fileInput'
+              type='file'
+              accept='.jpg, .png, .jpeg'
               onChange={onChange}
           />
           <label htmlFor="fileInput">Chose file</label>
         </div>
-
-        <img id="imagePreview"
-             className={classNames({[imgStyle]: !!value})}
-             alt="imagePreview"/>
+        <img id='imagePreview'
+             className={classNames({[imgStyle]: !!value})}/>
       </div>
   );
 };
 
 export default ImageUpload;
-
-
-
