@@ -10,24 +10,20 @@ import Schems from '../../validators/validationSchems';
 import Error from '../../components/Error/Error';
 
 const UpdateUserInfoForm = (props) => {
-  const {onSubmit, submitting, error, clearUserError} = props;
+  const {handleSubmit, submitting, error, clearUserError, onSubmit} = props;
   return (
-      <form onSubmit={onSubmit}
+      <form onSubmit={handleSubmit(onSubmit)}
             className={styles.updateContainer}>
-        {error && (
-            <Error
-                data={error.data}
-                status={error.status}
-                clearError={clearUserError}
-            />
-        )}
+        {error && <Error data={error.data}
+                         status={error.status}
+                         clearError={clearUserError}/>}
         <div className={styles.container}>
           <span className={styles.label}>First Name</span>
           <Field
-              name="firstName"
+              name='firstName'
               component={FormInput}
-              type="text"
-              label="First Name"
+              type='text'
+              label='First Name'
               classes={{
                 container: styles.inputContainer,
                 input: styles.input,
@@ -39,10 +35,10 @@ const UpdateUserInfoForm = (props) => {
         <div className={styles.container}>
           <span className={styles.label}>Last Name</span>
           <Field
-              name="lastName"
+              name='lastName'
               component={FormInput}
-              type="text"
-              label="LastName"
+              type='text'
+              label='LastName'
               classes={{
                 container: styles.inputContainer,
                 input: styles.input,
@@ -54,10 +50,10 @@ const UpdateUserInfoForm = (props) => {
         <div className={styles.container}>
           <span className={styles.label}>Display Name</span>
           <Field
-              name="displayName"
+              name='displayName'
               component={FormInput}
-              type="text"
-              label="Display Name"
+              type='text'
+              label='Display Name'
               classes={{
                 container: styles.inputContainer,
                 input: styles.input,
@@ -67,7 +63,7 @@ const UpdateUserInfoForm = (props) => {
           />
         </div>
         <Field
-            name="file"
+            name='file'
             component={ImageUpload}
             classes={{
               uploadContainer: styles.imageUploadContainer,
@@ -75,7 +71,7 @@ const UpdateUserInfoForm = (props) => {
               imgStyle: styles.imgStyle,
             }}
         />
-        <button type="submit"
+        <button type='submit'
                 disabled={submitting}>
           Submit
         </button>
@@ -101,12 +97,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(
-    reduxForm({
-      form: 'updateProfile',
-      validate: customValidator(Schems.UpdateUserSchema),
-    })(UpdateUserInfoForm),
-);
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
+  form: 'updateProfile',
+  validate: customValidator(Schems.UpdateUserSchema),
+})(UpdateUserInfoForm));
