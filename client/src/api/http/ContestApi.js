@@ -8,14 +8,20 @@ class ContestApi {
   }
 
   getCustomersContests = (data) => {
-
     const config = {
       headers: {
         status: data.contestStatus,
       },
     };
+    return this.#_client.get(`${this.url}/user/${data.id}`, config);
+  };
 
-    const url = `${this.url}/user/${data.id}`;
+  getActiveContests = (data) => {
+    console.log(data);
+    const urlParams = new URLSearchParams(data).toString();
+    console.log(urlParams);
+    return this.#_client.get(`${this.url}/user/${data.id}/active?${urlParams}`);
+  };
 
     return this.#_client.get(url, config);
   };
