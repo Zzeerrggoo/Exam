@@ -1,7 +1,7 @@
 import {put} from 'redux-saga/effects';
 import ACTION from '../actions/actionTypes';
 import * as restController from '../api/rest/restController';
-import * as ContestActionCreators from '../actions/contestActionCreators';
+import * as ContestActionCreators from '../actions/contestsActionCreators';
 import * as Api from '../api/http';
 
 const getContests = apiMethod =>

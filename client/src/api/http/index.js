@@ -1,7 +1,8 @@
 import axios from 'axios';
 import config from '../../app/config';
 import AuthApi from './AuthApi';
-import ContestApi from './ContestApi';
+import ContestsApi from './ContestsApi';
+import SingleContestApi from './SingleContestApi';
 
 const {
   api: {http},
@@ -10,6 +11,7 @@ const {
 const client = axios.create(http);
 
 export const auth = new AuthApi({client});
-export const contest = new ContestApi({client});
+export const contest = new ContestsApi({client});
+export const singleContest = new SingleContestApi({client});
 
 export default client;

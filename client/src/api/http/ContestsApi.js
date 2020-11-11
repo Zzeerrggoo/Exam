@@ -1,4 +1,4 @@
-class ContestApi {
+class ContestsApi {
   #_client;
 
   constructor({client}) {
@@ -27,4 +27,4 @@ class ContestApi {
 
 }
 
-export default ContestApi;
+export default ContestsApi;

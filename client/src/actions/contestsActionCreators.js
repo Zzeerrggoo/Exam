@@ -1,4 +1,4 @@
-import CONTEST_ACTION_TYPES from './contestActionTypes';
+import CONTEST_ACTION_TYPES from './contestsActionTypes';
 
 export const getContestsData = values => ({
   type: CONTEST_ACTION_TYPES.GET_CONTESTS,

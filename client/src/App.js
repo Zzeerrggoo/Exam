@@ -108,7 +108,6 @@ function App() {
             <PrivateRoute exact
                           path="/account"
                           component={UserProfile}/>
-            <Route path="/public/images/1604876096546judges-with-title.jpg"/>
             <Route component={NotFound}/>
           </Switch>
         </Suspense>

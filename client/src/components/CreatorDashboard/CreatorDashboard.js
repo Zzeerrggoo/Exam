@@ -6,7 +6,7 @@ import {
   getActiveContestsData,
   getIndustryForContest,
   setNewCreatorFilter,
-} from '../../actions/contestActionCreators';
+} from '../../actions/contestsActionCreators';
 import ContestsContainer
   from '../../components/ContestsContainer/ContestsContainer';
 import ContestBox from '../ContestBox/ContestBox';

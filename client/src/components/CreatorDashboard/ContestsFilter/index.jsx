@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
-import * as ContestActionCreators from '../../../actions/contestActionCreators';
+import * as ContestActionCreators from '../../../actions/contestsActionCreators';
 import styles from '../../CustomerDashboard/CustomerDashboard.module.sass';
 
 const ContestsFilter = (props) => {

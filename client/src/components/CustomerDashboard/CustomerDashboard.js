@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {authUserSelector, contestsSelector} from '../../selectors';
 import {useSelector, useDispatch} from 'react-redux';
-import {getContestsData} from '../../actions/contestActionCreators';
+import {getContestsData} from '../../actions/contestsActionCreators';
 import CONSTANTS from '../../constants';
 import ContestsContainer
   from '../../components/ContestsContainer/ContestsContainer';

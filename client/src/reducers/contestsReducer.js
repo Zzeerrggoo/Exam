@@ -1,5 +1,5 @@
 import produce from 'immer';
-import CONTEST_ACTION_TYPES from '../actions/contestActionTypes';
+import CONTEST_ACTION_TYPES from '../actions/contestsActionTypes';
 import createReducer from './helpers/createReducer';
 import CONSTANTS from '../constants';
 
