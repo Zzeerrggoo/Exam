@@ -4,18 +4,20 @@ import createReducer from './helpers/createReducer';
 import CONSTANTS from '../constants';
 
 const initialState = {
-  isFetching: true,
+  isFetching: false,
   error: null,
   contests: [],
   customerFilter: CONSTANTS.CONTEST_STATUS_ACTIVE,
   creatorFilter: {
-    typeIndex: 1,
+    typeIndex: 'name,tagline,logo',
     contestId: '',
     industry: '',
     awardSort: 'asc',
     ownEntries: false,
   },
   haveMore: true,
+  isIndustryLoading: false,
+  industryTypes: [],
 };
 
 const helpers = {
@@ -46,6 +48,36 @@ const helpers = {
         const {payload: {values}} = action;
         draftState.customerFilter = values;
       }),
+
+  [CONTEST_ACTION_TYPES.SET_NEW_CREATOR_FILTER]: produce(
+      (draftState, action) => {
+        const {payload: {values}} = action;
+        draftState.creatorFilter = values;
+      }),
+
+  [CONTEST_ACTION_TYPES.GET_INDUSTRY_FOR_CONTEST_REQUEST]: produce(
+      draftState => {
+        draftState.isIndustryLoaded = true;
+      }),
+
+  [CONTEST_ACTION_TYPES.GET_INDUSTRY_FOR_CONTEST_SUCCESS]: produce(
+      (draftState, action) => {
+
+        const {payload: {values}} = action;
+
+        draftState.industryTypes = values;
+        draftState.isIndustryLoaded = false;
+      }),
+
+  [CONTEST_ACTION_TYPES.GET_INDUSTRY_FOR_CONTEST_FAILED]: produce(
+      (draftState, action) => {
+        const {
+          payload: {error},
+        } = action;
+        draftState.error = error;
+        draftState.isIndustryLoaded = false;
+      }),
+
 };
 
 const contestsReducer = createReducer(initialState, helpers);
