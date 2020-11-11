@@ -22,6 +22,9 @@ const UserProfile = (props) => {
   const {
     balance,
     role,
+  } = props.user;
+
+  const {
     profileModeView,
     changeProfileModeView,
     error,
@@ -86,10 +89,10 @@ const UserProfile = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const {balance, role} = state.auth.user;
+  const {user} = state.auth;
   const {profileModeView} = state.userProfile;
   const {error} = state.payment;
-  return {balance, role, profileModeView, error};
+  return {user, profileModeView, error};
 };
 
 const mapDispatchToProps = (dispatch) => {
