@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const createHttpError = require('http-errors');
 const {
   sequelize,
@@ -76,7 +77,7 @@ module.exports.getCustomersContests = async (req, res, next) => {
   }
 };
 
-module.exports.industriesForContest = async (req, res, next) => {
+module.exports.getIndustriesForContest = async (req, res, next) => {
   try {
     const industryTypes = await Select.findAll({
       where: { type: 'industry' },
@@ -87,6 +88,36 @@ module.exports.industriesForContest = async (req, res, next) => {
     }
 
     const data = industryTypes.map((item) => item?.describe);
+    res.status(200).send({ data });
+  } catch (err) {
+    next(createHttpError(500, 'Server Error'));
+  }
+};
+
+module.exports.getDescriptionForContest = async (req, res, next) => {
+  const data = {};
+  try {
+    const whereOption = {
+      type: {
+        [Sequelize.Op.or]: _.compact([
+          req.body.characteristic1,
+          req.body.characteristic2,
+        ]),
+      },
+    };
+    const characteristics = await Select.findAll({
+      where: whereOption,
+    });
+    if (!characteristics) {
+      res.status(404).send();
+      return;
+    }
+    characteristics.forEach((characteristic) => {
+      if (!data[characteristic.type]) {
+        data[characteristic.type] = [];
+      }
+      data[characteristic.type].push(characteristic.describe);
+    });
     res.status(200).send({ data });
   } catch (err) {
     next(createHttpError(500, 'Server Error'));
