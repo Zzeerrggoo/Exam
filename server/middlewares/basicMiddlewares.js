@@ -1,8 +1,7 @@
-const bd = require('./../models/index');
-const NotFound = require('./../errors/UserNotFoundError');
-const RightsError = require('./../errors/RightsError');
-const ServerError = require('./../errors/ServerError');
-const CONSTANTS = require('./../constants');
+const bd = require('../models/index');
+const RightsError = require('../errors/RightsError');
+const ServerError = require('../errors/ServerError');
+const CONSTANTS = require('../constants');
 
 module.exports.parseBody = (req, res, next) => {
   req.body.contests = JSON.parse(req.body.contests);
@@ -19,11 +18,11 @@ module.exports.parseBody = (req, res, next) => {
 module.exports.canGetContest = async (req, res, next) => {
   let result = null;
   try {
-    if (req.tokenData.role === CONSTANTS.CUSTOMER) {
+    if (req.tokenPayload.userRole === CONSTANTS.CUSTOMER) {
       result = await bd.Contests.findOne({
-        where: { id: req.headers.contestid, userId: req.tokenData.userId },
+        where: { id: req.headers.contestid, userId: req.tokenPayload.userId },
       });
-    } else if (req.tokenData.role === CONSTANTS.CREATOR) {
+    } else if (req.tokenPayload.userRole === CONSTANTS.CREATOR) {
       result = await bd.Contests.findOne({
         where: {
           id: req.headers.contestid,
@@ -36,14 +35,14 @@ module.exports.canGetContest = async (req, res, next) => {
         },
       });
     }
-    !!result ? next() : next(new RightsError());
+    result ? next() : next(new RightsError());
   } catch (e) {
     next(new ServerError(e));
   }
 };
 
 module.exports.onlyForCreative = (req, res, next) => {
-  if (req.tokenData.role === CONSTANTS.CUSTOMER) {
+  if (req.tokenPayload.userRole === CONSTANTS.CUSTOMER) {
     next(new RightsError());
   } else {
     next();
@@ -51,15 +50,14 @@ module.exports.onlyForCreative = (req, res, next) => {
 };
 
 module.exports.onlyForCustomer = (req, res, next) => {
-  if (req.tokenData.role === CONSTANTS.CREATOR) {
+  if (req.tokenPayload.userRole === CONSTANTS.CREATOR) {
     return next(new RightsError('this page only for customers'));
-  } else {
-    next();
   }
+  next();
 };
 
 module.exports.canSendOffer = async (req, res, next) => {
-  if (req.tokenData.role === CONSTANTS.CUSTOMER) {
+  if (req.tokenPayload.userRole === CONSTANTS.CUSTOMER) {
     return next(new RightsError());
   }
   try {
@@ -85,7 +83,7 @@ module.exports.onlyForCustomerWhoCreateContest = async (req, res, next) => {
   try {
     const result = await bd.Contests.findOne({
       where: {
-        userId: req.tokenData.userId,
+        userId: req.tokenPayload.userId,
         id: req.body.contestId,
         status: CONSTANTS.CONTEST_STATUS_ACTIVE,
       },
@@ -103,7 +101,7 @@ module.exports.canUpdateContest = async (req, res, next) => {
   try {
     const result = bd.Contests.findOne({
       where: {
-        userId: req.tokenData.userId,
+        userId: req.tokenPayload.userId,
         id: req.body.contestId,
         status: { [bd.Sequelize.Op.not]: CONSTANTS.CONTEST_STATUS_FINISHED },
       },
