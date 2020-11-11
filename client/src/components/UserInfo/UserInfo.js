@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import UpdateUserInfoForm
-  from '../../components/UpdateUserInfoForm/UpdateUserInfoForm';
+  from '../forms/UpdateUserInfoForm/UpdateUserInfoForm';
 import {userUpdate} from '../../actions/userActionCreators';
 import CONSTANTS from '../../constants';
 import styles from './UserInfo.module.sass';

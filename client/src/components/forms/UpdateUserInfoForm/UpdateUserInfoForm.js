@@ -1,13 +1,13 @@
 import React from 'react';
 import {Field, reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
-import {clearUserError} from '../../actions/actionCreator';
+import {clearUserError} from '../../../actions/actionCreator';
 import styles from './UpdateUserInfoForm.module.sass';
-import ImageUpload from '../InputComponents/ImageUpload/ImageUpload';
-import FormInput from '../FormInput/FormInput';
-import customValidator from '../../validators/validator';
-import Schems from '../../validators/validationSchems';
-import Error from '../../components/Error/Error';
+import ImageUpload from '../../InputComponents/ImageUpload/ImageUpload';
+import FormInput from '../../FormInput/FormInput';
+import customValidator from '../../../validators/validator';
+import Schems from '../../../validators/validationSchems';
+import Error from '../../Error/Error';
 
 const UpdateUserInfoForm = (props) => {
   const {handleSubmit, submitting, error, clearUserError, onSubmit} = props;

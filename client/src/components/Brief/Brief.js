@@ -6,7 +6,7 @@ import {
 } from "../../actions/actionCreator";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import ContestForm from "../../components/ContestForm/ContestForm";
+import ContestForm from "../forms/ContestForm/ContestForm";
 import styles from "./Brief.module.sass";
 import { submit } from "redux-form";
 import ContestInfo from "../Contest/ContestInfo/ContestInfo";

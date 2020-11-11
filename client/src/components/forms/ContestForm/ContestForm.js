@@ -1,23 +1,22 @@
 import React, {useEffect} from 'react';
-import CONSTANTS from '../../constants';
+import CONSTANTS from '../../../constants';
 import {connect, useDispatch} from 'react-redux';
 import {useSelector} from 'react-redux';
 import * as SingleContestActionCreators
-  from '../../actions/singleContestActionCreators';
-import {withRouter} from 'react-router-dom';
+  from '../../../actions/singleContestActionCreators';
 import styles from './ContestForm.module.sass';
-import Spinner from '../Spinner/Spinner';
+import Spinner from '../../Spinner/Spinner';
 import {Field, reduxForm} from 'redux-form';
-import FormInput from '../FormInput/FormInput';
-import SelectInput from '../SelectInput/SelectInput';
-import customValidator from '../../validators/validator';
-import Schems from '../../validators/validationSchems';
-import FieldFileInput from '../InputComponents/FieldFileInput/FieldFileInput';
-import FormTextArea from '../InputComponents/FormTextArea/FormTextArea';
-import TryAgain from '../TryAgain/TryAgain';
-import {contestsSelector, singleContestSelector} from '../../selectors';
+import FormInput from '../../FormInput/FormInput';
+import SelectInput from '../../SelectInput/SelectInput';
+import customValidator from '../../../validators/validator';
+import Schems from '../../../validators/validationSchems';
+import FieldFileInput from '../../InputComponents/FieldFileInput/FieldFileInput';
+import FormTextArea from '../../InputComponents/FormTextArea/FormTextArea';
+import TryAgain from '../../TryAgain/TryAgain';
+import {contestsSelector, singleContestSelector} from '../../../selectors';
 import {bindActionCreators} from 'redux';
-import {getIndustryForContest} from '../../actions/contestsActionCreators';
+import {getIndustryForContest} from '../../../actions/contestsActionCreators';
 
 let submitFunc;
 
@@ -29,8 +28,10 @@ const ContestForm = (props) => {
   const {getDescriptionForContest} = bindActionCreators(
       SingleContestActionCreators, dispatch);
 
-  submitFunc = props.submitData;
   const {contestType} = props;
+  const {isFetching, error} = descriptionForContest;
+  const {handleSubmit} = props;
+  submitFunc = props.submitData;
 
   const getPreference = () => {
     switch (contestType) {
@@ -165,9 +166,6 @@ const ContestForm = (props) => {
     props.initialize(props.defaultData);
   }, []);
 
-  const {isFetching, error} = descriptionForContest;
-  const {handleSubmit} = props;
-
   if (error) return <TryAgain getData={getPreference}/>;
   else
     return (
@@ -266,14 +264,12 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default withRouter(
-    connect(
-        mapStateToProps,
-    )(
-        reduxForm({
-          form: 'contestForm',
-          validate: customValidator(Schems.ContestSchem),
-          onSubmit: submit,
-        })(ContestForm),
-    ),
+export default connect(
+    mapStateToProps,
+)(
+    reduxForm({
+      form: 'contestForm',
+      validate: customValidator(Schems.ContestSchem),
+      onSubmit: submit,
+    })(ContestForm),
 );
