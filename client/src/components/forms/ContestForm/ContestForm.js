@@ -11,7 +11,8 @@ import FormInput from '../../FormInput/FormInput';
 import SelectInput from '../../SelectInput/SelectInput';
 import customValidator from '../../../validators/validator';
 import Schems from '../../../validators/validationSchems';
-import FieldFileInput from '../../InputComponents/FieldFileInput/FieldFileInput';
+import FieldFileInput
+  from '../../InputComponents/FieldFileInput/FieldFileInput';
 import FormTextArea from '../../InputComponents/FormTextArea/FormTextArea';
 import TryAgain from '../../TryAgain/TryAgain';
 import {contestsSelector, singleContestSelector} from '../../../selectors';
@@ -56,7 +57,7 @@ const ContestForm = (props) => {
   const renderSpecialInputs = () => {
 
     const {
-      styleName,
+      nameStyle,
       typeOfName,
       brandStyle,
       typeOfTagline,
@@ -75,7 +76,7 @@ const ContestForm = (props) => {
                     inputHeader: styles.selectHeader,
                     selectInput: styles.select,
                   }}
-                  optionsArray={styleName}
+                  optionsArray={nameStyle}
               />
               <Field
                   name="typeOfName"

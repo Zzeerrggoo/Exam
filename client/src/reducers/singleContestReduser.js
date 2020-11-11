@@ -5,11 +5,12 @@ import createReducer from './helpers/createReducer';
 const initialState = {
   isFetching: false,
   description: {
-    styleName: '',
+    nameStyle: '',
     typeOfName: '',
     brandStyle: '',
     typeOfTagline: '',
   },
+  bundle: {},
   error: null,
 };
 
@@ -21,17 +22,22 @@ const helpers = {
 
   [SINGLE_CONTEST_ACTION_TYPES.GET_DESCRIPTION_FOR_CONTEST_SUCCESS]: produce(
       (draftState, action) => {
-        const {payload: values} = action;
+        const {payload: {values}} = action;
         draftState.description = values;
         draftState.isFetching = false;
       }),
 
   [SINGLE_CONTEST_ACTION_TYPES.GET_DESCRIPTION_FOR_CONTEST_FAILED]: produce(
       (draftState, action) => {
-        const {payload: error} = action;
+        const {payload: {error}} = action;
         draftState.error = error;
         draftState.isFetching = false;
       }),
+
+  [SINGLE_CONTEST_ACTION_TYPES.SELECT_BUNDLE]: produce((draftState, action) => {
+    const {payload: {values}} = action;
+    draftState.bundle = values;
+  }),
 
 };
 

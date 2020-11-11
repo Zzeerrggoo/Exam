@@ -4,7 +4,6 @@ import {useHistory} from 'react-router-dom';
 import styles from './ContestCreationPage.module.sass';
 import {
   saveContestToStore,
-  clearDataForContest,
 } from '../../actions/actionCreator';
 import NextButton from '../../components/NextButton/NextButton';
 import ContestForm from '../../components/forms/ContestForm/ContestForm';
@@ -16,21 +15,23 @@ import Header from '../../components/Header/Header';
 const ContestCreationPage = (props) => {
 
   const history = useHistory();
-  const {contestType, title} = props;
+  const {contestType, title, singleContestStore} = props;
+  const {bundle} = singleContestStore;
 
   const submitDataContest = (values) => {
     props.saveContest({type: contestType, info: values});
     history.push(
-        props.bundleStore.bundle[contestType] === 'payment'
+        bundle[contestType] === 'payment'
             ? '/payment'
-            : props.bundleStore.bundle[contestType] + 'Contest',
+            : bundle[contestType] + 'Contest',
     );
   };
 
-  !props.bundleStore.bundle && props.history.replace('/startContest');
+  !bundle && history.replace('/startContest');
   const contestData = props.contestStore.contests[contestType]
       ? props.contestStore.contests[contestType]
       : {contestType: contestType};
+
   return (
       <div>
         <Header/>
@@ -67,13 +68,12 @@ const ContestCreationPage = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const {contestStore, bundleStore} = state;
-  return {contestStore, bundleStore};
+  const {contestStore, singleContestStore} = state;
+  return {contestStore, singleContestStore};
 };
 
 const mapDispatchToProps = (dispatch) => ({
   saveContest: (data) => dispatch(saveContestToStore(data)),
-  clearDataForContest: () => dispatch(clearDataForContest()),
 });
 
 export default connect(

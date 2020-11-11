@@ -24,3 +24,10 @@ export const getDescriptionForContestFailed = error => ({
     error,
   },
 });
+
+export const selectBundle = values => ({
+  type: SINGLE_CONTEST_ACTION_TYPES.SELECT_BUNDLE,
+  payload: {
+    values,
+  },
+});
