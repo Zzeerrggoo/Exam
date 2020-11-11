@@ -7,6 +7,13 @@ export const getContestsData = values => ({
   },
 });
 
+export const getActiveContestsData = values => ({
+  type: CONTEST_ACTION_TYPES.GET_ACTIVE_CONTESTS,
+  payload: {
+    values,
+  },
+});
+
 export const getContestsRequest = () => ({
   type: CONTEST_ACTION_TYPES.GET_CONTESTS_REQUEST,
 });
@@ -32,3 +39,34 @@ export const setNewCustomerFilter = values => ({
   },
 });
 
+export const setNewCreatorFilter = values => ({
+  type: CONTEST_ACTION_TYPES.SET_NEW_CREATOR_FILTER,
+  payload: {
+    values,
+  },
+});
+
+export const getIndustryForContest = values => ({
+  type: CONTEST_ACTION_TYPES.GET_INDUSTRY_FOR_CONTEST,
+  payload: {
+    values,
+  },
+});
+
+export const getIndustryForContestRequest = () => ({
+  type: CONTEST_ACTION_TYPES.GET_INDUSTRY_FOR_CONTEST_REQUEST,
+});
+
+export const getIndustryForContestSuccess = values => ({
+  type: CONTEST_ACTION_TYPES.GET_INDUSTRY_FOR_CONTEST_SUCCESS,
+  payload: {
+    values,
+  },
+});
+
+export const getIndustryForContestFailed = error => ({
+  type: CONTEST_ACTION_TYPES.GET_INDUSTRY_FOR_CONTEST_FAILED,
+  payload: {
+    error,
+  },
+});
