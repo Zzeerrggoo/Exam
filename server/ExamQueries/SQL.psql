@@ -1,0 +1,20 @@
+SELECT role, count(*)
+FROM "Users"
+GROUP BY role;
+
+
+WITH c AS (SELECT u.id, sum(c.prize * 0.1) AS total
+           FROM "Users" AS u
+                    JOIN "Contests" AS c ON u.id = c."userId"
+           WHERE u.role = 'customer'
+             AND c."createdAt" BETWEEN date '2020-12-25' AND date '2021-01-14'
+           GROUP BY u.id)
+UPDATE "Users" AS u
+SET balance = balance + c.total
+FROM c
+WHERE u.id = c.id;
+
+
+UPDATE "Users" AS u
+SET balance = balance + 10
+WHERE u.id IN (SELECT id FROM "Users" WHERE role = 'customer' ORDER BY rating DESC);
