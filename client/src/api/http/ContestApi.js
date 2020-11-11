@@ -23,7 +23,8 @@ class ContestApi {
     return this.#_client.get(`${this.url}/user/${data.id}/active?${urlParams}`);
   };
 
-    return this.#_client.get(url, config);
+  getIndustryForContest = () => {
+    return this.#_client.get(`${this.url}/industries`);
   };
 
 }
