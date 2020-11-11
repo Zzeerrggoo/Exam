@@ -2,12 +2,11 @@ import {takeLatest, takeEvery} from 'redux-saga/effects';
 import ACTION from '../actions/actionTypes';
 import * as AuthSagas from './authSagas';
 import * as ContestsSagas from './contestsSagas';
+import * as SingleContestSagas from './singleContestSagas';
 
 import {paymentSaga, cashoutSaga} from './paymentSaga';
 import {
-  activeContestsSaga,
   updateContestSaga,
-  industryForContestSaga,
   getContestByIdSaga,
   downloadContestFileSaga,
 } from './contestsSagas';
@@ -27,15 +26,20 @@ import {
 } from './chatSagas';
 import AUTH_ACTION_TYPES from '../actions/authActionTypes';
 import USER_ACTION_TYPES from '../actions/userActionTypes';
-import CONTEST_ACTION_TYPES from '../actions/contestActionTypes';
+import CONTEST_ACTION_TYPES from '../actions/contestsActionTypes';
+import SINGLE_CONTEST_ACTION_TYPES from '../actions/singleContestActionTypes';
 
 function* rootSaga() {
+  //SINGLE_CONTEST
+  yield takeLatest(SINGLE_CONTEST_ACTION_TYPES.GET_DESCRIPTION_FOR_CONTEST,
+      SingleContestSagas.getDescriptionForContestCreatingSaga);
+
   // CONTESTS
   yield takeLatest(CONTEST_ACTION_TYPES.GET_CONTESTS,
       ContestsSagas.getCustomerContestsSaga);
   yield takeLatest(CONTEST_ACTION_TYPES.GET_ACTIVE_CONTESTS,
       ContestsSagas.activeContestsSaga);
-  yield takeEvery(CONTEST_ACTION_TYPES.GET_INDUSTRY_FOR_CONTEST,
+  yield takeLatest(CONTEST_ACTION_TYPES.GET_INDUSTRY_FOR_CONTEST,
       ContestsSagas.industryForContestSaga);
 
   // AUTH

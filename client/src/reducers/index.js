@@ -2,6 +2,7 @@ import {combineReducers} from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import authReducer from './authReducer';
 import contestsReducer from './contestsReducer';
+import singleContestReducer from './singleContestReduser';
 import payReducer from './payReducer';
 import storeContestReducer from './storeContestReducer';
 import bundleReducer from './bundleReducer';
@@ -13,8 +14,8 @@ import userProfileReducer from './userProfileReducer';
 const rootReducer = combineReducers({
   form: formReducer,
   auth: authReducer,
-  contestsList: contestsReducer,// quality mark
-
+  contestsList: contestsReducer,
+  singleContestStore: singleContestReducer,
   contestByIdStore: getContestByIdReducer,
   payment: payReducer,
   contestStore: storeContestReducer,
