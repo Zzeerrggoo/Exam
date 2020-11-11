@@ -4,31 +4,39 @@ import * as restController from '../api/rest/restController';
 import * as ContestActionCreators from '../actions/contestActionCreators';
 import * as Api from '../api/http';
 
-export function* getContestsSaga(action) {
-  yield put(ContestActionCreators.getContestsRequest());
+const getContests = apiMethod =>
+    function* contestsSaga(action) {
+      yield put(ContestActionCreators.getContestsRequest());
+      try {
+        const {payload: {values}} = action;
 
+        const {data: {data}} = yield apiMethod(values);
+
+        yield put(ContestActionCreators.getContestsSuccess(data));
+
+      } catch (error) {
+        yield put(ContestActionCreators.getContestsFailed(error));
+      }
+    };
+
+export const getCustomerContestsSaga = getContests(
+    Api.contest.getCustomersContests);
+
+export const activeContestsSaga = getContests(Api.contest.getActiveContests);
+
+export function* industryForContestSaga() {
+  yield put(ContestActionCreators.getIndustryForContestRequest());
   try {
-    const {payload: {values}} = action;
-    const {data: {data}} = yield Api.contest.getCustomersContests(values);
 
-    yield put(ContestActionCreators.getContestsSuccess(data));
+    const {data: {data}} = yield Api.contest.getIndustryForContest();
+    yield put(ContestActionCreators.getIndustryForContestSuccess(data));
 
   } catch (error) {
-    yield put(ContestActionCreators.getContestsFailed(error));
+    yield put(ContestActionCreators.getIndustryForContestFailed(error));
   }
 }
 
 /////////////////////////////legacy////////////////////////////////
-
-export function* activeContestsSaga(action) {
-  yield put({type: ACTION.GET_CONTESTS_ACTION_REQUEST});
-  try {
-    const {data} = yield restController.getActiveContests(action.data);
-    yield put({type: ACTION.GET_CONTESTS_ACTION_SUCCESS, data: data});
-  } catch (e) {
-    yield put({type: ACTION.GET_CONTESTS_ACTION_ERROR, error: e.response});
-  }
-}
 
 export function* updateContestSaga(action) {
   yield put({type: ACTION.UPDATE_CONTEST_REQUEST});
@@ -37,19 +45,6 @@ export function* updateContestSaga(action) {
     yield put({type: ACTION.UPDATE_STORE_AFTER_UPDATE_CONTEST, data: data});
   } catch (e) {
     yield put({type: ACTION.UPDATE_CONTEST_ERROR, error: e.response});
-  }
-}
-
-export function* dataForContestSaga(action) {
-  yield put({type: ACTION.GET_DATA_FOR_CONTEST_ACTION_REQUEST});
-  try {
-    const {data} = yield restController.dataForContest(action.data);
-    yield put({type: ACTION.GET_DATA_FOR_CONTEST_ACTION_SUCCESS, data: data});
-  } catch (e) {
-    yield put({
-      type: ACTION.GET_DATA_FOR_CONTEST_ACTION_ERROR,
-      error: e.response,
-    });
   }
 }
 

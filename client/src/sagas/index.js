@@ -7,7 +7,7 @@ import {paymentSaga, cashoutSaga} from './paymentSaga';
 import {
   activeContestsSaga,
   updateContestSaga,
-  dataForContestSaga,
+  industryForContestSaga,
   getContestByIdSaga,
   downloadContestFileSaga,
 } from './contestsSagas';
@@ -31,9 +31,12 @@ import CONTEST_ACTION_TYPES from '../actions/contestActionTypes';
 
 function* rootSaga() {
   // CONTESTS
-
   yield takeLatest(CONTEST_ACTION_TYPES.GET_CONTESTS,
-      ContestsSagas.getContestsSaga);
+      ContestsSagas.getCustomerContestsSaga);
+  yield takeLatest(CONTEST_ACTION_TYPES.GET_ACTIVE_CONTESTS,
+      ContestsSagas.activeContestsSaga);
+  yield takeEvery(CONTEST_ACTION_TYPES.GET_INDUSTRY_FOR_CONTEST,
+      ContestsSagas.industryForContestSaga);
 
   // AUTH
   yield takeLatest(USER_ACTION_TYPES.USER_UPDATE, AuthSagas.updateUserSaga);
@@ -44,13 +47,11 @@ function* rootSaga() {
       AuthSagas.refreshAuthSaga,
   );
   yield takeLatest(AUTH_ACTION_TYPES.LOGOUT_REQUEST, AuthSagas.logoutSaga);
+
   // legacy
-  yield takeEvery(ACTION.GET_DATA_FOR_CONTEST_ACTION, dataForContestSaga);
   yield takeLatest(ACTION.PAYMENT_ACTION, paymentSaga);
   yield takeLatest(ACTION.CASHOUT_ACTION, cashoutSaga);
-
   yield takeLatest(ACTION.GET_CONTEST_BY_ID_ACTION, getContestByIdSaga);
-  yield takeEvery(ACTION.GET_CONTESTS_FOR_CREATIVE, activeContestsSaga);
   yield takeLatest(
       ACTION.DOWNLOAD_CONTEST_FILE_ACTION,
       downloadContestFileSaga,
