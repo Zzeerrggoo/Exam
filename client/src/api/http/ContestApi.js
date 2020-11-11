@@ -17,9 +17,7 @@ class ContestApi {
   };
 
   getActiveContests = (data) => {
-    console.log(data);
     const urlParams = new URLSearchParams(data).toString();
-    console.log(urlParams);
     return this.#_client.get(`${this.url}/user/${data.id}/active?${urlParams}`);
   };
 
