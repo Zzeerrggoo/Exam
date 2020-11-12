@@ -3,7 +3,7 @@ import {reducer as formReducer} from 'redux-form';
 import authReducer from './authReducer';
 import contestsReducer from './contestsReducer';
 import singleContestReducer from './singleContestReduser';
-import payReducer from './payReducer';
+import paymentReducer from './paymentReducer';
 import storeContestReducer from './storeContestReducer';
 import getContestByIdReducer from './getContestByIdReducer';
 import updateContestReducer from './updateContestReducer';
@@ -15,8 +15,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
   contestsList: contestsReducer,
   singleContestStore: singleContestReducer,
+  payment: paymentReducer,
   contestByIdStore: getContestByIdReducer,
-  payment: payReducer,
   contestStore: storeContestReducer,
   updateContestStore: updateContestReducer,
   chatStore: chatReducer,

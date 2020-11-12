@@ -5,6 +5,7 @@ import createReducer from './helpers/createReducer';
 const initialState = {
   isFetching: false,
   error: null,
+  focusOnElement: 'number',
 };
 
 const helpers = {
@@ -14,10 +15,7 @@ const helpers = {
   }),
 
   [PAYMENT_ACTION_TYPES.PAYMENT_SUCCESS]: produce((draftState, action) => {
-
     const {payload: {values}} = action;
-
-    console.log(values);
     draftState.data = values;
   }),
 
@@ -27,6 +25,15 @@ const helpers = {
     } = action;
     draftState.isFetching = false;
     draftState.error = error;
+  }),
+
+  [PAYMENT_ACTION_TYPES.CLEAR_PAYMENT_STORE]: produce(draftState => {
+    draftState = initialState;
+  }),
+
+  [PAYMENT_ACTION_TYPES.CHANGE_FOCUS_ON_CARD]: produce((draftState, action) => {
+    const {payload: {values}} = action;
+    draftState.focusOnElement = values;
   }),
 };
 

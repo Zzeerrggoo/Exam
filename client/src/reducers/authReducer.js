@@ -41,6 +41,11 @@ const handlers = {
     draftState.user = values;
     draftState.isFetching = false;
   }),
+  [USER_ACTION_TYPES.USER_UPDATE_BALANCE]: produce((draftState, action) => {
+    const {payload: {values}} = action;
+    draftState.user.balance = values;
+    draftState.isFetching = false;
+  }),
   [USER_ACTION_TYPES.USER_UPDATE_FAILED]: produce((draftState, action) => {
     const {
       payload: {error},
