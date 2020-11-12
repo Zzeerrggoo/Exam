@@ -7,6 +7,7 @@ const upload = require('./utils/fileUpload');
 const authRouter = require('./routes/auth');
 const contestsRouter = require('./routes/contests');
 const singleContestRouter = require('./routes/singleContest');
+const paymentRouter = require('./routes/payment');
 const checkAuthorization = require('./middlewares/checkAuthorization');
 const validateBody = require('./middlewares/validateBody');
 const { contestSchema } = require('./validation/schemas');
@@ -21,13 +22,14 @@ router.use('/contests', contestsRouter);
 
 router.use('/singleContest', singleContestRouter);
 
+router.use('/payment', paymentRouter);
+
 router.post(
   '/pay',
   basicMiddlewares.onlyForCustomer,
   upload.uploadContestFiles,
   basicMiddlewares.parseBody,
   validateBody(contestSchema),
-  userController.payment,
 );
 
 router.get(
@@ -67,12 +69,6 @@ router.post(
   '/changeMark',
   basicMiddlewares.onlyForCustomer,
   userController.changeMark,
-);
-
-router.post(
-  '/cashout',
-  basicMiddlewares.onlyForCreative,
-  userController.cashout,
 );
 
 router.post('/newMessage', chatController.addMessage);
