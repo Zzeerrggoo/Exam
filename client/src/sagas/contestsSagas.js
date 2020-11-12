@@ -9,9 +9,7 @@ const getContests = apiMethod =>
       yield put(ContestActionCreators.getContestsRequest());
       try {
         const {payload: {values}} = action;
-
         const {data: {data}} = yield apiMethod(values);
-
         yield put(ContestActionCreators.getContestsSuccess(data));
 
       } catch (error) {
