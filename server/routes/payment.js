@@ -15,7 +15,7 @@ paymentRouter.patch(
   onlyForCustomer,
   uploadContestFiles,
   parseBody,
-  validateBody(contestSchema),
+  // validateBody(contestSchema),
   controller.payment,
 );
 
