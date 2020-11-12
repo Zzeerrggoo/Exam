@@ -7,7 +7,7 @@ class PaymentApi {
   }
 
   pay(data) {
-    return this.#_client.patch(`${this.url}/pay`, data);
+    return this.#_client.patch(`${this.url}/pay`, data.formData);
   }
 
   cashout(data) {
