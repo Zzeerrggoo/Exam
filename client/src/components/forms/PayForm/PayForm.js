@@ -3,7 +3,7 @@ import Cards from 'react-credit-cards';
 import styles from './PayForm.module.sass';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import { changeFocusOnCard } from '../../../actions/actionCreator';
+import { changeFocusOnCard } from '../../../actions/paymentActionCreators';
 import PayInput from '../../InputComponents/PayInput/PayInput';
 import customValidator from '../../../validators/validator';
 import Schems from '../../../validators/validationSchems';

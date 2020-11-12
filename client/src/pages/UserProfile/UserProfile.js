@@ -7,10 +7,10 @@ import UserInfo from '../../components/UserInfo/UserInfo';
 import PayForm from '../../components/forms/PayForm/PayForm';
 import classNames from 'classnames';
 import {
-  cashOut,
   changeProfileModeView,
-  clearPaymentStore,
 } from '../../actions/actionCreator';
+
+import {cashout, clearPaymentStore} from '../../actions/paymentActionCreators';
 import Error from '../../components/Error/Error';
 
 const UserProfile = (props) => {
@@ -97,7 +97,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    cashOut: (data) => dispatch(cashOut(data)),
+    cashOut: (data) => dispatch(cashout(data)),
     changeProfileModeView: (data) => dispatch(changeProfileModeView(data)),
     clearPaymentStore: () => dispatch(clearPaymentStore()),
   };
