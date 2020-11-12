@@ -24,3 +24,10 @@ export const userUpdateFailed = error => ({
     error,
   },
 });
+
+export const userUpdateBalance = values => ({
+  type: USER_ACTION_TYPES.USER_UPDATE_BALANCE,
+  payload: {
+    values,
+  },
+});

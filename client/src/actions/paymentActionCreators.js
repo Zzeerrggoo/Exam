@@ -32,5 +32,15 @@ export const payFailed = error => ({
   },
 });
 
+export const clearPaymentStore = () => ({
+  type: PAYMENT_ACTION_TYPES.CLEAR_PAYMENT_STORE,
+});
+
+export const changeFocusOnCard = values => ({
+  type: PAYMENT_ACTION_TYPES.CHANGE_FOCUS_ON_CARD,
+  payload: {
+    values,
+  },
+});
 
 
