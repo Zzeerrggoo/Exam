@@ -146,7 +146,7 @@ export const updateUserData = (data) => {
   };
 };
 
-export const cashOut = (data) => {
+export const cashout = (data) => {
   return {
     type: ACTION.CASHOUT_ACTION,
     data: data,
