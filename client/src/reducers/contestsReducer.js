@@ -7,6 +7,7 @@ const initialState = {
   isFetching: false,
   error: null,
   contests: [],
+  creatingContests: [],
   customerFilter: CONSTANTS.CONTEST_STATUS_ACTIVE,
   creatorFilter: {
     typeIndex: 'name,tagline,logo',
@@ -76,6 +77,17 @@ const helpers = {
         } = action;
         draftState.error = error;
         draftState.isIndustryLoaded = false;
+      }),
+
+  [CONTEST_ACTION_TYPES.SAVE_CREATING_CONTESTS_IN_STORE]: produce(
+      (draftState, action) => {
+        const {payload: {values}} = action;
+        draftState.creatingContests.push(values);
+      }),
+
+  [CONTEST_ACTION_TYPES.CLEAR_CREATING_CONTESTS_FROM_STORE]: produce(
+      draftState => {
+        draftState.creatingContests = [];
       }),
 
 };
