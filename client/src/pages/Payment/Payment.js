@@ -1,7 +1,6 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import {
-  pay,
+  pay as payAction,
   clearPaymentStore,
 } from '../../actions/paymentActionCreators';
 import PayForm from '../../components/forms/PayForm/PayForm';
@@ -9,36 +8,47 @@ import styles from './Payment.module.sass';
 import isEmpty from 'lodash/isEmpty';
 import CONSTANTS from '../../constants';
 import Error from '../../components/Error/Error';
+import {useDispatch, useSelector} from 'react-redux';
+import {contestsSelector, paymentSelector} from '../../selectors';
 
 const Payment = (props) => {
+
+  const dispatch = useDispatch();
+  const contestsStore = useSelector(contestsSelector);
+  const payment = useSelector(paymentSelector);
+
+  const {creatingContests} = contestsStore;
+  const {error} = payment;
+
   const pay = (values) => {
-    const {contests} = props.contestStore;
-    const contestArray = [];
-    Object.keys(contests).forEach((key) => contestArray.push(contests[key]));
+
     const {number, expiry, cvc} = values;
     const data = new FormData();
+    const contestArray = creatingContests.map(
+        item => ({contestType: item.type, ...item.info}));
+
+    console.log(contestArray);
+
     for (let i = 0; i < contestArray.length; i++) {
       data.append('files', contestArray[i].file);
       contestArray[i].haveFile = !!contestArray[i].file;
     }
+
     data.append('number', number);
     data.append('expiry', expiry);
     data.append('cvc', cvc);
     data.append('contests', JSON.stringify(contestArray));
     data.append('price', '100');
-    props.pay({
+    dispatch(payAction({
       formData: data,
-    });
+    }));
   };
 
   const goBack = () => {
     props.history.goBack();
   };
 
-  const {contests} = props.contestStore;
-  const {error} = props.payment;
-  const {clearPaymentStore} = props;
-  if (isEmpty(contests)) {
+  if (isEmpty(creatingContests)) {
     props.history.replace('startContest');
   }
   return (
@@ -80,16 +90,4 @@ const Payment = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    payment: state.payment,
-    contestStore: state.contestStore,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  pay: (data) => dispatch(pay(data)),
-  clearPaymentStore: () => dispatch(clearPaymentStore()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Payment);
+export default Payment;

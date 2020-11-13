@@ -1,25 +1,36 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React, {useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {contestsSelector, singleContestSelector} from '../../selectors';
 import styles from './ContestCreationPage.module.sass';
 import {
-  saveContestToStore,
-} from '../../actions/actionCreator';
+  saveCreatingContestsInStore,
+  clearCreatingContestsFromStore,
+} from '../../actions/contestsActionCreators';
+import ProgressBar from '../../components/ProgressBar/ProgressBar';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
 import NextButton from '../../components/NextButton/NextButton';
 import ContestForm from '../../components/forms/ContestForm/ContestForm';
 import BackButton from '../../components/BackButton/BackButton';
-import ProgressBar from '../../components/ProgressBar/ProgressBar';
-import Footer from '../../components/Footer/Footer';
-import Header from '../../components/Header/Header';
 
 const ContestCreationPage = (props) => {
 
   const history = useHistory();
-  const {contestType, title, singleContestStore} = props;
-  const {bundle} = singleContestStore;
+  const dispatch = useDispatch();
+  const contests = useSelector(contestsSelector);
+  const singleContest = useSelector(singleContestSelector);
+
+  const {contestType, title} = props;
+  const {bundle} = singleContest;
+  const {creatingContests} = contests;
+
+  useEffect(() => {
+    dispatch(clearCreatingContestsFromStore());
+  }, []);
 
   const submitDataContest = (values) => {
-    props.saveContest({type: contestType, info: values});
+    dispatch(saveCreatingContestsInStore({type: contestType, info: values}));
     history.push(
         bundle[contestType] === 'payment'
             ? '/payment'
@@ -28,8 +39,8 @@ const ContestCreationPage = (props) => {
   };
 
   !bundle && history.replace('/startContest');
-  const contestData = props.contestStore.contests[contestType]
-      ? props.contestStore.contests[contestType]
+  const contestData = creatingContests[contestType]
+      ? creatingContests[contestType]
       : {contestType: contestType};
 
   return (
@@ -67,16 +78,4 @@ const ContestCreationPage = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const {contestStore, singleContestStore} = state;
-  return {contestStore, singleContestStore};
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  saveContest: (data) => dispatch(saveContestToStore(data)),
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(ContestCreationPage);
+export default ContestCreationPage;
