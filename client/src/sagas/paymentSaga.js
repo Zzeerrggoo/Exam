@@ -5,6 +5,7 @@ import ACTION from '../actions/actionTypes';
 import CONSTANTS from '../constants';
 import history from '../browserHistory';
 import * as UserActionCreators from '../actions/userActionCreators';
+import * as ContestsActionCreators from '../actions/contestsActionCreators';
 
 export function* paymentSaga(action) {
   yield put(PaymentActionCreators.payRequest());
@@ -12,7 +13,7 @@ export function* paymentSaga(action) {
     const {payload: {values}} = action;
     yield Api.payment.pay(values);
     history.replace('dashboard');
-    yield put({type: ACTION.CLEAR_CONTEST_STORE});
+    yield put(ContestsActionCreators.clearCreatingContestsFromStore());
     yield put(PaymentActionCreators.clearPaymentStore());
 
   } catch (error) {
