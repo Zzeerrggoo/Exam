@@ -21,7 +21,7 @@ module.exports.getContests = async (req, res, next) => {
     req.query.typeIndex,
     req.query.contestId,
     req.query.industry,
-    req.query.awardSort,
+    req.query.awardType,
   );
 
   try {
