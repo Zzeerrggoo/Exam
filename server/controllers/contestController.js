@@ -22,9 +22,12 @@ module.exports.getContests = async (req, res, next) => {
     req.query.contestId,
     req.query.industry,
     req.query.awardType,
+    req.tokenPayload.userId,
   );
 
   try {
+    const ownEntries = req.query.ownEntries === 'true';
+
     const contests = await Contest.findAll({
       where: predicates.where,
       order: predicates.order,
@@ -33,9 +36,8 @@ module.exports.getContests = async (req, res, next) => {
       include: [
         {
           model: Offer,
-          required: req.query.ownEntries,
-          where: req.query.ownEntries ? { userId: req.tokenPayload.userId } : {},
-          attributes: ['id'],
+          where: ownEntries ? { userId: req.tokenPayload.userId } : {},
+          required: ownEntries,
         },
       ],
     });
