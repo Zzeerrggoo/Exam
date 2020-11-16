@@ -126,6 +126,28 @@ module.exports.getDescriptionForContest = async (req, res, next) => {
   }
 };
 
+module.exports.getContestDataById = async (req, res, next) => {
+  try {
+    const contestData = await Contest.findOne({
+      where: { id: req.params.contestId },
+      include: [
+        {
+          model: User,
+          required: true,
+          attributes: {
+            exclude: ['role', 'balance', 'password'],
+          },
+        },
+      ],
+    });
+
+    const data = contestData.get({ plain: true });
+    res.status(200).send({ data });
+  } catch (error) {
+    next(createHttpError(500, 'Server Error'));
+  }
+};
+
 /// legacy///
 
 module.exports.getContestById = async (req, res, next) => {
@@ -180,7 +202,7 @@ module.exports.getContestById = async (req, res, next) => {
   }
 };
 
-module.exports.downloadFile = async (req, res, next) => {
+module.exports.downloadFile = async (req, res) => {
   const file = CONSTANTS.CONTESTS_DEFAULT_DIR + req.params.fileName;
   res.download(file);
 };
@@ -202,6 +224,8 @@ module.exports.updateContest = async (req, res, next) => {
     next(e);
   }
 };
+
+/// /PUSH IT INTO OFFERS CONTROLLER
 
 module.exports.setNewOffer = async (req, res, next) => {
   const obj = {};
