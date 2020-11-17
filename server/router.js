@@ -8,9 +8,8 @@ const authRouter = require('./routes/auth');
 const contestsRouter = require('./routes/contests');
 const singleContestRouter = require('./routes/singleContest');
 const paymentRouter = require('./routes/payment');
+const offersRouter = require('./routes/offers');
 const checkAuthorization = require('./middlewares/checkAuthorization');
-const validateBody = require('./middlewares/validateBody');
-const { contestSchema } = require('./validation/schemas');
 
 const router = express.Router();
 
@@ -24,33 +23,7 @@ router.use('/singleContest', singleContestRouter);
 
 router.use('/payment', paymentRouter);
 
-router.post(
-  '/pay',
-  basicMiddlewares.onlyForCustomer,
-  upload.uploadContestFiles,
-  basicMiddlewares.parseBody,
-  validateBody(contestSchema),
-);
-
-router.get(
-  '/getContestById',
-  basicMiddlewares.canGetContest,
-  contestController.getContestById,
-);
-
-router.post(
-  '/getAllContests',
-  basicMiddlewares.onlyForCreative,
-  contestController.getContests,
-);
-
-router.get('/downloadFile/:fileName', contestController.downloadFile);
-
-router.post(
-  '/updateContest',
-  upload.updateContestFile,
-  contestController.updateContest,
-);
+router.use('/offers', offersRouter);
 
 router.post(
   '/setNewOffer',
@@ -91,7 +64,6 @@ router.post('/removeChatFromCatalog', chatController.removeChatFromCatalog);
 
 router.post(
   '/deleteCatalog',
-
   chatController.deleteCatalog,
 );
 
