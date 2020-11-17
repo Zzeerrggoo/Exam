@@ -24,8 +24,9 @@ export const getContestById = (data) => {
   });
 };
 export const updateContest = (data) => client.post('updateContest', data);
-export const setNewOffer = (data) => client.post('setNewOffer', data);
-export const setOfferStatus = (data) => client.post('setOfferStatus', data);
 export const downloadContestFile = (data) =>
     client.get('downloadFile/' + data.fileName);
+/////////////////////////////////////////////////
+export const setNewOffer = (data) => client.post('setNewOffer', data);
+export const setOfferStatus = (data) => client.post('setOfferStatus', data);
 export const changeMark = (data) => client.post('changeMark', data);
