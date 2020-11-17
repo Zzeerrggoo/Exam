@@ -30,7 +30,7 @@ const ContestForm = (props) => {
       SingleContestActionCreators, dispatch);
 
   const {defaultData, contestType, handleSubmit} = props;
-  const {isFetching, error} = descriptionForContest;
+  const {isFetchingDescr: isFetching, error} = descriptionForContest;
   submitFunc = props.submitData;
 
   const getPreference = () => {

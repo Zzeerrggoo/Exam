@@ -6,9 +6,15 @@ import {useSelector} from 'react-redux';
 import {authUserSelector} from '../../selectors';
 
 const ContestSideBar = (props) => {
+
+  const {contestData} = props;
+  const {id} = useSelector(authUserSelector);
+  const {totalEntries} = props;
+  const {User, prize} = contestData;
+
   const getTimeStr = () => {
     const diff = moment.duration(
-        moment().diff(moment(props.contestData.createdAt)),
+        moment().diff(moment(contestData.createdAt)),
     );
     let str = '';
     if (diff._data.days !== 0) str = `${diff._data.days} days `;
@@ -17,9 +23,6 @@ const ContestSideBar = (props) => {
     return str;
   };
 
-  const {id} = useSelector(authUserSelector);
-  const {totalEntries} = props;
-  const {User, prize} = props.contestData;
   return (
       <div className={styles.contestSideBarInfo}>
         <div className={styles.contestInfo}>
