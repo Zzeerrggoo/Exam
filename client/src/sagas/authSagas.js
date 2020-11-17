@@ -2,6 +2,8 @@ import {put} from 'redux-saga/effects';
 import * as AuthActionCreators from '../actions/authActionCreators';
 import * as Api from './../api/http';
 import * as UserActionCreators from '../actions/userActionCreators';
+import ACTION from '../actions/actionTypes';
+import CONSTANTS from '../constants';
 
 const createAuthSaga = apiMethod =>
     function* authSaga(action) {
@@ -25,6 +27,10 @@ export const refreshAuthSaga = createAuthSaga(Api.auth.refresh);
 
 export const logoutSaga = function* () {
   yield Api.auth.logout();
+  yield put({
+    type: ACTION.CHANGE_PROFILE_MODE_VIEW,
+    data: CONSTANTS.USER_INFO_MODE,
+  });
   yield put(AuthActionCreators.logoutRequestSuccess());
 };
 
