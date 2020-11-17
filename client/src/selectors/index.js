@@ -9,3 +9,5 @@ export const contestsSelector = state => state.contestsList;
 export const singleContestSelector = state => state.singleContestStore;
 
 export const paymentSelector = state => state.payment;
+
+export const offersSelector = state => state.offers;
