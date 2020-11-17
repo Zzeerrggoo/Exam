@@ -148,65 +148,6 @@ module.exports.getContestDataById = async (req, res, next) => {
   }
 };
 
-/// legacy///
-
-module.exports.getContestById = async (req, res, next) => {
-  try {
-    let contestInfo = await Contest.findOne({
-      where: { id: req.headers.contestid },
-      order: [[Offer, 'id', 'asc']],
-      include: [
-        {
-          model: User,
-          required: true,
-          attributes: {
-            exclude: ['password', 'role', 'balance', 'accessToken'],
-          },
-        },
-        {
-          model: Offer,
-          required: false,
-          where:
-              req.tokenPayload.role === CONSTANTS.CREATOR
-                ? { userId: req.tokenPayload.userId }
-                : {},
-          attributes: { exclude: ['userId', 'contestId'] },
-          include: [
-            {
-              model: User,
-              required: true,
-              attributes: {
-                exclude: ['password', 'role', 'balance', 'accessToken'],
-              },
-            },
-            {
-              model: Rating,
-              required: false,
-              where: { userId: req.tokenPayload.userId },
-              attributes: { exclude: ['userId', 'offerId'] },
-            },
-          ],
-        },
-      ],
-    });
-    contestInfo = contestInfo.get({ plain: true });
-    contestInfo.Offers.forEach((offer) => {
-      if (offer.Rating) {
-        offer.mark = offer.Rating.mark;
-      }
-      delete offer.Rating;
-    });
-    res.send(contestInfo);
-  } catch (e) {
-    next(new ServerError());
-  }
-};
-
-module.exports.downloadFile = async (req, res) => {
-  const file = CONSTANTS.CONTESTS_DEFAULT_DIR + req.params.fileName;
-  res.download(file);
-};
-
 module.exports.updateContest = async (req, res, next) => {
   if (req.file) {
     req.body.fileName = req.file.filename;
@@ -219,7 +160,7 @@ module.exports.updateContest = async (req, res, next) => {
       id: contestId,
       userId: req.tokenPayload.userId,
     });
-    res.send(updatedContest);
+    res.status(200).send({ data: updatedContest });
   } catch (e) {
     next(e);
   }
