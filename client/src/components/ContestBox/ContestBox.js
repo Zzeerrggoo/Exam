@@ -25,7 +25,8 @@ const ContestBox = (props) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  const { id, title, contestType, prize, count, goToExtended } = props.data;
+  const { id, title, contestType, prize, count, status } = props.data;
+
   return (
     <div
       className={styles.contestBoxContainer}
@@ -79,7 +80,7 @@ const ContestBox = (props) => {
         </div>
         <div className={styles.timeContainer}>
           <span className={styles.timeContest}>{getTimeStr()}</span>
-          <span>Going</span>
+          <span style={{textTransform:'capitalize'}}>{status}</span>
         </div>
       </div>
     </div>
