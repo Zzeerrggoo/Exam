@@ -4,11 +4,7 @@ import * as AuthSagas from './authSagas';
 import * as ContestsSagas from './contestsSagas';
 import * as SingleContestSagas from './singleContestSagas';
 import * as PaymentSagas from './paymentSaga';
-import {
-  updateContestSaga,
-  getContestByIdSaga,
-  downloadContestFileSaga,
-} from './contestsSagas';
+import * as OfferSagas from './offerSagas';
 import {changeMarkSaga, setOfferStatusSaga, addOfferSaga} from './offerSagas';
 import {
   previewSaga,
@@ -28,20 +24,16 @@ import USER_ACTION_TYPES from '../actions/userActionTypes';
 import CONTEST_ACTION_TYPES from '../actions/contestsActionTypes';
 import SINGLE_CONTEST_ACTION_TYPES from '../actions/singleContestActionTypes';
 import PAYMENT_ACTION_TYPES from '../actions/paymentActionTypes';
+import OFFER_ACTION_TYPES from '../actions/offerActionTypes';
 
 function* rootSaga() {
   //SINGLE_CONTEST
   yield takeLatest(SINGLE_CONTEST_ACTION_TYPES.GET_DESCRIPTION_FOR_CONTEST,
       SingleContestSagas.getDescriptionForContestCreatingSaga);
-
-  ////////////////////////////
-  yield takeLatest(ACTION.GET_CONTEST_BY_ID_ACTION, getContestByIdSaga);
-  yield takeLatest(
-      ACTION.DOWNLOAD_CONTEST_FILE_ACTION,
-      downloadContestFileSaga,
-  );
-  yield takeLatest(ACTION.UPDATE_CONTEST_ACTION, updateContestSaga);
-  ///////////////////////////
+  yield takeLatest(SINGLE_CONTEST_ACTION_TYPES.GET_CONTEST_BY_ID,
+      SingleContestSagas.getContestByIdSaga);
+  yield takeLatest(SINGLE_CONTEST_ACTION_TYPES.UPDATE_CONTEST,
+      SingleContestSagas.updateContestSaga);
 
   // CONTESTS
   yield takeLatest(CONTEST_ACTION_TYPES.GET_CONTESTS,
@@ -65,6 +57,9 @@ function* rootSaga() {
   yield takeLatest(PAYMENT_ACTION_TYPES.PAYMENT, PaymentSagas.paymentSaga);
   yield takeLatest(PAYMENT_ACTION_TYPES.CASHOUT, PaymentSagas.cashoutSaga);
 
+  //OFFERS
+  yield takeLatest(OFFER_ACTION_TYPES.GET_OFFERS_FOR_CONTEST,
+      OfferSagas.getOffersSaga);
   // legacy
   //OFFER LEGACY
   yield takeEvery(ACTION.SET_OFFER_ACTION, addOfferSaga);
