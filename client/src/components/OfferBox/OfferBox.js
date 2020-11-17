@@ -112,7 +112,8 @@ const OfferBox = props => {
     });
   };
 
-  const {data, role, id, contestType} = props;
+  const {data, contestType} = props;
+  const {id, role} = props.user;
   const {avatar, firstName, lastName, email, rating} = props.data.User;
   return (
       <div className={styles.offerContainer}>
@@ -235,9 +236,9 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   const {isShowModal} = state.singleContestStore;
   const {changeMarkError} = state.contestByIdStore;
-  const {id, role} = state.userStore.data;
+  const {user} = state.auth;
   const {messagesPreview} = state.chatStore;
-  return {changeMarkError, id, role, messagesPreview, isShowModal};
+  return {changeMarkError, user, messagesPreview, isShowModal};
 };
 
 export default withRouter(
