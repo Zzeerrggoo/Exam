@@ -1,13 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
-  getContestById,
   setOfferStatus,
   clearSetOfferStatusError,
   goToExpandedDialog,
-  changeEditContest,
-  changeShowImage,
 } from '../../actions/actionCreator';
-import {connect} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import Header from '../../components/Header/Header';
 import ContestSideBar from '../../components/ContestSideBar/ContestSideBar';
 import styles from './ContestPage.module.sass';
@@ -22,31 +19,69 @@ import Spinner from '../../components/Spinner/Spinner';
 import TryAgain from '../../components/TryAgain/TryAgain';
 import 'react-image-lightbox/style.css';
 import Error from '../../components/Error/Error';
+import {
+  authUserSelector,
+  offersSelector,
+  singleContestSelector,
+} from '../../selectors';
+import {
+  getContestById,
+  changeContestViewMode,
+  changeShowImage,
+  changeEditContest,
+} from '../../actions/singleContestActionCreators';
+import {getOffersForContest} from '../../actions/offerActionCreators';
 
-class ContestPage extends React.Component {
-  componentWillUnmount() {
-    this.props.changeEditContest(false);
-  }
+const ContestPage = (props) => {
 
-  componentDidMount() {
-    this.getData();
-  }
+  const {id: authUserId, role} = useSelector(authUserSelector);
+  const {
+    isFetching,
+    error,
+    contestData,
+    isShowOnFull,
+    imagePath,
+    isBrief,
+  } = useSelector(singleContestSelector);
+  const {offers} = useSelector(offersSelector);
+  const dispatch = useDispatch();
+  
+  const {
+    contestByIdStore,
+    changeShowImage,
+    changeContestViewMode,
+    clearSetOfferStatusError,
+  } = props;
+  const {
+    setOfferStatusError,
+  } = contestByIdStore;
 
-  getData = () => {
-    const {params} = this.props.match;
-    this.props.getData({contestId: params.id});
+  const getData = () => {
+    const {params} = props.match;
+    dispatch(getContestById({contestId: params.id}));
+    dispatch(getOffersForContest({contestId: params.id}));
   };
 
-  setOffersList = () => {
+  const needButtons = (offerStatus) => {
+    const contestCreatorId = contestData.User.id;
+    const contestStatus = contestData.status;
+    return (
+        contestCreatorId === authUserId &&
+        contestStatus === CONSTANTS.CONTEST_STATUS_ACTIVE &&
+        offerStatus === CONSTANTS.OFFER_STATUS_PENDING
+    );
+  };
+
+  const setOffersList = () => {
     const array = [];
-    for (let i = 0; i < this.props.contestByIdStore.offers.length; i++) {
+    for (let i = 0; i < offers.length; i++) {
       array.push(
           <OfferBox
-              data={this.props.contestByIdStore.offers[i]}
-              key={this.props.contestByIdStore.offers[i].id}
-              needButtons={this.needButtons}
-              setOfferStatus={this.setOfferStatus}
-              contestType={this.props.contestByIdStore.contestData.contestType}
+              data={offers[i]}
+              key={offers[i].id}
+              needButtons={needButtons}
+              setOfferStatus={setOfferStatus}
+              contestType={contestData.contestType}
               date={new Date()}
           />,
       );
@@ -60,20 +95,9 @@ class ContestPage extends React.Component {
     );
   };
 
-  needButtons = (offerStatus) => {
-    const contestCreatorId = this.props.contestByIdStore.contestData.User.id;
-    const userId = this.props.auth.user.id;
-    const contestStatus = this.props.contestByIdStore.contestData.status;
-    return (
-        contestCreatorId === userId &&
-        contestStatus === CONSTANTS.CONTEST_STATUS_ACTIVE &&
-        offerStatus === CONSTANTS.OFFER_STATUS_PENDING
-    );
-  };
-
-  setOfferStatus = (creatorId, offerId, command) => {
-    this.props.clearSetOfferStatusError();
-    const {id, orderId, priority} = this.props.contestByIdStore.contestData;
+  const setOfferStatus = (creatorId, offerId, command) => {
+    props.clearSetOfferStatusError();
+    const {id, orderId, priority} = contestData;
     const obj = {
       command,
       offerId,
@@ -82,13 +106,12 @@ class ContestPage extends React.Component {
       priority,
       contestId: id,
     };
-    this.props.setOfferStatus(obj);
+    props.setOfferStatus(obj);
   };
 
-  findConversationInfo = (interlocutorId) => {
-    const {messagesPreview} = this.props.chatStore;
-    const {id} = this.props.auth.user;
-    const participants = [id, interlocutorId];
+  const findConversationInfo = (interlocutorId) => {
+    const {messagesPreview} = props.chatStore;
+    const participants = [authUserId, interlocutorId];
     participants.sort(
         (participant1, participant2) => participant1 - participant2,
     );
@@ -105,57 +128,43 @@ class ContestPage extends React.Component {
     return null;
   };
 
-  goChat = () => {
-    const {User} = this.props.contestByIdStore.contestData;
-    this.props.goToExpandedDialog({
+  const goChat = () => {
+    const {User} = contestData;
+    props.goToExpandedDialog({
       interlocutor: User,
-      conversationData: this.findConversationInfo(User.id),
+      conversationData: findConversationInfo(User.id),
     });
   };
 
-  render() {
-    const {role} = this.props.auth.user;
-    const {
-      contestByIdStore,
-      changeShowImage,
-      changeContestViewMode,
-      getData,
-      clearSetOfferStatusError,
-    } = this.props;
-    const {
-      isShowOnFull,
-      imagePath,
-      error,
-      isFetching,
-      isBrief,
-      contestData,
-      offers,
-      setOfferStatusError,
-    } = contestByIdStore;
-    return (
-        <div>
-          {/*<Chat/>*/}
-          {isShowOnFull && (
-              <LightBox
-                  mainSrc={`${CONSTANTS.publicURL}${imagePath}`}
-                  onCloseRequest={() =>
-                      changeShowImage({isShowOnFull: false, imagePath: null})
-                  }
-              />
-          )}
-          <Header/>
-          {error ? (
-              <div className={styles.tryContainer}>
-                <TryAgain getData={getData}/>
-              </div>
-          ) : isFetching ? (
-              <div className={styles.containerSpinner}>
-                <Spinner/>
-              </div>
-          ) : (
-              <div className={styles.mainInfoContainer}>
-                <div className={styles.infoContainer}>
-                  <div className={styles.buttonsContainer}>
+  useEffect(() => {
+    getData();
+    return () => props.changeEditContest(false);
+  }, []);
+
+  return (
+      <div>
+        {/*<Chat/>*/}
+        {isShowOnFull && (
+            <LightBox
+                mainSrc={`${CONSTANTS.publicURL}${imagePath}`}
+                onCloseRequest={() =>
+                    changeShowImage({isShowOnFull: false, imagePath: null})
+                }
+            />
+        )}
+        <Header/>
+        {error ? (
+            <div className={styles.tryContainer}>
+              <TryAgain getData={getData}/>
+            </div>
+        ) : isFetching ? (
+            <div className={styles.containerSpinner}>
+              <Spinner/>
+            </div>
+        ) : (
+            <div className={styles.mainInfoContainer}>
+              <div className={styles.infoContainer}>
+                <div className={styles.buttonsContainer}>
                 <span
                     onClick={() => changeContestViewMode(true)}
                     className={classNames(styles.btn, {
@@ -164,68 +173,68 @@ class ContestPage extends React.Component {
                 >
                   Brief
                 </span>
-                    <span
-                        onClick={() => changeContestViewMode(false)}
-                        className={classNames(styles.btn, {
-                          [styles.activeBtn]: !isBrief,
-                        })}
-                    >
+                  <span
+                      onClick={() => changeContestViewMode(false)}
+                      className={classNames(styles.btn, {
+                        [styles.activeBtn]: !isBrief,
+                      })}
+                  >
                   Offer
                 </span>
-                  </div>
-                  {isBrief ? (
-                      <Brief
-                          contestData={contestData}
-                          role={role}
-                          goChat={this.goChat}
-                      />
-                  ) : (
-                      <div className={styles.offersContainer}>
-                        {role === CONSTANTS.CREATOR &&
-                        contestData.status ===
-                        CONSTANTS.CONTEST_STATUS_ACTIVE && (
-                            <OfferForm
-                                contestType={contestData.contestType}
-                                contestId={contestData.id}
-                                customerId={contestData.User.id}
-                            />
-                        )}
-                        {setOfferStatusError && (
-                            <Error
-                                data={setOfferStatusError.data}
-                                status={setOfferStatusError.status}
-                                clearError={clearSetOfferStatusError}
-                            />
-                        )}
-                        <div className={styles.offers}>{this.setOffersList()}</div>
-                      </div>
-                  )}
                 </div>
-                <ContestSideBar
-                    contestData={contestData}
-                    totalEntries={offers.length}
-                />
+                {isBrief ? (
+                    <Brief
+                        contestData={contestData}
+                        role={role}
+                        goChat={goChat}
+                    />
+                ) : (
+                    <div className={styles.offersContainer}>
+                      {role === CONSTANTS.CREATOR &&
+                      contestData.status ===
+                      CONSTANTS.CONTEST_STATUS_ACTIVE && (
+                          <OfferForm
+                              contestType={contestData.contestType}
+                              contestId={contestData.id}
+                              customerId={contestData.User.id}
+                          />
+                      )}
+                      {setOfferStatusError && (
+                          <Error
+                              data={setOfferStatusError.data}
+                              status={setOfferStatusError.status}
+                              clearError={clearSetOfferStatusError}
+                          />
+                      )}
+                      <div className={styles.offers}>{setOffersList()}</div>
+                    </div>
+                )}
               </div>
-          )}
-        </div>
-    );
-  }
-}
+              <ContestSideBar
+                  contestData={contestData}
+                  totalEntries={offers.length}
+              />
+            </div>
+        )}
+      </div>
+  );
+};
 
 const mapStateToProps = (state) => {
-  const {contestByIdStore, auth, chatStore} = state;
-  return {contestByIdStore, auth, chatStore};
+  const {contestByIdStore, chatStore} = state;
+  return {contestByIdStore, chatStore};
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getData: (data) => dispatch(getContestById(data)),
     setOfferStatus: (data) => dispatch(setOfferStatus(data)),
     clearSetOfferStatusError: () => dispatch(clearSetOfferStatusError()),
     goToExpandedDialog: (data) => dispatch(goToExpandedDialog(data)),
     changeEditContest: (data) => dispatch(changeEditContest(data)),
+    changeContestViewMode: (data) => dispatch(changeContestViewMode(data)),
     changeShowImage: (data) => dispatch(changeShowImage(data)),
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContestPage);
+
