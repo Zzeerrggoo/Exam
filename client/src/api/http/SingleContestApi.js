@@ -19,10 +19,6 @@ class SingleContestApi {
     return this.#_client.patch(`${this.url}/${data.contestId}`, data);
   };
 
-  getContestFile = ({contestId, fileName}) => {
-    return this.#_client.get(`${this.url}/${contestId}/file/${fileName}`);
-  };
-
 }
 
 export default SingleContestApi;

@@ -28,13 +28,6 @@ export const changeEditContest = values => ({
   },
 });
 
-export const changeShowModal = values => ({
-  type: SINGLE_CONTEST_ACTION_TYPES.CHANGE_SHOW_MODAL,
-  payload: {
-    values,
-  },
-});
-
 export const getDescriptionForContest = values => ({
   type: SINGLE_CONTEST_ACTION_TYPES.GET_DESCRIPTION_FOR_CONTEST,
   payload: {
@@ -105,31 +98,6 @@ export const updateContestSuccess = values => ({
 
 export const updateContestFailed = error => ({
   type: SINGLE_CONTEST_ACTION_TYPES.UPDATE_CONTEST_FAILED,
-  payload: {
-    error,
-  },
-});
-
-export const downloadContestFile = values => ({
-  type: SINGLE_CONTEST_ACTION_TYPES.DOWNLOAD_CONTEST_FILE,
-  payload: {
-    values,
-  },
-});
-
-export const downloadContestFileRequest = () => ({
-  type: SINGLE_CONTEST_ACTION_TYPES.DOWNLOAD_CONTEST_FILE_REQUEST,
-});
-
-export const downloadContestFileSuccess = values => ({
-  type: SINGLE_CONTEST_ACTION_TYPES.DOWNLOAD_CONTEST_FILE_SUCCESS,
-  payload: {
-    values,
-  },
-});
-
-export const downloadContestFileFailed = error => ({
-  type: SINGLE_CONTEST_ACTION_TYPES.DOWNLOAD_CONTEST_FILE_FAILED,
   payload: {
     error,
   },
