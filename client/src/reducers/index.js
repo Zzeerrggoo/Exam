@@ -2,10 +2,10 @@ import {combineReducers} from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import authReducer from './authReducer';
 import contestsReducer from './contestsReducer';
-import singleContestReducer from './singleContestReduser';
+import singleContestReducer from './singleContestReducer';
 import paymentReducer from './paymentReducer';
+import offersReducer from './offersReducer';
 import getContestByIdReducer from './getContestByIdReducer';
-import updateContestReducer from './updateContestReducer';
 import chatReducer from './chatReducer';
 import userProfileReducer from './userProfileReducer';
 
@@ -15,8 +15,8 @@ const rootReducer = combineReducers({
   contestsList: contestsReducer,
   singleContestStore: singleContestReducer,
   payment: paymentReducer,
+  offers: offersReducer,
   contestByIdStore: getContestByIdReducer,
-  updateContestStore: updateContestReducer,
   chatStore: chatReducer,
   userProfile: userProfileReducer,
 });
