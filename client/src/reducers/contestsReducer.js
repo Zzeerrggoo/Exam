@@ -4,7 +4,7 @@ import createReducer from './helpers/createReducer';
 import CONSTANTS from '../constants';
 
 const initialState = {
-  isFetching: false,
+  isFetching: true,
   error: null,
   contests: [],
   creatingContests: [],
@@ -19,6 +19,8 @@ const initialState = {
   haveMore: true,
   isIndustryLoading: false,
   industryTypes: [],
+
+
 };
 
 const helpers = {

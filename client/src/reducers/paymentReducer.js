@@ -3,7 +3,7 @@ import PAYMENT_ACTION_TYPES from '../actions/paymentActionTypes';
 import createReducer from './helpers/createReducer';
 
 const initialState = {
-  isFetching: false,
+  isFetching: true,
   error: null,
   focusOnElement: 'number',
 };
