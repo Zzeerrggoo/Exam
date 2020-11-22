@@ -5,7 +5,7 @@ import * as ContestsSagas from './contestsSagas';
 import * as SingleContestSagas from './singleContestSagas';
 import * as PaymentSagas from './paymentSaga';
 import * as OfferSagas from './offerSagas';
-import {changeMarkSaga, setOfferStatusSaga, addOfferSaga} from './offerSagas';
+import {setOfferStatusSaga, addOfferSaga} from './offerSagas';
 import {
   previewSaga,
   getDialog,
@@ -60,13 +60,16 @@ function* rootSaga() {
   //OFFERS
   yield takeLatest(OFFER_ACTION_TYPES.GET_OFFERS_FOR_CONTEST,
       OfferSagas.getOffersSaga);
+  yield takeLatest(OFFER_ACTION_TYPES.CHANGE_OFFER_MARK,
+      OfferSagas.changeOfferMarkSaga);
+  //yield takeLatest(ACTION.CHANGE_MARK_ACTION, changeMarkSaga);
+
   // legacy
   //OFFER LEGACY
   yield takeEvery(ACTION.SET_OFFER_ACTION, addOfferSaga);
   yield takeLatest(ACTION.SET_OFFER_STATUS_ACTION, setOfferStatusSaga);
 
   //CHAT LEGACY
-  yield takeLatest(ACTION.CHANGE_MARK_ACTION, changeMarkSaga);
   yield takeLatest(ACTION.GET_PREVIEW_CHAT_ASYNC, previewSaga);
   yield takeLatest(ACTION.GET_DIALOG_MESSAGES_ASYNC, getDialog);
   yield takeLatest(ACTION.SEND_MESSAGE_ACTION, sendMessage);

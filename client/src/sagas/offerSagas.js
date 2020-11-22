@@ -5,6 +5,20 @@ import CONSTANTS from '../constants';
 import * as Api from '../api/http';
 import * as OfferActionCreators from '../actions/offerActionCreators';
 
+export function* getOffersSaga(action) {
+  yield put(OfferActionCreators.getOffersForContestRequest());
+
+  try {
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.offers.getOffersForContest(values);
+    yield put(OfferActionCreators.getOffersForContestSuccess(data));
+
+  } catch (error) {
+    yield put(OfferActionCreators.getOffersForContestFailed(error));
+  }
+
+}
+
 export function* changeMarkSaga(action) {
   try {
     const {data} = yield restController.changeMark(action.data);
@@ -20,6 +34,18 @@ export function* changeMarkSaga(action) {
     yield put({type: ACTION.CHANGE_MARK_SUCCESS, data: offers});
   } catch (err) {
     yield put({type: ACTION.CHANGE_MARK_ERROR, error: err.response});
+  }
+}
+
+export function* changeOfferMarkSaga(action) {
+  try {
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.offers.changeOfferMark(values);
+
+    yield put(OfferActionCreators.changeOfferMarkSuccess(data));
+
+  } catch (error) {
+    yield put(OfferActionCreators.changeOfferMarkFailed(error));
   }
 }
 
@@ -54,16 +80,3 @@ export function* setOfferStatusSaga(action) {
   }
 }
 
-export function* getOffersSaga(action) {
-  yield put(OfferActionCreators.getOffersForContestRequest());
-
-  try {
-    const {payload: {values}} = action;
-    const {data: {data}} = yield Api.offers.getOffersForContest(values);
-    yield put(OfferActionCreators.getOffersForContestSuccess(data));
-
-  } catch (error) {
-    yield put(OfferActionCreators.getOffersForContestFailed(error));
-  }
-
-}
