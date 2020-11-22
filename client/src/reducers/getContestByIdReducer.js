@@ -17,84 +17,33 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-      // case ACTION.GET_CONTEST_BY_ID_REQUEST: {
-      //   return {
-      //     ...state,
-      //     isFetching: true,
-      //     contestData: null,
-      //     error: null,
-      //     offers: [],
-      //   };
-      // }
-      // case ACTION.GET_CONTEST_BY_ID_SUCCESS: {
-      //   return {
-      //     ...state,
-      //     isFetching: false,
-      //     contestData: action.data.contestData,
-      //     error: null,
-      //     offers: action.data.offers,
-      //   };
-      // }
-      // case ACTION.GET_CONTEST_BY_ID_ERROR: {
-      //   return {
-      //     ...state,
-      //     isFetching: false,
-      //     error: action.error,
-      //   };
-      // }
-      // case ACTION.CHANGE_CONTEST_VIEW_MODE: {
-      //   return {
-      //     ...state,
-      //     isEditContest: false,
-      //     isBrief: action.data,
-      //   };
-      // }
-      // case ACTION.CHANGE_EDIT_CONTEST: {
-      //   return {
-      //     ...state,
-      //     isEditContest: action.data,
-      //   };
-      // }
-      // case ACTION.CHANGE_SHOW_IMAGE: {
-      //   return {
-      //     ...state,
-      //     isShowOnFull: action.data.isShowOnFull,
-      //     imagePath: action.data.imagePath,
-      //   };
-      // }
-      // case ACTION.CHANGE_SHOW_MODAL: {
-      //   return {
-      //     ...state,
-      //     isShowModal: action.data,
-      //   };
-      // }
 
-    case ACTION.CHANGE_MARK_SUCCESS: {
-      return {
-        ...state,
-        error: null,
-        offers: [...action.data],
-      };
-    }
-    case ACTION.CHANGE_STORE_FOR_STATUS: {
-      return {
-        ...state,
-        error: null,
-        offers: [...action.data],
-      };
-    }
-    case ACTION.CHANGE_MARK_ERROR: {
-      return {
-        ...state,
-        changeMarkError: action.error,
-      };
-    }
-    case ACTION.CLEAR_CHANGE_MARK_ERROR: {
-      return {
-        ...state,
-        changeMarkError: null,
-      };
-    }
+      // case ACTION.CHANGE_MARK_SUCCESS: {
+      //   return {
+      //     ...state,
+      //     error: null,
+      //     offers: [...action.data],
+      //   };
+      // }
+      // case ACTION.CHANGE_STORE_FOR_STATUS: {
+      //   return {
+      //     ...state,
+      //     error: null,
+      //     offers: [...action.data],
+      //   };
+      // }
+      // case ACTION.CHANGE_MARK_ERROR: {
+      //   return {
+      //     ...state,
+      //     changeMarkError: action.error,
+      //   };
+      // }
+      // case ACTION.CLEAR_CHANGE_MARK_ERROR: {
+      //   return {
+      //     ...state,
+      //     changeMarkError: null,
+      //   };
+      // }
 
     case ACTION.ADD_NEW_OFFER_TO_STORE: {
       return {
