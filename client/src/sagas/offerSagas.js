@@ -45,17 +45,6 @@ export function* setNewOfferSaga(action) {
   }
 }
 
-export function* addOfferSaga(action) {
-  try {
-    const {data} = yield restController.setNewOffer(action.data);
-    const offers = yield select((state) => state.contestByIdStore.offers);
-    offers.unshift(data);
-    yield put({type: ACTION.ADD_NEW_OFFER_TO_STORE, data: offers});
-  } catch (e) {
-    yield put({type: ACTION.ADD_OFFER_ERROR, error: e.response});
-  }
-}
-
 export function* setOfferStatusSaga(action) {
   try {
     const {data} = yield restController.setOfferStatus(action.data);
@@ -76,3 +65,16 @@ export function* setOfferStatusSaga(action) {
   }
 }
 
+export function* setOffersStatusSaga(action) {
+  yield put(OfferActionCreators.setOfferStatusRequest());
+
+  try {
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.offers.setOfferStatus(values);
+
+    yield put(OfferActionCreators.setOfferStatusSuccess(data));
+
+  } catch (error) {
+    yield put(OfferActionCreators.setOfferStatusFailed(error));
+  }
+}
