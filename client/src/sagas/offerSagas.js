@@ -31,6 +31,20 @@ export function* changeOfferMarkSaga(action) {
   }
 }
 
+export function* setNewOfferSaga(action) {
+  yield put(OfferActionCreators.addNewOfferRequest());
+
+  try {
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.offers.addNewOffer(values);
+
+    yield put(OfferActionCreators.addNewOfferSuccess(data));
+
+  } catch (error) {
+    yield put(OfferActionCreators.addNewOfferFailed(error));
+  }
+}
+
 export function* addOfferSaga(action) {
   try {
     const {data} = yield restController.setNewOffer(action.data);
