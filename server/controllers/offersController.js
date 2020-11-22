@@ -100,10 +100,15 @@ module.exports.setNewOffer = async (req, res, next) => {
   obj.contestId = req.body.contestId;
   try {
     const result = await contestQueries.createOffer(obj);
-    delete result.contestId;
-    delete result.userId;
-    controller.getNotificationController().emitEntryCreated(req.body.customerId);
-    const user = { ...req.tokenPayload, id: req.tokenPayload.userId };
+    controller.getNotificationController()
+      .emitEntryCreated(req.body.customerId);
+
+    const user = await User.findOne({
+      where: { id: req.tokenPayload.userId },
+      raw: true,
+      attributes: { exclude: ['password'] },
+    });
+
     res.send({ data: { ...result, User: user } });
   } catch (error) {
     next(error);
