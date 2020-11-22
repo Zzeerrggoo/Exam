@@ -6,7 +6,6 @@ const {
   User,
   Offer,
   Select,
-  Rating,
   Contest,
 } = require('../models');
 const ServerError = require('../errors/ServerError');
@@ -292,7 +291,7 @@ module.exports.setOfferStatus = async (req, res, next) => {
       );
       res.send(winningOffer);
     } catch (err) {
-      transaction.rollback();
+      await transaction.rollback();
       next(err);
     }
   }

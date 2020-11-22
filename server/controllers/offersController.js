@@ -3,7 +3,7 @@ const {
   sequelize,
   User,
   Offer,
-  Rating, z,
+  Rating,
 } = require('../models');
 const ServerError = require('../errors/ServerError');
 const contestQueries = require('./queries/contestQueries');
@@ -13,8 +13,6 @@ const CONSTANTS = require('../constants');
 
 module.exports.getOffersForContest = async (req, res, next) => {
   try {
-    const userid = !req?.tokenPayload?.userId ? '2' : req?.tokenPayload?.userId;
-
     const offers = await Offer.findAll({
 
       where: { contestId: req.params.contestId },
@@ -29,17 +27,9 @@ module.exports.getOffersForContest = async (req, res, next) => {
         {
           model: Rating,
           required: false,
-          where: { userId: userid },
-          attributes: { exclude: ['userId', 'offerId'] },
+          attributes: { exclude: ['offerId', 'userId'] },
         },
       ],
-    });
-
-    offers.forEach((offer) => {
-      if (offer.Rating) {
-        offer.mark = offer.Rating.mark;
-      }
-      delete offer.Rating;
     });
 
     res.status(200).send({ data: offers });
@@ -48,6 +38,61 @@ module.exports.getOffersForContest = async (req, res, next) => {
   }
 };
 
+module.exports.changeMark = async (req, res, next) => {
+  const {
+    creatorId, offerId, mark,
+  } = req.body;
+
+  try {
+    const changeMark = await Rating.update({ mark }, {
+      where: {
+        offerId,
+        userId: creatorId,
+      },
+    });
+
+    if (changeMark[0] === 0) {
+      await Rating.create({
+        offerId,
+        mark,
+        userId: creatorId,
+      });
+    }
+
+    const rating = await Rating.findAll({
+      where: {
+        userId: creatorId,
+      },
+      attributes: [
+        [sequelize.fn('AVG', sequelize.col('mark')), 'rating'],
+      ],
+    });
+
+    const { rating: preparedRating } = rating[0].get({ plain: true });
+    const user = await User.update({ rating: preparedRating },
+      {
+        where: { id: creatorId },
+        returning: true,
+      });
+
+    const userData = user[1][0].get({ plain: true });
+    const data = {
+      offer: { creatorId, offerId, mark },
+      user: userData,
+    };
+
+    controller.getNotificationController().emitChangeMark(creatorId);
+
+    res.status(200).send({ data });
+  } catch
+  (error) {
+    next(error);
+  }
+};
+
+/// ////////////////////////////////////
+/// ///////////////////////////////////
+/// //////////////////////////////////
 module.exports.setNewOffer = async (req, res, next) => {
   const obj = {};
   if (req.body.contestType === CONSTANTS.LOGO_CONTEST) {
