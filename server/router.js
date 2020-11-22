@@ -38,12 +38,6 @@ router.post(
   contestController.setOfferStatus,
 );
 
-router.post(
-  '/changeMark',
-  basicMiddlewares.onlyForCustomer,
-  userController.changeMark,
-);
-
 router.post('/newMessage', chatController.addMessage);
 
 router.post('/getChat', chatController.getChat);
