@@ -1,9 +1,5 @@
 const express = require('express');
-const basicMiddlewares = require('./middlewares/basicMiddlewares');
-const userController = require('./controllers/userController');
-const contestController = require('./controllers/contestController');
 const chatController = require('./controllers/chatController');
-const upload = require('./utils/fileUpload');
 const authRouter = require('./routes/auth');
 const contestsRouter = require('./routes/contests');
 const singleContestRouter = require('./routes/singleContest');
@@ -25,18 +21,7 @@ router.use('/payment', paymentRouter);
 
 router.use('/offers', offersRouter);
 
-router.post(
-  '/setNewOffer',
-  upload.uploadLogoFiles,
-  basicMiddlewares.canSendOffer,
-  contestController.setNewOffer,
-);
-
-router.post(
-  '/setOfferStatus',
-  basicMiddlewares.onlyForCustomerWhoCreateContest,
-  contestController.setOfferStatus,
-);
+/// /////////CHAT LEGACY
 
 router.post('/newMessage', chatController.addMessage);
 
