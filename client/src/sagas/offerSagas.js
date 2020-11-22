@@ -19,24 +19,6 @@ export function* getOffersSaga(action) {
 
 }
 
-export function* changeMarkSaga(action) {
-  try {
-    const {data} = yield restController.changeMark(action.data);
-    const offers = yield select((state) => state.contestByIdStore.offers);
-    offers.forEach((offer) => {
-      if (offer.User.id === data.userId) {
-        offer.User.rating = data.rating;
-      }
-      if (offer.id === action.data.offerId) {
-        offer.mark = action.data.mark;
-      }
-    });
-    yield put({type: ACTION.CHANGE_MARK_SUCCESS, data: offers});
-  } catch (err) {
-    yield put({type: ACTION.CHANGE_MARK_ERROR, error: err.response});
-  }
-}
-
 export function* changeOfferMarkSaga(action) {
   try {
     const {payload: {values}} = action;

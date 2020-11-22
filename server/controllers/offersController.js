@@ -5,7 +5,6 @@ const {
   Offer,
   Rating,
 } = require('../models');
-const ServerError = require('../errors/ServerError');
 const contestQueries = require('./queries/contestQueries');
 const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
@@ -84,15 +83,11 @@ module.exports.changeMark = async (req, res, next) => {
     controller.getNotificationController().emitChangeMark(creatorId);
 
     res.status(200).send({ data });
-  } catch
-  (error) {
+  } catch (error) {
     next(error);
   }
 };
 
-/// ////////////////////////////////////
-/// ///////////////////////////////////
-/// //////////////////////////////////
 module.exports.setNewOffer = async (req, res, next) => {
   const obj = {};
   if (req.body.contestType === CONSTANTS.LOGO_CONTEST) {
@@ -107,15 +102,17 @@ module.exports.setNewOffer = async (req, res, next) => {
     const result = await contestQueries.createOffer(obj);
     delete result.contestId;
     delete result.userId;
-    controller.getNotificationController()
-      .emitEntryCreated(req.body.customerId);
+    controller.getNotificationController().emitEntryCreated(req.body.customerId);
     const user = { ...req.tokenPayload, id: req.tokenPayload.userId };
-    res.send({ ...result, User: user });
-  } catch (e) {
-    return next(new ServerError());
+    res.send({ data: { ...result, User: user } });
+  } catch (error) {
+    next(error);
   }
 };
 
+/// ////////////////////////////////////
+/// ///////////////////////////////////
+/// //////////////////////////////////
 const rejectOffer = async (offerId, creatorId, contestId) => {
   const rejectedOffer = await contestQueries.updateOffer(
     { status: CONSTANTS.OFFER_STATUS_REJECTED },

@@ -27,8 +27,6 @@ const Payment = (props) => {
     const contestArray = creatingContests.map(
         item => ({contestType: item.type, ...item.info}));
 
-    console.log(contestArray);
-
     for (let i = 0; i < contestArray.length; i++) {
       data.append('files', contestArray[i].file);
       contestArray[i].haveFile = !!contestArray[i].file;
