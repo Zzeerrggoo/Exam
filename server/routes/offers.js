@@ -8,7 +8,7 @@ offersRouter.post('/', upload.uploadLogoFiles,
 
 offersRouter.get('/:contestId', controller.getOffersForContest);
 
-offersRouter.get('/:offerId/status', basicMiddlewares.onlyForCustomerWhoCreateContest,
+offersRouter.patch('/:offerId/status', basicMiddlewares.onlyForCustomerWhoCreateContest,
   controller.setOfferStatus);
 
 offersRouter.put('/:offerId/rating', basicMiddlewares.onlyForCustomer,

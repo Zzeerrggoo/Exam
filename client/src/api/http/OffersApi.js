@@ -16,12 +16,11 @@ class OffersApi {
   };
 
   setOfferStatus = (data) => {
-    const urlParam = new URLSearchParams(data.status).toString();
-    return this.#_client.get(`${this.url}/:${data.offerId}/status?${urlParam}`);
+    return this.#_client.patch(`${this.url}/${data.offerId}/status`, data);
   };
 
   changeOfferMark = (data) => {
-    return this.#_client.put(`${this.url}/:${data.offerId}/rating`, data);
+    return this.#_client.put(`${this.url}/${data.offerId}/rating`, data);
   };
 
 }
