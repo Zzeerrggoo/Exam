@@ -16,17 +16,6 @@ export const removeChatFromCatalog = (data) =>
 export const changeCatalogName = (data) => http.post('updateNameCatalog', data);
 
 /*//////////////////THAT'S IT//////////////////*/
-export const getContestById = (data) => {
-  return client.get('getContestById', {
-    headers: {
-      contestId: data.contestId,
-    },
-  });
-};
-export const updateContest = (data) => client.post('updateContest', data);
-export const downloadContestFile = (data) =>
-    client.get('downloadFile/' + data.fileName);
-/////////////////////////////////////////////////
 export const setNewOffer = (data) => client.post('setNewOffer', data);
 export const setOfferStatus = (data) => client.post('setOfferStatus', data);
 export const changeMark = (data) => client.post('changeMark', data);
