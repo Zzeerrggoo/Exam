@@ -4,15 +4,15 @@ import CONSTANTS from '../../constants';
 import {connect} from 'react-redux';
 import Rating from 'react-rating';
 import {
-  changeMark,
-  clearChangeMarkError,
   goToExpandedDialog,
 } from '../../actions/actionCreator';
-
+import {
+  changeOfferMark,
+  clearMarkError,
+} from '../../actions/offerActionCreators';
 import {
   changeShowImage,
 } from '../../actions/singleContestActionCreators';
-
 import {withRouter} from 'react-router-dom';
 import {isEqual} from 'lodash';
 import classNames from 'classnames';
@@ -115,6 +115,7 @@ const OfferBox = props => {
   const {data, contestType} = props;
   const {id, role} = props.user;
   const {avatar, firstName, lastName, email, rating} = props.data.User;
+
   return (
       <div className={styles.offerContainer}>
         {offerStatus()}
@@ -178,6 +179,7 @@ const OfferBox = props => {
                 <span className={styles.response}>{data.text}</span>
             )}
             {data.User.id !== id && (
+
                 <Rating
                     fractions={2}
                     fullSymbol={
@@ -199,7 +201,7 @@ const OfferBox = props => {
                       />
                     }
                     onClick={changeMark}
-                    placeholderRating={data.mark}
+                    placeholderRating={data?.Rating?.mark}
                 />
             )}
           </div>
@@ -226,8 +228,8 @@ const OfferBox = props => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    changeMark: data => dispatch(changeMark(data)),
-    clearError: () => dispatch(clearChangeMarkError()),
+    changeMark: data => dispatch(changeOfferMark(data)),
+    clearError: () => dispatch(clearMarkError()),
     goToExpandedDialog: data => dispatch(goToExpandedDialog(data)),
     changeShowImage: data => dispatch(changeShowImage(data)),
   };
