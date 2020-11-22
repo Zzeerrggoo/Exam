@@ -39,14 +39,13 @@ const helpers = {
   [OFFER_ACTION_TYPES.ADD_NEW_OFFER_REQUEST]: produce(
       draftState => {
         draftState.isFetching = true;
-        draftState.offers = [];
         draftState.error = null;
       }),
 
   [OFFER_ACTION_TYPES.ADD_NEW_OFFER_SUCCESS]: produce(
       (draftState, action) => {
         const {payload: {values}} = action;
-        draftState.offers = values;
+        draftState.offers.push(values);
         draftState.isFetching = false;
       }),
 
@@ -87,7 +86,13 @@ const helpers = {
         const index = draftState.offers.findIndex(
             elem => elem.id === offer.offerId && elem.userId ===
                 offer.creatorId);
-        draftState.offers[index].Rating.mark = offer.mark;
+
+        const currentOffer = draftState.offers[index];
+        if (currentOffer.Rating) {
+          currentOffer.Rating.mark = offer.mark;
+        } else {
+          currentOffer.Rating = {mark: offer.mark};
+        }
 
         draftState.offers.map(item => {
           if (item.User.id === user.id) {
