@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {
-  setOfferStatus,
   clearSetOfferStatusError,
   goToExpandedDialog,
 } from '../../actions/actionCreator';
@@ -30,7 +29,10 @@ import {
   changeShowImage,
   changeEditContest,
 } from '../../actions/singleContestActionCreators';
-import {getOffersForContest} from '../../actions/offerActionCreators';
+import {
+  getOffersForContest,
+  setOfferStatus,
+} from '../../actions/offerActionCreators';
 
 const ContestPage = (props) => {
 
@@ -45,7 +47,7 @@ const ContestPage = (props) => {
   } = useSelector(singleContestSelector);
   const {offers} = useSelector(offersSelector);
   const dispatch = useDispatch();
-  
+
   const {
     contestByIdStore,
     changeShowImage,
