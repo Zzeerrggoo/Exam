@@ -115,9 +115,6 @@ module.exports.setNewOffer = async (req, res, next) => {
   }
 };
 
-/// ////////////////////////////////////
-/// ///////////////////////////////////
-/// //////////////////////////////////
 const rejectOffer = async (offerId, creatorId, contestId) => {
   const rejectedOffer = await contestQueries.updateOffer(
     { status: CONSTANTS.OFFER_STATUS_REJECTED },
@@ -131,26 +128,24 @@ const rejectOffer = async (offerId, creatorId, contestId) => {
   return rejectedOffer;
 };
 
-const resolveOffer = async (
-  contestId,
-  creatorId,
-  orderId,
-  offerId,
-  priority,
-  transaction,
-) => {
+const resolveOffer = async (data) => {
+  const {
+    contestId,
+    creatorId,
+    orderId,
+    offerId,
+    priority,
+    transaction,
+  } = data;
+
   const finishedContest = await contestQueries.updateContestStatus(
     {
-      status: sequelize.literal(`   CASE
-            WHEN "id"=${contestId}  AND "orderId"='${orderId}' THEN '${
-  CONSTANTS.CONTEST_STATUS_FINISHED
-}'
-            WHEN "orderId"='${orderId}' AND "priority"=${priority + 1}  THEN '${
-  CONSTANTS.CONTEST_STATUS_ACTIVE
-}'
-            ELSE '${CONSTANTS.CONTEST_STATUS_PENDING}'
-            END
-    `),
+      status: sequelize.literal(`CASE
+                                 WHEN "id"=${contestId}  AND "orderId"='${orderId}' THEN '${CONSTANTS.CONTEST_STATUS_FINISHED}'
+                                 WHEN "orderId"='${orderId}' AND "priority"=${priority
+        + 1}  THEN '${CONSTANTS.CONTEST_STATUS_ACTIVE}'
+                                 ELSE '${CONSTANTS.CONTEST_STATUS_PENDING}'
+                                 END`),
     },
     { orderId },
     transaction,
@@ -163,10 +158,9 @@ const resolveOffer = async (
   const updatedOffers = await contestQueries.updateOfferStatus(
     {
       status: sequelize.literal(` CASE
-            WHEN "id"=${offerId} THEN '${CONSTANTS.OFFER_STATUS_WON}'
-            ELSE '${CONSTANTS.OFFER_STATUS_REJECTED}'
-            END
-    `),
+                                  WHEN "id"=${offerId} THEN '${CONSTANTS.OFFER_STATUS_WON}'
+                                  ELSE '${CONSTANTS.OFFER_STATUS_REJECTED}'
+                                  END`),
     },
     {
       contestId,
@@ -202,22 +196,22 @@ module.exports.setOfferStatus = async (req, res, next) => {
         req.body.creatorId,
         req.body.contestId,
       );
-      res.send(offer);
+      res.status(200).send({ data: offer });
     } catch (err) {
       next(err);
     }
   } else if (req.body.command === 'resolve') {
     try {
       transaction = await sequelize.transaction();
-      const winningOffer = await resolveOffer(
-        req.body.contestId,
-        req.body.creatorId,
-        req.body.orderId,
-        req.body.offerId,
-        req.body.priority,
+      const winningOffer = await resolveOffer({
+        contestId: req.body.contestId,
+        creatorId: req.body.creatorId,
+        orderId: req.body.orderId,
+        offerId: req.body.offerId,
+        priority: req.body.priority,
         transaction,
-      );
-      res.send(winningOffer);
+      });
+      res.status(200).send({ data: winningOffer });
     } catch (err) {
       transaction.rollback();
       next(err);
