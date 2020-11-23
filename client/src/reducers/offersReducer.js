@@ -1,6 +1,8 @@
-import produce from 'immer';
+import produce, {original} from 'immer';
+import _ from 'lodash';
 import OFFER_ACTION_TYPES from '../actions/offerActionTypes';
 import createReducer from './helpers/createReducer';
+import CONSTANTS from '../constants';
 
 const initialState = {
   isFetching: true,
@@ -59,14 +61,28 @@ const helpers = {
   [OFFER_ACTION_TYPES.SET_OFFER_STATUS_REQUEST]: produce(
       draftState => {
         draftState.isFetching = true;
-        draftState.offers = [];
         draftState.error = null;
       }),
 
   [OFFER_ACTION_TYPES.SET_OFFER_STATUS_SUCCESS]: produce(
       (draftState, action) => {
         const {payload: {values}} = action;
-        draftState.offers = values;
+        const orig = original(draftState);
+        const offers = _.cloneDeep(orig.offers);
+
+        draftState.offers = offers.map((offer) => {
+
+          if (values.status === CONSTANTS.OFFER_STATUS_WON) {
+            offer.status =
+                values.id === offer.id
+                    ? CONSTANTS.OFFER_STATUS_WON
+                    : CONSTANTS.OFFER_STATUS_REJECTED;
+          } else if (values.id === offer.id) {
+            offer.status = CONSTANTS.OFFER_STATUS_REJECTED;
+          }
+          return offer;
+        });
+
         draftState.isFetching = false;
       }),
 
