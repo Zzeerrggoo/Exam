@@ -8,7 +8,7 @@ import {
 } from '../../actions/actionCreator';
 import {
   changeOfferMark,
-  clearMarkError,
+  clearError,
 } from '../../actions/offerActionCreators';
 import {
   changeShowImage,
@@ -229,7 +229,7 @@ const OfferBox = props => {
 const mapDispatchToProps = dispatch => {
   return {
     changeMark: data => dispatch(changeOfferMark(data)),
-    clearError: () => dispatch(clearMarkError()),
+    clearError: () => dispatch(clearError()),
     goToExpandedDialog: data => dispatch(goToExpandedDialog(data)),
     changeShowImage: data => dispatch(changeShowImage(data)),
   };
@@ -237,10 +237,9 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   const {isShowModal} = state.singleContestStore;
-  const {changeMarkError} = state.contestByIdStore;
   const {user} = state.auth;
   const {messagesPreview} = state.chatStore;
-  return {changeMarkError, user, messagesPreview, isShowModal};
+  return {user, messagesPreview, isShowModal};
 };
 
 export default withRouter(

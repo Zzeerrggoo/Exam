@@ -1,7 +1,7 @@
 import React from 'react';
 import CONTANTS from '../../../constants';
 import {connect} from 'react-redux';
-import {clearAddOfferError} from '../../../actions/actionCreator';
+import {clearError} from '../../../actions/offerActionCreators';
 import {addNewOffer} from '../../../actions/offerActionCreators';
 import styles from './OfferForm.module.sass';
 import {reduxForm, Field} from 'redux-form';
@@ -58,13 +58,13 @@ const OfferForm = (props) => {
   };
 
   contestType = props.contestType;
-  const {handleSubmit, valid, addOfferError, clearOfferError} = props;
+  const {handleSubmit, valid, error, clearOfferError} = props;
   return (
       <div className={styles.offerContainer}>
-        {addOfferError && (
+        {error && (
             <Error
-                data={addOfferError.data}
-                status={addOfferError.status}
+                data={error.data}
+                status={error.status}
                 clearError={clearOfferError}
             />
         )}
@@ -85,13 +85,13 @@ const OfferForm = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setNewOffer: (data) => dispatch(addNewOffer(data)),
-    clearOfferError: () => dispatch(clearAddOfferError()),
+    clearOfferError: () => dispatch(clearError()),
   };
 };
 
 const mapStateToProps = (state) => {
-  const {addOfferError} = state.contestByIdStore;
-  return {addOfferError};
+  const {error} = state.offers;
+  return {error};
 };
 
 export default connect(

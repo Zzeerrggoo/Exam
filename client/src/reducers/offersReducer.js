@@ -8,11 +8,6 @@ const initialState = {
   isFetching: true,
   offers: [],
   error: null,
-
-  changeMarkError: null,
-  addOfferError: null,
-  setOfferStatusError: null,
-
 };
 
 const helpers = {
@@ -126,7 +121,7 @@ const helpers = {
         draftState.isFetching = false;
       }),
 
-  [OFFER_ACTION_TYPES.CLEAR_MARK_ERROR]: produce(
+  [OFFER_ACTION_TYPES.CLEAR_ERROR]: produce(
       (draftState) => {
         draftState.error = null;
       }),

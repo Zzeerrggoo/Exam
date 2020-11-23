@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {
-  clearSetOfferStatusError,
   goToExpandedDialog,
 } from '../../actions/actionCreator';
 import {connect, useDispatch, useSelector} from 'react-redux';
@@ -32,6 +31,7 @@ import {
 import {
   getOffersForContest,
   setOfferStatus,
+  clearError,
 } from '../../actions/offerActionCreators';
 
 const ContestPage = (props) => {
@@ -49,14 +49,10 @@ const ContestPage = (props) => {
   const dispatch = useDispatch();
 
   const {
-    contestByIdStore,
     changeShowImage,
     changeContestViewMode,
     clearSetOfferStatusError,
   } = props;
-  const {
-    setOfferStatusError,
-  } = contestByIdStore;
 
   const getData = () => {
     const {params} = props.match;
@@ -201,10 +197,10 @@ const ContestPage = (props) => {
                               customerId={contestData.User.id}
                           />
                       )}
-                      {setOfferStatusError && (
+                      {error && (
                           <Error
-                              data={setOfferStatusError.data}
-                              status={setOfferStatusError.status}
+                              data={error.data}
+                              status={error.status}
                               clearError={clearSetOfferStatusError}
                           />
                       )}
@@ -223,14 +219,14 @@ const ContestPage = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const {contestByIdStore, chatStore} = state;
-  return {contestByIdStore, chatStore};
+  const {chatStore} = state;
+  return {chatStore};
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setOfferStatus: (data) => dispatch(setOfferStatus(data)),
-    clearSetOfferStatusError: () => dispatch(clearSetOfferStatusError()),
+    clearSetOfferStatusError: () => dispatch(clearError()),
     goToExpandedDialog: (data) => dispatch(goToExpandedDialog(data)),
     changeEditContest: (data) => dispatch(changeEditContest(data)),
     changeContestViewMode: (data) => dispatch(changeContestViewMode(data)),

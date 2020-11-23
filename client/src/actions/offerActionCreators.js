@@ -46,8 +46,8 @@ export const changeOfferMarkFailed = error => ({
   },
 });
 
-export const clearMarkError = () => ({
-  type: OFFER_ACTION_TYPES.CLEAR_MARK_ERROR,
+export const clearError = () => ({
+  type: OFFER_ACTION_TYPES.CLEAR_ERROR,
 });
 
 export const addNewOffer = values => ({
