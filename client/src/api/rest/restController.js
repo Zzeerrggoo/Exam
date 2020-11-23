@@ -1,5 +1,5 @@
-import http from '../interceptor';
-import client from '../http';
+//import http from '../interceptor';
+import http from '../http';
 
 export const getPreviewChat = () => http.post('getPreview');
 export const getDialog = (data) => http.post('getChat', data);
@@ -14,8 +14,3 @@ export const deleteCatalog = (data) => http.post('deleteCatalog', data);
 export const removeChatFromCatalog = (data) =>
     http.post('removeChatFromCatalog', data);
 export const changeCatalogName = (data) => http.post('updateNameCatalog', data);
-
-/*//////////////////THAT'S IT//////////////////*/
-export const setNewOffer = (data) => client.post('setNewOffer', data);
-export const setOfferStatus = (data) => client.post('setOfferStatus', data);
-export const changeMark = (data) => client.post('changeMark', data);
