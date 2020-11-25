@@ -70,3 +70,14 @@ export const getIndustryForContestFailed = error => ({
     error,
   },
 });
+
+export const saveCreatingContestsInStore = values => ({
+  type: CONTEST_ACTION_TYPES.SAVE_CREATING_CONTESTS_IN_STORE,
+  payload: {
+    values,
+  },
+});
+
+export const clearCreatingContestsFromStore = () => ({
+  type: CONTEST_ACTION_TYPES.CLEAR_CREATING_CONTESTS_FROM_STORE,
+});

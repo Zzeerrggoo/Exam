@@ -3,14 +3,8 @@ import ACTION from '../actions/actionTypes';
 import * as AuthSagas from './authSagas';
 import * as ContestsSagas from './contestsSagas';
 import * as SingleContestSagas from './singleContestSagas';
-
-import {paymentSaga, cashoutSaga} from './paymentSaga';
-import {
-  updateContestSaga,
-  getContestByIdSaga,
-  downloadContestFileSaga,
-} from './contestsSagas';
-import {changeMarkSaga, setOfferStatusSaga, addOfferSaga} from './offerSagas';
+import * as PaymentSagas from './paymentSaga';
+import * as OfferSagas from './offerSagas';
 import {
   previewSaga,
   getDialog,
@@ -28,11 +22,17 @@ import AUTH_ACTION_TYPES from '../actions/authActionTypes';
 import USER_ACTION_TYPES from '../actions/userActionTypes';
 import CONTEST_ACTION_TYPES from '../actions/contestsActionTypes';
 import SINGLE_CONTEST_ACTION_TYPES from '../actions/singleContestActionTypes';
+import PAYMENT_ACTION_TYPES from '../actions/paymentActionTypes';
+import OFFER_ACTION_TYPES from '../actions/offerActionTypes';
 
 function* rootSaga() {
   //SINGLE_CONTEST
   yield takeLatest(SINGLE_CONTEST_ACTION_TYPES.GET_DESCRIPTION_FOR_CONTEST,
       SingleContestSagas.getDescriptionForContestCreatingSaga);
+  yield takeLatest(SINGLE_CONTEST_ACTION_TYPES.GET_CONTEST_BY_ID,
+      SingleContestSagas.getContestByIdSaga);
+  yield takeLatest(SINGLE_CONTEST_ACTION_TYPES.UPDATE_CONTEST,
+      SingleContestSagas.updateContestSaga);
 
   // CONTESTS
   yield takeLatest(CONTEST_ACTION_TYPES.GET_CONTESTS,
@@ -52,18 +52,20 @@ function* rootSaga() {
   );
   yield takeLatest(AUTH_ACTION_TYPES.LOGOUT_REQUEST, AuthSagas.logoutSaga);
 
-  // legacy
-  yield takeLatest(ACTION.PAYMENT_ACTION, paymentSaga);
-  yield takeLatest(ACTION.CASHOUT_ACTION, cashoutSaga);
-  yield takeLatest(ACTION.GET_CONTEST_BY_ID_ACTION, getContestByIdSaga);
-  yield takeLatest(
-      ACTION.DOWNLOAD_CONTEST_FILE_ACTION,
-      downloadContestFileSaga,
-  );
-  yield takeLatest(ACTION.UPDATE_CONTEST_ACTION, updateContestSaga);
-  yield takeEvery(ACTION.SET_OFFER_ACTION, addOfferSaga);
-  yield takeLatest(ACTION.SET_OFFER_STATUS_ACTION, setOfferStatusSaga);
-  yield takeLatest(ACTION.CHANGE_MARK_ACTION, changeMarkSaga);
+  //PAYMENT
+  yield takeLatest(PAYMENT_ACTION_TYPES.PAYMENT, PaymentSagas.paymentSaga);
+  yield takeLatest(PAYMENT_ACTION_TYPES.CASHOUT, PaymentSagas.cashoutSaga);
+
+  //OFFERS
+  yield takeLatest(OFFER_ACTION_TYPES.GET_OFFERS_FOR_CONTEST,
+      OfferSagas.getOffersSaga);
+  yield takeLatest(OFFER_ACTION_TYPES.CHANGE_OFFER_MARK,
+      OfferSagas.changeOfferMarkSaga);
+  yield takeEvery(OFFER_ACTION_TYPES.ADD_NEW_OFFER, OfferSagas.setNewOfferSaga);
+  yield takeLatest(OFFER_ACTION_TYPES.SET_OFFER_STATUS,
+      OfferSagas.setOffersStatusSaga);
+
+  //CHAT LEGACY
   yield takeLatest(ACTION.GET_PREVIEW_CHAT_ASYNC, previewSaga);
   yield takeLatest(ACTION.GET_DIALOG_MESSAGES_ASYNC, getDialog);
   yield takeLatest(ACTION.SEND_MESSAGE_ACTION, sendMessage);

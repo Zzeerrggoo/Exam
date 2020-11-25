@@ -6,9 +6,17 @@ class SingleContestApi {
     this.url = '/singleContest';
   }
 
-  getDescDataForContest = (data) => {
+  getDescrDataForContest = (data) => {
     const urlParams = new URLSearchParams(data).toString();
     return this.#_client.get(`${this.url}/description?${urlParams}`);
+  };
+
+  getContestById = ({contestId}) => {
+    return this.#_client.get(`${this.url}/${contestId}`);
+  };
+
+  updateContest = (data) => {
+    return this.#_client.patch(`${this.url}/${data.contestId}`, data);
   };
 
 }

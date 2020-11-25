@@ -6,7 +6,6 @@ const {
   User,
   Offer,
   Select,
-  Rating,
   Contest,
 } = require('../models');
 const ServerError = require('../errors/ServerError');
@@ -21,10 +20,13 @@ module.exports.getContests = async (req, res, next) => {
     req.query.typeIndex,
     req.query.contestId,
     req.query.industry,
-    req.query.awardSort,
+    req.query.awardType,
+    req.tokenPayload.userId,
   );
 
   try {
+    const ownEntries = req.query.ownEntries === 'true';
+
     const contests = await Contest.findAll({
       where: predicates.where,
       order: predicates.order,
@@ -33,9 +35,8 @@ module.exports.getContests = async (req, res, next) => {
       include: [
         {
           model: Offer,
-          required: req.query.ownEntries,
-          where: req.query.ownEntries ? { userId: req.tokenPayload.userId } : {},
-          attributes: ['id'],
+          where: ownEntries ? { userId: req.tokenPayload.userId } : {},
+          required: ownEntries,
         },
       ],
     });
@@ -124,63 +125,26 @@ module.exports.getDescriptionForContest = async (req, res, next) => {
   }
 };
 
-/// legacy///
-
-module.exports.getContestById = async (req, res, next) => {
+module.exports.getContestDataById = async (req, res, next) => {
   try {
-    let contestInfo = await Contest.findOne({
-      where: { id: req.headers.contestid },
-      order: [[Offer, 'id', 'asc']],
+    const contestData = await Contest.findOne({
+      where: { id: req.params.contestId },
       include: [
         {
           model: User,
           required: true,
           attributes: {
-            exclude: ['password', 'role', 'balance', 'accessToken'],
+            exclude: ['role', 'balance', 'password'],
           },
-        },
-        {
-          model: Offer,
-          required: false,
-          where:
-              req.tokenPayload.role === CONSTANTS.CREATOR
-                ? { userId: req.tokenPayload.userId }
-                : {},
-          attributes: { exclude: ['userId', 'contestId'] },
-          include: [
-            {
-              model: User,
-              required: true,
-              attributes: {
-                exclude: ['password', 'role', 'balance', 'accessToken'],
-              },
-            },
-            {
-              model: Rating,
-              required: false,
-              where: { userId: req.tokenPayload.userId },
-              attributes: { exclude: ['userId', 'offerId'] },
-            },
-          ],
         },
       ],
     });
-    contestInfo = contestInfo.get({ plain: true });
-    contestInfo.Offers.forEach((offer) => {
-      if (offer.Rating) {
-        offer.mark = offer.Rating.mark;
-      }
-      delete offer.Rating;
-    });
-    res.send(contestInfo);
-  } catch (e) {
-    next(new ServerError());
-  }
-};
 
-module.exports.downloadFile = async (req, res, next) => {
-  const file = CONSTANTS.CONTESTS_DEFAULT_DIR + req.params.fileName;
-  res.download(file);
+    const data = contestData.get({ plain: true });
+    res.status(200).send({ data });
+  } catch (error) {
+    next(createHttpError(500, 'Server Error'));
+  }
 };
 
 module.exports.updateContest = async (req, res, next) => {
@@ -195,11 +159,13 @@ module.exports.updateContest = async (req, res, next) => {
       id: contestId,
       userId: req.tokenPayload.userId,
     });
-    res.send(updatedContest);
+    res.status(200).send({ data: updatedContest });
   } catch (e) {
     next(e);
   }
 };
+
+/// /PUSH IT INTO OFFERS CONTROLLER
 
 module.exports.setNewOffer = async (req, res, next) => {
   const obj = {};
@@ -325,7 +291,7 @@ module.exports.setOfferStatus = async (req, res, next) => {
       );
       res.send(winningOffer);
     } catch (err) {
-      transaction.rollback();
+      await transaction.rollback();
       next(err);
     }
   }

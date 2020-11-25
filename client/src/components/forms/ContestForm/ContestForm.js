@@ -29,9 +29,8 @@ const ContestForm = (props) => {
   const {getDescriptionForContest} = bindActionCreators(
       SingleContestActionCreators, dispatch);
 
-  const {contestType} = props;
-  const {isFetching, error} = descriptionForContest;
-  const {handleSubmit} = props;
+  const {defaultData, contestType, handleSubmit} = props;
+  const {isFetchingDescr: isFetching, error} = descriptionForContest;
   submitFunc = props.submitData;
 
   const getPreference = () => {
@@ -163,9 +162,12 @@ const ContestForm = (props) => {
 
   useEffect(() => {
     dispatch(getIndustryForContest());
-    getPreference(props.contestType);
-    props.initialize(props.defaultData);
   }, []);
+
+  useEffect(() => {
+    getPreference(contestType);
+    props.initialize(defaultData);
+  }, [contestType]);
 
   if (error) return <TryAgain getData={getPreference}/>;
   else
@@ -260,7 +262,6 @@ const submit = (values) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    contestStore: state.contestStore,
     initialValues: ownProps.defaultData,
   };
 };

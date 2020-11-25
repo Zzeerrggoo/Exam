@@ -1,4 +1,5 @@
 import produce from 'immer';
+import _ from 'lodash';
 import AUTH_ACTION_TYPES from '../actions/authActionTypes';
 import USER_ACTION_TYPES from '../actions/userActionTypes';
 import createReducer from './helpers/createReducer';
@@ -38,7 +39,15 @@ const handlers = {
   }),
   [USER_ACTION_TYPES.USER_UPDATE_SUCCESS]: produce((draftState, action) => {
     const {payload: {values}} = action;
-    draftState.user = values;
+
+    const preparedUser = _.omit(values, ['password']);
+
+    draftState.user = preparedUser;
+    draftState.isFetching = false;
+  }),
+  [USER_ACTION_TYPES.USER_UPDATE_BALANCE]: produce((draftState, action) => {
+    const {payload: {values}} = action;
+    draftState.user.balance = values;
     draftState.isFetching = false;
   }),
   [USER_ACTION_TYPES.USER_UPDATE_FAILED]: produce((draftState, action) => {

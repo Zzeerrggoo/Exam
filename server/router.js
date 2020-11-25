@@ -1,15 +1,11 @@
 const express = require('express');
-const basicMiddlewares = require('./middlewares/basicMiddlewares');
-const userController = require('./controllers/userController');
-const contestController = require('./controllers/contestController');
 const chatController = require('./controllers/chatController');
-const upload = require('./utils/fileUpload');
 const authRouter = require('./routes/auth');
 const contestsRouter = require('./routes/contests');
 const singleContestRouter = require('./routes/singleContest');
+const paymentRouter = require('./routes/payment');
+const offersRouter = require('./routes/offers');
 const checkAuthorization = require('./middlewares/checkAuthorization');
-const validateBody = require('./middlewares/validateBody');
-const { contestSchema } = require('./validation/schemas');
 
 const router = express.Router();
 
@@ -21,59 +17,11 @@ router.use('/contests', contestsRouter);
 
 router.use('/singleContest', singleContestRouter);
 
-router.post(
-  '/pay',
-  basicMiddlewares.onlyForCustomer,
-  upload.uploadContestFiles,
-  basicMiddlewares.parseBody,
-  validateBody(contestSchema),
-  userController.payment,
-);
+router.use('/payment', paymentRouter);
 
-router.get(
-  '/getContestById',
-  basicMiddlewares.canGetContest,
-  contestController.getContestById,
-);
+router.use('/offers', offersRouter);
 
-router.post(
-  '/getAllContests',
-  basicMiddlewares.onlyForCreative,
-  contestController.getContests,
-);
-
-router.get('/downloadFile/:fileName', contestController.downloadFile);
-
-router.post(
-  '/updateContest',
-  upload.updateContestFile,
-  contestController.updateContest,
-);
-
-router.post(
-  '/setNewOffer',
-  upload.uploadLogoFiles,
-  basicMiddlewares.canSendOffer,
-  contestController.setNewOffer,
-);
-
-router.post(
-  '/setOfferStatus',
-  basicMiddlewares.onlyForCustomerWhoCreateContest,
-  contestController.setOfferStatus,
-);
-
-router.post(
-  '/changeMark',
-  basicMiddlewares.onlyForCustomer,
-  userController.changeMark,
-);
-
-router.post(
-  '/cashout',
-  basicMiddlewares.onlyForCreative,
-  userController.cashout,
-);
+/// /////////CHAT LEGACY
 
 router.post('/newMessage', chatController.addMessage);
 
@@ -95,7 +43,6 @@ router.post('/removeChatFromCatalog', chatController.removeChatFromCatalog);
 
 router.post(
   '/deleteCatalog',
-
   chatController.deleteCatalog,
 );
 

@@ -2,6 +2,7 @@ const bd = require('../models/index');
 const RightsError = require('../errors/RightsError');
 const ServerError = require('../errors/ServerError');
 const CONSTANTS = require('../constants');
+const { Sequelize, Contest } = require('../models');
 
 module.exports.parseBody = (req, res, next) => {
   req.body.contests = JSON.parse(req.body.contests);
@@ -19,15 +20,15 @@ module.exports.canGetContest = async (req, res, next) => {
   let result = null;
   try {
     if (req.tokenPayload.userRole === CONSTANTS.CUSTOMER) {
-      result = await bd.Contests.findOne({
-        where: { id: req.headers.contestid, userId: req.tokenPayload.userId },
+      result = await Contest.findOne({
+        where: { id: req.params.contestId, userId: req.tokenPayload.userId },
       });
     } else if (req.tokenPayload.userRole === CONSTANTS.CREATOR) {
-      result = await bd.Contests.findOne({
+      result = await Contest.findOne({
         where: {
-          id: req.headers.contestid,
+          id: req.params.contestId,
           status: {
-            [bd.Sequelize.Op.or]: [
+            [Sequelize.Op.or]: [
               CONSTANTS.CONTEST_STATUS_ACTIVE,
               CONSTANTS.CONTEST_STATUS_FINISHED,
             ],
@@ -61,7 +62,7 @@ module.exports.canSendOffer = async (req, res, next) => {
     return next(new RightsError());
   }
   try {
-    const result = await bd.Contests.findOne({
+    const result = await Contest.findOne({
       where: {
         id: req.body.contestId,
       },
@@ -81,7 +82,7 @@ module.exports.canSendOffer = async (req, res, next) => {
 
 module.exports.onlyForCustomerWhoCreateContest = async (req, res, next) => {
   try {
-    const result = await bd.Contests.findOne({
+    const result = await Contest.findOne({
       where: {
         userId: req.tokenPayload.userId,
         id: req.body.contestId,
@@ -99,11 +100,11 @@ module.exports.onlyForCustomerWhoCreateContest = async (req, res, next) => {
 
 module.exports.canUpdateContest = async (req, res, next) => {
   try {
-    const result = bd.Contests.findOne({
+    const result = Contest.findOne({
       where: {
         userId: req.tokenPayload.userId,
         id: req.body.contestId,
-        status: { [bd.Sequelize.Op.not]: CONSTANTS.CONTEST_STATUS_FINISHED },
+        status: { [Sequelize.Op.not]: CONSTANTS.CONTEST_STATUS_FINISHED },
       },
     });
     if (!result) {
