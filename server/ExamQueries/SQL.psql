@@ -15,6 +15,7 @@ FROM c
 WHERE u.id = c.id;
 
 
+
 UPDATE "Users" AS u
 SET balance = balance + 10
 WHERE u.id IN (SELECT id FROM "Users" WHERE role = 'customer' ORDER BY rating DESC);
