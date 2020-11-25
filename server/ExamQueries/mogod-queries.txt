@@ -1,0 +1,6 @@
+db.messages.find({body: /паровоз/i});
+
+db.messages.aggregate([
+  {$match: {body: /паровоз/i}},
+  {$count: "number of words"},
+]);
