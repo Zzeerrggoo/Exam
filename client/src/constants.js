@@ -23,11 +23,12 @@ export default {
   STATIC_IMAGES_PATH: '/staticImages/',
   ANONYM_IMAGE_PATH: '/staticImages/anonym.png',
   BASE_URL: `http://${serverIP}:5000/api`,
+  WS_BASE_URL: `ws://${serverIP}:5000`,
   ACCESS_TOKEN: 'accessToken',
   publicURL:
-    env === 'production'
-      ? `http://${serverIP}:80/images/`
-      : `http://${serverIP}:5000/public/images/`,
+      env === 'production'
+          ? `http://${serverIP}:80/images/`
+          : `http://${serverIP}:5000/public/images/`,
   NORMAL_PREVIEW_CHAT_MODE: 'NORMAL_PREVIEW_CHAT_MODE',
   FAVORITE_PREVIEW_CHAT_MODE: 'FAVORITE_PREVIEW_CHAT_MODE',
   BLOCKED_PREVIEW_CHAT_MODE: 'BLOCKED_PREVIEW_CHAT_MODE',
