@@ -21,6 +21,10 @@ module.exports = {
           model: 'Chats',
         },
       },
+      isBlocked: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       isInBlackList: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
