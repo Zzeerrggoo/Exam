@@ -4,8 +4,9 @@ const {
 
 module.exports = (sequelize, DataTypes) => {
   class Catalog extends Model {
-    static associate({ User }) {
+    static associate({ User, Chat, CatalogChat }) {
       Catalog.belongsTo(User);
+      Catalog.belongsToMany(Chat, { through: CatalogChat });
     }
   }
 
