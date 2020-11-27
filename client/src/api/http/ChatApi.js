@@ -6,8 +6,8 @@ class ChatApi {
     this.url = '/chats';
   }
 
-  getChatsPreview(data) {
-    return this.#_client.get(`${this.url}/?userId=${data.userId}`);
+  getChatsPreview() {
+    return this.#_client.get(`${this.url}/`);
   }
 
   getChat(data) {
