@@ -18,9 +18,9 @@ const ChatInput = (props) => {
   const clickButton = (values) => {
     const {reset} = props;
     props.sendMessage({
+      chatId: props.chatId,
       messageBody: values.message,
       recipient: props.interlocutor.id,
-      interlocutor: props.interlocutor,
     });
     reset();
   };
