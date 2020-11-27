@@ -5,8 +5,9 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Catalog extends Model {
     static associate({ User, Chat, CatalogChat }) {
-      Catalog.belongsTo(User);
-      Catalog.belongsToMany(Chat, { through: CatalogChat });
+      Catalog.belongsTo(User, { foreignKey: 'userId' });
+      Catalog.belongsToMany(Chat,
+        { through: CatalogChat, foreignKey: 'catalogId', otherKey: 'chatId' });
     }
   }
 

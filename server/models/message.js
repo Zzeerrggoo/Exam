@@ -5,8 +5,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Message extends Model {
     static associate({ User, Chat }) {
-      Message.belongsTo(User);
-      Message.belongsTo(Chat);
+      Message.belongsTo(User, { foreignKey: 'userId' });
+      Message.belongsTo(Chat, { foreignKey: 'chatId' });
     }
   }
 

@@ -39,7 +39,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId',
       });
 
-      User.belongsToMany(Chat, { through: UserChat });
+      User.hasMany(UserChat, {
+        foreignKey: 'userId',
+      });
+
+      User.belongsToMany(Chat,
+        { through: UserChat, foreignKey: 'userId', otherKey: 'chatId' });
     }
   }
 
