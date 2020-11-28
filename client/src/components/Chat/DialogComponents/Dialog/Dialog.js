@@ -53,7 +53,7 @@ class Dialog extends React.Component {
           <div
               key={i}
               className={className(
-                  userId === message.sender
+                  userId === message.userId
                       ? styles.ownMessage
                       : styles.message,
               )}
@@ -91,7 +91,7 @@ class Dialog extends React.Component {
           {chatData && (chatData.isBlocked || chatData.isInBlackList) ? (
               this.blockMessage()
           ) : (
-              <ChatInput chatId={chatData._id}/>
+              <ChatInput chatId={chatData.chatId}/>
           )}
         </>
     );

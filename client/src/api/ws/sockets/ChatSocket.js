@@ -35,14 +35,12 @@ class ChatSocket extends WebSocket {
       const {message, interlocutor, chatData} = data.message;
       const {messagesPreview} = this.getState().chatStore;
       const preview = {...chatData, interlocutor, text: message.body};
-      console.log(data);
-      console.log(preview);
 
       let isNew = true;
       messagesPreview.forEach(preview => {
         if (preview.chatId === message.chatId) {
           preview.text = message.body;
-          preview.sender = message.sender;
+          preview.sender = message.userId;
           preview.createAt = message.createdAt;
           isNew = false;
         }
@@ -50,7 +48,8 @@ class ChatSocket extends WebSocket {
       if (isNew) {
         messagesPreview.push(preview);
       }
-      this.dispatch(addMessage({message, messagesPreview}));
+
+      this.dispatch(addMessage({message, chatData, messagesPreview}));
     });
   };
 
