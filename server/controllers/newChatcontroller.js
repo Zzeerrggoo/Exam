@@ -1,3 +1,4 @@
+const { QueryTypes } = require('sequelize');
 const controller = require('../socketInit');
 const {
   User,
@@ -16,6 +17,7 @@ module.exports.getChatsPreview = async (req, res, next) => {
 
     const conversations = await UserChat.findAll({
       where: { userId },
+      order: [['chatId', 'DESC']],
       include: [
         {
           model: UserChat,
@@ -38,7 +40,31 @@ module.exports.getChatsPreview = async (req, res, next) => {
       nest: true,
     });
 
-    const data = { conversations };
+    const chatsId = conversations.map((item) => item?.chatId);
+    const preparedChatsIs = chatsId[0] ? chatsId : null;
+    const previewMessages = await sequelize.query(`
+            SELECT *
+            FROM "Messages" AS m
+            WHERE m."createdAt" IN (SELECT MAX("createdAt") AS "createdAt"
+                                    FROM "Messages"
+                                    WHERE "chatId" IN (${preparedChatsIs})
+                                    GROUP BY "chatId")
+            ORDER BY m."chatId" DESC;`, {
+      plain: false,
+      raw: false,
+      type: QueryTypes.SELECT,
+    });
+
+    const data = {
+      conversations: conversations.map((item, index) => {
+        if (item?.chatId === previewMessages[index]?.chatId) {
+          // eslint-disable-next-line no-param-reassign
+          item.message = previewMessages[index];
+        }
+        return item;
+      }),
+    };
+
     res.status(200).send({ data });
   } catch (err) {
     next(err);
