@@ -20,15 +20,19 @@ export function* sendMessage(action) {
     const {data: {data}} = yield Api.chats.postNewMessage(action.data);
 
     const {message, interlocutor, chatData} = data;
-    const preview = {...chatData, interlocutor, text: message.body};
+    const preview = {
+      ...chatData,
+      Interlocutor: {User: interlocutor},
+      message,
+    };
     const {messagesPreview} = yield select(state => state.chatStore);
 
     let isNew = true;
     messagesPreview.forEach(preview => {
       if (preview.chatId === message.chatId) {
-        preview.text = message.body;
-        preview.sender = message.userId;
-        preview.createAt = message.createdAt;
+        preview.message.body = message.body;
+        preview.message.sender = message.userId;
+        preview.message.createAt = message.createdAt;
         isNew = false;
       }
     });
@@ -41,7 +45,6 @@ export function* sendMessage(action) {
       data: {message, chatData, messagesPreview},
     });
   } catch (err) {
-    console.log(err);
     yield put({type: ACTION.SEND_MESSAGE_ERROR, error: err.response});
   }
 }
