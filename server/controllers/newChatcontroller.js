@@ -71,6 +71,28 @@ module.exports.getChatsPreview = async (req, res, next) => {
   }
 };
 
+async function getChatInfo(chatId, userId, interlocutorId) {
+  const userChat = await UserChat.findOrCreate({
+    where: {
+      chatId,
+      userId,
+    },
+    returning: true,
+  });
+  const chatData = userChat[0].get({ plain: true });
+  const interlocutor = await User.findOne({
+    where: {
+      id: interlocutorId,
+    },
+    attributes: {
+      exclude: ['role', 'balance', 'password'],
+    },
+    raw: true,
+  });
+
+  return { chatData, interlocutor };
+}
+
 module.exports.postNewMessage = async (req, res, next) => {
   const senderId = req.tokenPayload.userId;
   const recipientId = req.body.recipient;
@@ -83,17 +105,10 @@ module.exports.postNewMessage = async (req, res, next) => {
         id: tryChatId,
       },
     });
-
     const chatId = chat[0].dataValues.id;
 
-    const userChat = await UserChat.findOrCreate({
-      where: {
-        chatId,
-        userId: senderId,
-      },
-      returning: true,
-    });
-    const chatData = userChat[0].get({ plain: true });
+    const senderChatInfo = await getChatInfo(chatId, senderId, recipientId);
+    const recipientChatInfo = await getChatInfo(chatId, recipientId, senderId);
 
     const newMessage = await Message.create({
       userId: senderId,
@@ -102,24 +117,17 @@ module.exports.postNewMessage = async (req, res, next) => {
     });
     const message = newMessage.get({ plain: true });
 
-    const interlocutor = await User.findOne({
-      where: {
-        id: recipientId,
-      },
-      attributes: {
-        exclude: ['role', 'balance', 'password'],
-      },
-      raw: true,
+    controller.getChatController().emitNewMessage(recipientId, {
+      message,
+      ...recipientChatInfo,
     });
 
-    const data = {
-      chatData,
-      message,
-      interlocutor,
-    };
-
-    controller.getChatController().emitNewMessage(recipientId, data);
-    res.status(201).send({ data });
+    res.status(201).send({
+      data: {
+        message,
+        ...senderChatInfo,
+      },
+    });
   } catch (err) {
     next(err);
   }
