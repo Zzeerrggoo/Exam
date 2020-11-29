@@ -5,12 +5,16 @@ class WebSocket {
   constructor(dispatch, getState, room) {
     this.dispatch = dispatch;
     this.getState = getState;
+    this.connect(room);
+    this.listen();
+  }
+
+  connect = (room) => {
     this.socket = socketIoClient(`${CONSTANTS.WS_BASE_URL}${room}`, {
       origins: 'localhost:*',
     });
-
-    this.listen();
-  }
+    console.log(this.socket);
+  };
 
   listen = () => {
     this.socket.on('connect', () => {

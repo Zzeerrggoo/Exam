@@ -34,21 +34,24 @@ class ChatSocket extends WebSocket {
     this.socket.on('newMessage', data => {
       const {message, interlocutor, chatData} = data.message;
       const {messagesPreview} = this.getState().chatStore;
-      const preview = {...chatData, interlocutor, text: message.body};
+      const preview = {
+        ...chatData,
+        Interlocutor: {User: interlocutor},
+        message,
+      };
 
       let isNew = true;
       messagesPreview.forEach(preview => {
         if (preview.chatId === message.chatId) {
-          preview.text = message.body;
-          preview.sender = message.userId;
-          preview.createAt = message.createdAt;
+          preview.message.body = message.body;
+          preview.message.sender = message.userId;
+          preview.message.createAt = message.createdAt;
           isNew = false;
         }
       });
       if (isNew) {
         messagesPreview.push(preview);
       }
-
       this.dispatch(addMessage({message, chatData, messagesPreview}));
     });
   };

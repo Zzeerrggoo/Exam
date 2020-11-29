@@ -1,4 +1,6 @@
 import {REFRESH_TOKEN_KEY} from '../../constants';
+import {chatController, controller, initSocket} from '../ws/socketController';
+import store from '../../app/store';
 
 class AuthApi {
   #_client;
@@ -26,6 +28,7 @@ class AuthApi {
    * @returns {Promise}
    */
   login = data => {
+    initSocket(store);
     return this.#_client.post(`${this.url}/login`, data);
   };
 
@@ -56,6 +59,8 @@ class AuthApi {
   };
 
   logout = () => {
+    controller.socket.disconnect();
+    chatController.socket.disconnect();
     this.#_token = null;
     localStorage.removeItem(REFRESH_TOKEN_KEY);
   };
