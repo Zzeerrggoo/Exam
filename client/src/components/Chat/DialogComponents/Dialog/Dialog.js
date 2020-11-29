@@ -12,7 +12,9 @@ import ChatInput from '../../ChatComponents/ChatInut/ChatInput';
 
 class Dialog extends React.Component {
   componentDidMount() {
-    this.props.getDialog({interlocutorId: this.props.interlocutor.id});
+    const {chatData} = this.props;
+    const chatId = chatData?.chatId;
+    this.props.getDialog({interlocutorId: this.props.interlocutor.id, chatId});
     this.scrollToBottom();
   }
 
@@ -23,8 +25,13 @@ class Dialog extends React.Component {
   };
 
   componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.interlocutor.id !== this.props.interlocutor.id)
-      this.props.getDialog({interlocutorId: nextProps.interlocutor.id});
+    if (nextProps.interlocutor.id !== this.props.interlocutor.id) {
+      const {chatData} = this.props;
+      const chatId = chatData?.chatId;
+      this.props.getDialog(
+          {interlocutorId: nextProps.interlocutor.id, chatId})
+      ;
+    }
   }
 
   componentWillUnmount() {
@@ -91,7 +98,7 @@ class Dialog extends React.Component {
           {chatData && (chatData.isBlocked || chatData.isInBlackList) ? (
               this.blockMessage()
           ) : (
-              <ChatInput chatId={chatData.chatId}/>
+              <ChatInput chatId={chatData?.chatId}/>
           )}
         </>
     );

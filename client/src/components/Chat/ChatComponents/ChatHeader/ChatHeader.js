@@ -22,7 +22,6 @@ const ChatHeader = (props) => {
 
   const {avatar, firstName} = props.interlocutor;
   const {backToDialogList, chatData, userId} = props;
-  const {isBlocked, isFavorite} = chatData;
   return (
       <div className={styles.chatHeader}>
         <div
@@ -52,30 +51,30 @@ const ChatHeader = (props) => {
                     onClick={(event) =>
                         changeFavorite(
                             {
-                              participants: chatData.participants,
-                              favoriteFlag: !isFavorite,
+                              favoriteFlag: !chatData?.isFavorite,
                             },
                             event,
                         )
                     }
                     className={classNames({
-                      'far fa-heart': !isFavorite,
-                      'fas fa-heart': isFavorite,
+                      'far fa-heart': !chatData?.isFavorite,
+                      'fas fa-heart': chatData?.isFavorite,
                     })}
                 />
                 <i
                     onClick={(event) =>
                         changeBlackList(
                             {
-                              participants: chatData.participants,
-                              blackListFlag: !isBlocked,
+                              blackListFlag: !chatData?.isInBlackList,
+                              chatId: chatData.chatId,
+                              interlocutorId: props.interlocutor.id,
                             },
                             event,
                         )
                     }
                     className={classNames({
-                      'fas fa-user-lock': !isBlocked,
-                      'fas fa-unlock': isBlocked,
+                      'fas fa-user-lock': !chatData?.isInBlackList,
+                      'fas fa-unlock': chatData?.isInBlackList,
                     })}
                 />
               </div>

@@ -12,7 +12,7 @@ class ChatApi {
 
   getChat(data) {
     return this.#_client.get(
-        `${this.url}/${data.chatId}?userId=${data.userId}`);
+        `${this.url}/${data.chatId}?interlocutorId=${data.interlocutorId}`);
   }
 
   setChatFavorite(data) {

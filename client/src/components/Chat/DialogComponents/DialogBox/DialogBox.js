@@ -14,13 +14,16 @@ const DialogBox = (props) => {
     goToExpandedDialog,
     chatMode,
   } = props;
+
   const {
     isBlocked,
     isFavorite,
     isInBlackList,
     chatId,
-    text,
-    createdAt,
+    message: {
+      body,
+      createdAt,
+    },
   } = chatPreview;
 
   const interlocutor = chatPreview.Interlocutor.User;
@@ -53,7 +56,7 @@ const DialogBox = (props) => {
           <span className={styles.interlocutorName}>
             {interlocutor.firstName}
           </span>
-            <span className={styles.interlocutorMessage}>{text}</span>
+            <span className={styles.interlocutorMessage}>{body}</span>
           </div>
           <div className={styles.buttonsContainer}>
             <span className={styles.time}>{getTimeStr(createdAt)}</span>
@@ -62,6 +65,8 @@ const DialogBox = (props) => {
                     changeFavorite(
                         {
                           favoriteFlag: !isFavorite,
+                          chatId,
+                          interlocutorId: interlocutor.id,
                         },
                         event,
                     )
@@ -75,14 +80,16 @@ const DialogBox = (props) => {
                 onClick={(event) =>
                     changeBlackList(
                         {
-                          blackListFlag: !isBlocked,
+                          blackListFlag: !isInBlackList,
+                          chatId,
+                          interlocutorId: interlocutor.id,
                         },
                         event,
                     )
                 }
                 className={classNames({
-                  'fas fa-user-lock': !isBlocked,
-                  'fas fa-unlock': isBlocked,
+                  'fas fa-user-lock': !isInBlackList,
+                  'fas fa-unlock': isInBlackList,
                 })}
             />
             <i

@@ -13,7 +13,6 @@ class WebSocket {
     this.socket = socketIoClient(`${CONSTANTS.WS_BASE_URL}${room}`, {
       origins: 'localhost:*',
     });
-    console.log(this.socket);
   };
 
   listen = () => {
