@@ -133,4 +133,78 @@ module.exports.postNewMessage = async (req, res, next) => {
   }
 };
 
+module.exports.getChat = async (req, res, next) => {
+  try {
+    const recipientId = req.query.interlocutorId;
+    const chatId = Number(req.params.chatId) || null;
+
+    const messages = await Message.findAll({
+      where: {
+        chatId,
+      },
+      raw: true,
+    });
+
+    const interlocutor = await User.findOne({
+      where: {
+        id: recipientId,
+      },
+      attributes: {
+        exclude: ['role', 'balance', 'password'],
+      },
+      raw: true,
+    });
+
+    const data = { messages, interlocutor };
+    res.status(200).send({ data });
+  } catch (err) {
+    next(err);
+  }
+};
+
+async function setChatStatus(updateOptions, userId, chatId, t) {
+  const rawData = await UserChat.update(updateOptions, {
+    where: { userId, chatId }, returning: true, transaction: t,
+  });
+
+  return rawData[1][0].get({ plain: true });
+}
+
+module.exports.setChatBlocked = async (req, res, next) => {
+  const { userId } = req.tokenPayload;
+  const { interlocutorId } = req.body;
+  const { blackListFlag } = req.body;
+  const { chatId } = req.params;
+
+  const t = await sequelize.transaction();
+  try {
+    const userData = await setChatStatus({ isInBlackList: blackListFlag }, userId, chatId, t);
+    const interlocutorData = await setChatStatus({ isBlocked: blackListFlag },
+      interlocutorId, chatId, t);
+    await t.commit();
+    controller.getChatController()
+      .emitChangeBlockStatus(interlocutorId, interlocutorData);
+
+    res.status(200).send({ data: userData });
+  } catch (err) {
+    await t.rollback();
+    next(err);
+  }
+};
+
+module.exports.setChatFavorite = async (req, res, next) => {
+  const { userId } = req.tokenPayload;
+  const isFavorite = req.body.favoriteFlag;
+
+  try {
+    const rawData = await UserChat.update({ isFavorite }, {
+      where: { userId }, returning: true,
+    });
+    // CHECK FOR RETURNING DATA;
+    const data = rawData[1][0].get({ plain: true });
+    res.status(200).send({ data });
+  } catch (err) {
+    next(err);
+  }
+};
 /// ///////////////////////////////////////////////////////////
