@@ -1,4 +1,5 @@
 const { QueryTypes } = require('sequelize');
+const _ = require('lodash');
 const controller = require('../socketInit');
 const {
   User,
@@ -230,20 +231,27 @@ module.exports.createCatalog = async (req, res, next) => {
 module.exports.getCatalogs = async (req, res, next) => {
   try {
     const { userId } = req.tokenPayload;
-    const catalogs = await sequelize.query(`
-                      WITH cc AS (SELECT "catalogId", count(*) AS "chatNumber" 
-                                  FROM "CatalogChats" GROUP BY "catalogId")
-                      SELECT c.id, c."userId", c."catalogName", cc."chatNumber"
-                      FROM "Catalogs" AS c
-                               JOIN cc ON c.id = cc."catalogId"
-                      WHERE c."userId" = ${userId}`,
-    {
-      plain: false,
-      raw: false,
-      type: QueryTypes.SELECT,
+    const catalogs = await Catalog.findAll({
+      where: { userId },
+      include: [
+        {
+          model: CatalogChat,
+          attributes: ['chatId'],
+        },
+      ],
+      raw: true,
+      nested: true,
     });
 
-    res.status(200).send({ data: catalogs });
+    const groupedData = _.groupBy(catalogs, 'id');
+    const data = Object.values(groupedData)
+      .map((item) => {
+        const catalog = _.omit(item[0], 'CatalogChats.chatId');
+        catalog.chats = item.map((chat) => chat['CatalogChats.chatId']);
+        return catalog;
+      });
+
+    res.status(200).send({ data });
   } catch (err) {
     next(err);
   }
@@ -266,51 +274,3 @@ module.exports.addChatToExistingCatalog = async (req, res, next) => {
 
 /// ///////////////////////////////////////////////////////////
 
-module.exports.changeCatalogName = async (req, res, next) => {
-  try {
-    const { userId } = req.tokenPayload;
-    const { catalogName } = req.body;
-
-    const catalog = await Catalog.update({ catalogName }, {
-      where: { userId }, returning: true,
-    });
-    // CHECK FOR RETURNING DATA;
-    const data = catalog[1][0].get({ plain: true });
-    res.send({ data });
-  } catch (err) {
-    next(err);
-  }
-};
-
-module.exports.deleteCatalog = async (req, res, next) => {
-  try {
-    const { catalogId } = req.body;
-    const { userId } = req.tokenPayload;
-    await Catalog.destroy({ where: { id: catalogId, userId } });
-
-    res.status(204).send();
-  } catch (err) {
-    next(err);
-  }
-};
-
-module.exports.removeChatFromCatalog = async (req, res, next) => {
-  try {
-    const { userId } = req.tokenPayload;
-    const { chatId } = req.body;
-    const { catalogId } = req.body;
-
-    await CatalogChat.destroy({ where: { chatId, catalogId } });
-    const catalog = Catalog.findOne({
-      where: {
-        id: catalogId,
-        userId,
-      },
-      raw: true,
-    });
-
-    res.status(200).send({ data: catalog });
-  } catch (err) {
-    next(err);
-  }
-};
