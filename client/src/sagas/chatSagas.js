@@ -161,15 +161,13 @@ export function* removeChatFromCatalogSaga(action) {
   }
 }
 
-/////////////////////////////////////////
-
 export function* deleteCatalog(action) {
   try {
-    yield restController.deleteCatalog(action.data);
+    yield Api.chats.deleteCatalog(action.data);
     const {catalogList} = yield select(state => state.chatStore);
     const newCatalogList = remove(
         catalogList,
-        catalog => action.data.catalogId !== catalog._id,
+        catalog => action.data.catalogId !== catalog.id,
     );
     yield put({type: ACTION.DELETE_CATALOG_SUCCESS, data: newCatalogList});
   } catch (err) {

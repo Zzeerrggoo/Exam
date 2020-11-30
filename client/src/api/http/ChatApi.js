@@ -38,7 +38,7 @@ class ChatApi {
   }
 
   deleteCatalog(data) {
-    return this.#_client.delete(`${this.url}/catalogs/${data.catalogId}`, data);
+    return this.#_client.delete(`${this.url}/catalogs/${data.catalogId}`);
   }
 
   changeCatalogName(data) {
