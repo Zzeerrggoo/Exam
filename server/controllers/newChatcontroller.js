@@ -221,7 +221,6 @@ module.exports.createCatalog = async (req, res, next) => {
 
   try {
     const newCatalog = await Catalog.create({ userId, catalogName });
-    // return data from catalog, get Id , update catalog and send it
     await addChatIntoCatalog({ chatId, catalogId: newCatalog.id });
     const data = { catalog: newCatalog };
     res.status(201).send({ data });
@@ -229,4 +228,27 @@ module.exports.createCatalog = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.getCatalogs = async (req, res, next) => {
+  try {
+    const { userId } = req.tokenPayload;
+    const catalogs = await sequelize.query(`
+                      WITH cc AS (SELECT "catalogId", count(*) AS "chatNumber" 
+                                  FROM "CatalogChats" GROUP BY "catalogId")
+                      SELECT c.id, c."userId", c."catalogName", cc."chatNumber"
+                      FROM "Catalogs" AS c
+                               JOIN cc ON c.id = cc."catalogId"
+                      WHERE c."userId" = ${userId}`,
+    {
+      plain: false,
+      raw: false,
+      type: QueryTypes.SELECT,
+    });
+
+    res.status(200).send({ data: catalogs });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
