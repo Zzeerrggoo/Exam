@@ -2,7 +2,6 @@ import {put, select} from 'redux-saga/effects';
 import ACTION from '../actions/actionTypes';
 import * as restController from '../api/rest/restController';
 import remove from 'lodash/remove';
-import {isEqual} from 'lodash';
 import * as ChatsActionCreators from '../actions/chatsActionCreators';
 import * as Api from '../api/http';
 
@@ -97,47 +96,22 @@ export function* changeChatFavorite(action) {
 export function* createCatalog(action) {
   try {
     const {data: {data}} = yield Api.chats.createCatalog(action.data);
-    console.log(data);
     yield put({type: ACTION.CREATE_CATALOG_SUCCESS, data: data});
   } catch (err) {
     yield put({type: ACTION.CREATE_CATALOG_ERROR, error: err.response});
   }
 }
-/////////////////////////////////////////
 
 export function* getCatalogListSaga(action) {
   try {
-    const {data} = yield restController.getCatalogList(action.data);
+    const {data: {data}} = yield Api.chats.getCatalogsList(action.data);
     yield put({type: ACTION.RECEIVE_CATALOG_LIST, data: data});
   } catch (err) {
     yield put({type: ACTION.RECEIVE_CATALOG_LIST_ERROR, error: err.response});
   }
 }
 
-export function* addChatToCatalog(action) {
-  try {
-    const {data} = yield restController.addChatToCatalog(action.data);
-    const {catalogList} = yield select(state => state.chatStore);
-    for (let i = 0; i < catalogList.length; i++) {
-      if (catalogList[i]._id === data._id) {
-        catalogList[i].chats = data.chats;
-        break;
-      }
-    }
-    yield put({type: ACTION.ADD_CHAT_TO_CATALOG, data: catalogList});
-  } catch (err) {
-    yield put({type: ACTION.ADD_CHAT_TO_CATALOG_ERROR, error: err.response});
-  }
-}
-
-export function* createCatalog(action) {
-  try {
-    const {data} = yield restController.createCatalog(action.data);
-    yield put({type: ACTION.CREATE_CATALOG_SUCCESS, data: data});
-  } catch (err) {
-    yield put({type: ACTION.CREATE_CATALOG_ERROR, error: err.response});
-  }
-}
+/////////////////////////////////////////
 
 export function* deleteCatalog(action) {
   try {
