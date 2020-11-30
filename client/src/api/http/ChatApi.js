@@ -53,7 +53,7 @@ class ChatApi {
 
   removeChatFromCatalog(data) {
     return this.#_client.delete(
-        `${this.url}/catalogs/${data.catalogId}/${data.chatId}`, data);
+        `${this.url}/catalogs/${data.catalogId}/${data.chatId}`);
   }
 
 }
