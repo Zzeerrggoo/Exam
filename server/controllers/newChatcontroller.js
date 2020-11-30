@@ -178,7 +178,8 @@ module.exports.setChatBlocked = async (req, res, next) => {
 
   const t = await sequelize.transaction();
   try {
-    const userData = await setChatStatus({ isInBlackList: blackListFlag }, userId, chatId, t);
+    const userData = await setChatStatus({ isInBlackList: blackListFlag }, userId,
+      chatId, t);
     const interlocutorData = await setChatStatus({ isBlocked: blackListFlag },
       interlocutorId, chatId, t);
     await t.commit();
@@ -205,4 +206,27 @@ module.exports.setChatFavorite = async (req, res, next) => {
     next(err);
   }
 };
+
 /// ///////////////////////////////////////////////////////////
+
+async function addChatIntoCatalog(data) {
+  const { catalogId, chatId } = data;
+  await CatalogChat.create({ catalogId, chatId });
+}
+
+module.exports.createCatalog = async (req, res, next) => {
+  const { userId } = req.tokenPayload;
+  const { catalogName } = req.body;
+  const { chatId } = req.body;
+
+  try {
+    const newCatalog = await Catalog.create({ userId, catalogName });
+    // return data from catalog, get Id , update catalog and send it
+    await addChatIntoCatalog({ chatId, catalogId: newCatalog.id });
+    const data = { catalog: newCatalog };
+    res.status(201).send({ data });
+  } catch (err) {
+    next(err);
+  }
+};
+
