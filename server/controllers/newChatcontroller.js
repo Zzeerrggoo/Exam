@@ -244,12 +244,11 @@ module.exports.getCatalogs = async (req, res, next) => {
     });
 
     const groupedData = _.groupBy(catalogs, 'id');
-    const data = Object.values(groupedData)
-      .map((item) => {
-        const catalog = _.omit(item[0], 'CatalogChats.chatId');
-        catalog.chats = item.map((chat) => chat['CatalogChats.chatId']);
-        return catalog;
-      });
+    const data = Object.values(groupedData).map((item) => {
+      const catalog = _.omit(item[0], 'CatalogChats.chatId');
+      catalog.chats = _.compact(item.map((chat) => chat['CatalogChats.chatId']));
+      return catalog;
+    });
 
     res.status(200).send({ data });
   } catch (err) {
@@ -280,8 +279,14 @@ module.exports.changeCatalogName = async (req, res, next) => {
     const catalog = await Catalog.update({ catalogName }, {
       where: { userId, id: catalogId }, returning: true,
     });
+
+    const chats = await catalog[1][0].getCatalogChats(
+      { attributes: ['chatId'], raw: true },
+    );
     const data = catalog[1][0].get({ plain: true });
-    res.send({ data });
+    data.chats = _.compact(chats.map((item) => item.chatId));
+
+    res.status(200).send({ data });
   } catch (err) {
     next(err);
   }
