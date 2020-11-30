@@ -4,6 +4,9 @@ const {
 
 module.exports = (sequelize, DataTypes) => {
   class CatalogChat extends Model {
+    static associate({ Catalog }) {
+      CatalogChat.belongsTo(Catalog, { foreignKey: 'catalogId' });
+    }
   }
 
   CatalogChat.init({
