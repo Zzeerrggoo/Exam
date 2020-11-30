@@ -94,6 +94,15 @@ export function* changeChatFavorite(action) {
   }
 }
 
+export function* createCatalog(action) {
+  try {
+    const {data: {data}} = yield Api.chats.createCatalog(action.data);
+    console.log(data);
+    yield put({type: ACTION.CREATE_CATALOG_SUCCESS, data: data});
+  } catch (err) {
+    yield put({type: ACTION.CREATE_CATALOG_ERROR, error: err.response});
+  }
+}
 /////////////////////////////////////////
 
 export function* getCatalogListSaga(action) {
