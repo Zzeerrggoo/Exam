@@ -111,6 +111,15 @@ export function* getCatalogListSaga(action) {
   }
 }
 
+export function* addChatToCatalog(action) {
+  try {
+    yield Api.chats.addChatIntoCatalog(action.data);
+    yield put({type: ACTION.ADD_CHAT_TO_CATALOG});
+  } catch (err) {
+    yield put({type: ACTION.ADD_CHAT_TO_CATALOG_ERROR, error: err.response});
+  }
+}
+
 /////////////////////////////////////////
 
 export function* deleteCatalog(action) {
