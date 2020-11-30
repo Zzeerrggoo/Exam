@@ -120,6 +120,25 @@ export function* addChatToCatalog(action) {
   }
 }
 
+export function* changeCatalogName(action) {
+  try {
+    const {data: {data}} = yield Api.chats.changeCatalogName(action.data);
+    const {catalogList} = yield select(state => state.chatStore);
+
+    const index = catalogList.findIndex((item) => item.id === data.id);
+    if (index !== -1) {
+      catalogList[index].catalogName = data.catalogName;
+    }
+
+    yield put({
+      type: ACTION.CHANGE_CATALOG_NAME_SUCCESS,
+      data: {catalogList, currentCatalog: catalogList[index]},
+    });
+  } catch (err) {
+    yield put({type: ACTION.CHANGE_CATALOG_NAME_ERROR, error: err.response});
+  }
+}
+
 /////////////////////////////////////////
 
 export function* deleteCatalog(action) {
@@ -155,24 +174,5 @@ export function* removeChatFromCatalogSaga(action) {
       type: ACTION.REMOVE_CHAT_FROM_CATALOG_ERROR,
       error: err.response,
     });
-  }
-}
-
-export function* changeCatalogName(action) {
-  try {
-    const {data} = yield restController.changeCatalogName(action.data);
-    const {catalogList} = yield select(state => state.chatStore);
-    for (let i = 0; i < catalogList.length; i++) {
-      if (catalogList[i]._id === data._id) {
-        catalogList[i].catalogName = data.catalogName;
-        break;
-      }
-    }
-    yield put({
-      type: ACTION.CHANGE_CATALOG_NAME_SUCCESS,
-      data: {catalogList, currentCatalog: data},
-    });
-  } catch (err) {
-    yield put({type: ACTION.CHANGE_CATALOG_NAME_ERROR, error: err.response});
   }
 }
