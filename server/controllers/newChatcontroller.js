@@ -195,13 +195,11 @@ module.exports.setChatBlocked = async (req, res, next) => {
 module.exports.setChatFavorite = async (req, res, next) => {
   const { userId } = req.tokenPayload;
   const isFavorite = req.body.favoriteFlag;
+  const { chatId } = req.params;
 
   try {
-    const rawData = await UserChat.update({ isFavorite }, {
-      where: { userId }, returning: true,
-    });
-    // CHECK FOR RETURNING DATA;
-    const data = rawData[1][0].get({ plain: true });
+    const data = await setChatStatus({ isFavorite }, userId, chatId);
+
     res.status(200).send({ data });
   } catch (err) {
     next(err);
