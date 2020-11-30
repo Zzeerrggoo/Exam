@@ -21,7 +21,8 @@ const ChatHeader = (props) => {
   };
 
   const {avatar, firstName} = props.interlocutor;
-  const {backToDialogList, chatData, userId} = props;
+  const {backToDialogList, chatData} = props;
+
   return (
       <div className={styles.chatHeader}>
         <div
@@ -52,6 +53,7 @@ const ChatHeader = (props) => {
                         changeFavorite(
                             {
                               favoriteFlag: !chatData?.isFavorite,
+                              chatId: chatData.chatId,
                             },
                             event,
                         )
