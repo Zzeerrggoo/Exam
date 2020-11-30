@@ -272,5 +272,20 @@ module.exports.addChatToExistingCatalog = async (req, res, next) => {
   }
 };
 
+module.exports.changeCatalogName = async (req, res, next) => {
+  try {
+    const { userId } = req.tokenPayload;
+    const { catalogName, catalogId } = req.body;
+
+    const catalog = await Catalog.update({ catalogName }, {
+      where: { userId, id: catalogId }, returning: true,
+    });
+    const data = catalog[1][0].get({ plain: true });
+    res.send({ data });
+  } catch (err) {
+    next(err);
+  }
+};
+
 /// ///////////////////////////////////////////////////////////
 
