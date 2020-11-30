@@ -292,5 +292,30 @@ module.exports.changeCatalogName = async (req, res, next) => {
   }
 };
 
+module.exports.removeChatFromCatalog = async (req, res, next) => {
+  try {
+    const { userId } = req.tokenPayload;
+    const { chatId, catalogId } = req.params;
+
+    await CatalogChat.destroy({ where: { chatId, catalogId } });
+    const catalog = await Catalog.findOne({
+      where: {
+        id: catalogId,
+        userId,
+      },
+    });
+
+    const chats = await catalog.getCatalogChats(
+      { attributes: ['chatId'], raw: true },
+    );
+    const data = catalog.get({ plain: true });
+    data.chats = _.compact(chats.map((item) => item.chatId));
+
+    res.status(200).send({ data });
+  } catch (err) {
+    next(err);
+  }
+};
+
 /// ///////////////////////////////////////////////////////////
 
