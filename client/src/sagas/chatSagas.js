@@ -61,7 +61,6 @@ export function* getDialog(action) {
 export function* changeChatBlock(action) {
   try {
     const {data: {data}} = yield Api.chats.setChatBlocked(action.data);
-    console.log(data);
     const {messagesPreview} = yield select(state => state.chatStore);
     messagesPreview.forEach(preview => {
       if (preview.chatId === data.chatId) {
@@ -78,22 +77,24 @@ export function* changeChatBlock(action) {
   }
 }
 
-export function* changeChatBlock(action) {
+export function* changeChatFavorite(action) {
   try {
-    const {data} = yield restController.changeChatBlock(action.data);
+    const {data: {data}} = yield Api.chats.setChatFavorite(action.data);
     const {messagesPreview} = yield select(state => state.chatStore);
     messagesPreview.forEach(preview => {
-      if (isEqual(preview.participants, data.participants))
-        preview.favoriteList = data.favoriteList;
+      if (preview.chatId === data.chatId)
+        preview.isFavorite = data.isFavorite;
     });
     yield put({
-      type: ACTION.CHANGE_CHAT_BLOCK,
-      data: {messagesPreview, chatData: data},
+      type: ACTION.CHANGE_CHAT_FAVORITE,
+      data: {changedPreview: data, messagesPreview},
     });
   } catch (err) {
-    yield put({type: ACTION.SET_CHAT_BLOCK_ERROR, error: err.response});
+    yield put({type: ACTION.SET_CHAT_FAVORITE_ERROR, error: err.response});
   }
 }
+
+/////////////////////////////////////////
 
 export function* getCatalogListSaga(action) {
   try {
