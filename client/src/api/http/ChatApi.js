@@ -12,29 +12,29 @@ class ChatApi {
 
   getChat(data) {
     return this.#_client.get(
-        `${this.url}/${data.chatId}?interlocutorId=${data.interlocutorId}`);
+        `${this.url}/chat/${data.chatId}?interlocutorId=${data.interlocutorId}`);
   }
 
   setChatFavorite(data) {
     return this.#_client.patch(
-        `${this.url}/${data.chatId}/favorite`, data);
+        `${this.url}/chat/${data.chatId}/favorite`, data);
   }
 
   setChatBlocked(data) {
     return this.#_client.patch(
-        `${this.url}/${data.chatId}/blocked`, data);
+        `${this.url}/chat/${data.chatId}/blocked`, data);
   }
 
   postNewMessage(data) {
-    return this.#_client.post(`${this.url}/${data.chatId}`, data);
+    return this.#_client.post(`${this.url}/chat/${data.chatId}`, data);
   }
 
   createCatalog(data) {
-    return this.#_client.post(`${this.url}/catalogs`, data);
+    return this.#_client.post(`${this.url}/catalogs/`, data);
   }
 
   getCatalogsList(data) {
-    return this.#_client.get(`${this.url}/catalogs`, data);
+    return this.#_client.get(`${this.url}/catalogs/`, data);
   }
 
   deleteCatalog(data) {
