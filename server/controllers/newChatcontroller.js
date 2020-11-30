@@ -207,11 +207,9 @@ module.exports.setChatFavorite = async (req, res, next) => {
   }
 };
 
-/// ///////////////////////////////////////////////////////////
-
 async function addChatIntoCatalog(data) {
   const { catalogId, chatId } = data;
-  await CatalogChat.create({ catalogId, chatId });
+  await CatalogChat.findOrCreate({ where: { catalogId, chatId } });
 }
 
 module.exports.createCatalog = async (req, res, next) => {
@@ -251,4 +249,68 @@ module.exports.getCatalogs = async (req, res, next) => {
   }
 };
 
+module.exports.addChatToExistingCatalog = async (req, res, next) => {
+  try {
+    const { userId } = req.tokenPayload;
+    const { catalogId } = req.body;
+    const { chatId } = req.body;
 
+    await addChatIntoCatalog({ catalogId, chatId });
+    const catalog = await Catalog.findOne({ where: { userId, id: catalogId } });
+    const data = { catalog };
+    res.send({ data });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/// ///////////////////////////////////////////////////////////
+
+module.exports.changeCatalogName = async (req, res, next) => {
+  try {
+    const { userId } = req.tokenPayload;
+    const { catalogName } = req.body;
+
+    const catalog = await Catalog.update({ catalogName }, {
+      where: { userId }, returning: true,
+    });
+    // CHECK FOR RETURNING DATA;
+    const data = catalog[1][0].get({ plain: true });
+    res.send({ data });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.deleteCatalog = async (req, res, next) => {
+  try {
+    const { catalogId } = req.body;
+    const { userId } = req.tokenPayload;
+    await Catalog.destroy({ where: { id: catalogId, userId } });
+
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.removeChatFromCatalog = async (req, res, next) => {
+  try {
+    const { userId } = req.tokenPayload;
+    const { chatId } = req.body;
+    const { catalogId } = req.body;
+
+    await CatalogChat.destroy({ where: { chatId, catalogId } });
+    const catalog = Catalog.findOne({
+      where: {
+        id: catalogId,
+        userId,
+      },
+      raw: true,
+    });
+
+    res.status(200).send({ data: catalog });
+  } catch (err) {
+    next(err);
+  }
+};
