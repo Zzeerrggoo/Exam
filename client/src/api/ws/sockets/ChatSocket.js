@@ -4,7 +4,6 @@ import {
   addMessage,
   changeBlockStatusInStore,
 } from '../../../actions/actionCreator';
-import {isEqual} from 'lodash';
 
 class ChatSocket extends WebSocket {
   constructor(dispatch, getState, room) {
@@ -21,9 +20,9 @@ class ChatSocket extends WebSocket {
       const {message} = data;
       const {messagesPreview} = this.getState().chatStore;
       messagesPreview.forEach(preview => {
-        if (preview.chatId === data.chatId) {
-          preview.isBlocked = data.isBlocked;
-          preview.isInBlackList = data.isInBlackList;
+        if (preview.chatId === message.chatId) {
+          preview.isBlocked = message.isBlocked;
+          preview.isInBlackList = message.isInBlackList;
         }
       });
       this.dispatch(
