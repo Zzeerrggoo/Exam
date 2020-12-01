@@ -12,6 +12,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'Catalogs',
+          onDelete: 'CASCADE',
         },
       },
       chatId: {
@@ -19,6 +20,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'Chats',
+          onDelete: 'CASCADE',
         },
       },
       createdAt: {
