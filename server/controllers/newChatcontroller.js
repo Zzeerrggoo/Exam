@@ -112,28 +112,6 @@ module.exports.getChatsPreview = async (req, res, next) => {
   }
 };
 
-async function getChatInfo(chatId, userId, interlocutorId) {
-  const userChat = await UserChat.findOrCreate({
-    where: {
-      chatId,
-      userId,
-    },
-    returning: true,
-  });
-  const chatData = userChat[0].get({ plain: true });
-  const interlocutor = await User.findOne({
-    where: {
-      id: interlocutorId,
-    },
-    attributes: {
-      exclude: ['role', 'balance', 'password'],
-    },
-    raw: true,
-  });
-
-  return { chatData, interlocutor };
-}
-
 module.exports.postNewMessage = async (req, res, next) => {
   const senderId = req.tokenPayload.userId;
   const recipientId = req.body.recipient;
@@ -148,14 +126,15 @@ module.exports.postNewMessage = async (req, res, next) => {
     });
     const chatId = chat[0].dataValues.id;
 
-    const senderChatInfo = await getChatInfo(chatId, senderId, recipientId);
-    const recipientChatInfo = await getChatInfo(chatId, recipientId, senderId);
-
-    const newMessage = await Message.create({
+    const promises = [];
+    promises.push(getChatInfo(chatId, senderId, recipientId));
+    promises.push(getChatInfo(chatId, recipientId, senderId));
+    promises.push(Message.create({
       userId: senderId,
       chatId,
       body: messageBody,
-    });
+    }));
+    const [senderChatInfo, recipientChatInfo, newMessage] = await Promise.all(promises);
     const message = newMessage.get({ plain: true });
 
     controller.getChatController().emitNewMessage(recipientId, {
@@ -185,31 +164,13 @@ module.exports.getChat = async (req, res, next) => {
       },
       raw: true,
     });
-
-    const interlocutor = await User.findOne({
-      where: {
-        id: recipientId,
-      },
-      attributes: {
-        exclude: ['role', 'balance', 'password'],
-      },
-      raw: true,
-    });
-
+    const interlocutor = await getUser(recipientId);
     const data = { messages, interlocutor };
     res.status(200).send({ data });
   } catch (err) {
     next(err);
   }
 };
-
-async function setChatStatus(updateOptions, userId, chatId, t) {
-  const rawData = await UserChat.update(updateOptions, {
-    where: { userId, chatId }, returning: true, transaction: t,
-  });
-
-  return rawData[1][0].get({ plain: true });
-}
 
 module.exports.setChatBlocked = async (req, res, next) => {
   const { userId } = req.tokenPayload;
@@ -223,6 +184,7 @@ module.exports.setChatBlocked = async (req, res, next) => {
       chatId, t);
     const interlocutorData = await setChatStatus({ isBlocked: blackListFlag },
       interlocutorId, chatId, t);
+
     await t.commit();
     controller.getChatController()
       .emitChangeBlockStatus(interlocutorId, interlocutorData);
@@ -247,11 +209,6 @@ module.exports.setChatFavorite = async (req, res, next) => {
     next(err);
   }
 };
-
-async function addChatIntoCatalog(data) {
-  const { catalogId, chatId } = data;
-  await CatalogChat.findOrCreate({ where: { catalogId, chatId } });
-}
 
 module.exports.createCatalog = async (req, res, next) => {
   const { userId } = req.tokenPayload;
@@ -286,7 +243,9 @@ module.exports.getCatalogs = async (req, res, next) => {
     const groupedData = _.groupBy(catalogs, 'id');
     const data = Object.values(groupedData).map((item) => {
       const catalog = _.omit(item[0], 'CatalogChats.chatId');
-      catalog.chats = _.compact(item.map((chat) => chat['CatalogChats.chatId']));
+      catalog.chats = _.compact(
+        item.map((chat) => chat['CatalogChats.chatId']),
+      );
       return catalog;
     });
 
