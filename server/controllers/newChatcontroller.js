@@ -12,6 +12,46 @@ const {
   sequelize,
 } = require('../models');
 
+function getUser(userId) {
+  return User.findOne({
+    where: {
+      id: userId,
+    },
+    attributes: {
+      exclude: ['role', 'balance', 'password'],
+    },
+    raw: true,
+  });
+}
+
+async function getChatInfo(chatId, userId, interlocutorId) {
+  const userChat = UserChat.findOrCreate({
+    where: {
+      chatId,
+      userId,
+    },
+    returning: true,
+  });
+  const interlocutor = getUser(interlocutorId);
+
+  const [chat, user] = await Promise.all([userChat, interlocutor]);
+  const chatData = chat[0].get({ plain: true });
+  return { chatData, interlocutor: user };
+}
+
+async function setChatStatus(updateOptions, userId, chatId, t) {
+  const rawData = await UserChat.update(updateOptions, {
+    where: { userId, chatId }, returning: true, transaction: t,
+  });
+
+  return rawData[1][0].get({ plain: true });
+}
+
+async function addChatIntoCatalog(data) {
+  const { catalogId, chatId } = data;
+  await CatalogChat.findOrCreate({ where: { catalogId, chatId } });
+}
+
 module.exports.getChatsPreview = async (req, res, next) => {
   try {
     const { userId } = req.tokenPayload;
