@@ -240,57 +240,57 @@ export const getDialogMessagesFailed = error => ({
 });
 
 ////////////////NO SAGA ACTIONS/////////////////
-export const clearMessageList = error => ({
+export const clearMessageList = values => ({
   type: CHATS_ACTION_TYPES.CLEAR_MESSAGE_LIST,
   payload: {
-    error,
+    values,
   },
 });
-export const changeChatShow = error => ({
+export const changeChatShow = values => ({
   type: CHATS_ACTION_TYPES.CHANGE_CHAT_SHOW,
   payload: {
-    error,
+    values,
   },
 });
-export const backToDialogList = error => ({
+export const backToDialogList = values => ({
   type: CHATS_ACTION_TYPES.BACK_TO_DIALOG_LIST,
   payload: {
-    error,
+    values,
   },
 });
-export const changeRenameCatalogMode = error => ({
+export const changeRenameCatalogMode = values => ({
   type: CHATS_ACTION_TYPES.CHANGE_RENAME_CATALOG_MODE,
   payload: {
-    error,
+    values,
   },
 });
-export const setChatPreviewMode = error => ({
+export const setChatPreviewMode = values => ({
   type: CHATS_ACTION_TYPES.SET_CHAT_PREVIEW_MODE,
   payload: {
-    error,
+    values,
   },
 });
-export const goToExpandedDialog = error => ({
+export const goToExpandedDialog = values => ({
   type: CHATS_ACTION_TYPES.GO_TO_EXPANDED_DIALOG,
   payload: {
-    error,
+    values,
   },
 });
-export const changeShowModeCatalog = error => ({
+export const changeShowModeCatalog = values => ({
   type: CHATS_ACTION_TYPES.CHANGE_SHOW_MODE_CATALOG,
   payload: {
-    error,
+    values,
   },
 });
-export const changeTypeAddingChatInCatalog = error => ({
+export const changeTypeAddingChatInCatalog = values => ({
   type: CHATS_ACTION_TYPES.CHANGE_TYPE_ADDING_CHAT_IN_CATALOG,
   payload: {
-    error,
+    values,
   },
 });
-export const changeShowAddChatToCatalog = error => ({
+export const changeShowAddChatToCatalog = values => ({
   type: CHATS_ACTION_TYPES.CHANGE_SHOW_ADD_CHAT_TO_CATALOG,
   payload: {
-    error,
+    values,
   },
 });
