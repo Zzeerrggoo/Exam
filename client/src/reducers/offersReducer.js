@@ -33,6 +33,27 @@ const helpers = {
         draftState.isFetching = false;
       }),
 
+  [OFFER_ACTION_TYPES.GET_MODERATING_OFFERS_REQUEST]: produce(
+      draftState => {
+        draftState.isFetching = true;
+        draftState.offers = [];
+        draftState.error = null;
+      }),
+
+  [OFFER_ACTION_TYPES.GET_MODERATING_OFFERS_SUCCESS]: produce(
+      (draftState, action) => {
+        const {payload: {values}} = action;
+        draftState.offers = values;
+        draftState.isFetching = false;
+      }),
+
+  [OFFER_ACTION_TYPES.GET_MODERATING_OFFERS_FAILED]: produce(
+      (draftState, action) => {
+        const {payload: {error}} = action;
+        draftState.error = error;
+        draftState.isFetching = false;
+      }),
+
   [OFFER_ACTION_TYPES.ADD_NEW_OFFER_REQUEST]: produce(
       draftState => {
         draftState.isFetching = true;
