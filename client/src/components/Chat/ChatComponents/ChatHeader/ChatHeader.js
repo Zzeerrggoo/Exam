@@ -2,9 +2,9 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {
   backToDialogList,
-  changeChatFavorite,
-  changeChatBlock,
-} from '../../../../actions/actionCreator';
+  setChatFavorite,
+  setChatBlocked,
+} from '../../../../actions/chatsActionCreators';
 import styles from './ChatHeader.module.sass';
 import CONSTANTS from '../../../../constants';
 import classNames from 'classnames';
@@ -94,8 +94,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     backToDialogList: () => dispatch(backToDialogList()),
-    changeChatFavorite: (data) => dispatch(changeChatFavorite(data)),
-    changeChatBlock: (data) => dispatch(changeChatBlock(data)),
+    changeChatFavorite: (data) => dispatch(setChatFavorite(data)),
+    changeChatBlock: (data) => dispatch(setChatBlocked(data)),
   };
 };
 

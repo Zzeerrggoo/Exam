@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {sendMessageAction} from '../../../../actions/actionCreator';
+import {postMessage} from '../../../../actions/chatsActionCreators';
 import {Field, reduxForm} from 'redux-form';
 import styles from './ChatInput.module.sass';
 import CONSTANTS from '../../../../constants';
@@ -61,7 +61,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    sendMessage: (data) => dispatch(sendMessageAction(data)),
+    sendMessage: (data) => dispatch(postMessage(data)),
   };
 };
 

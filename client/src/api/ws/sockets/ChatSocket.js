@@ -1,14 +1,11 @@
 import WebSocket from './WebSocket';
 import CONTANTS from '../../../constants';
 import {
-  addMessage,
-  changeBlockStatusInStore,
-} from '../../../actions/actionCreator';
+  postMessage,
+  setChatBlocked,
+} from '../../../actions/chatsActionCreators';
 
 class ChatSocket extends WebSocket {
-  constructor(dispatch, getState, room) {
-    super(dispatch, getState, room);
-  }
 
   anotherSubscribes = () => {
     this.onNewMessage();
@@ -26,7 +23,7 @@ class ChatSocket extends WebSocket {
         }
       });
       this.dispatch(
-          changeBlockStatusInStore({chatData: message, messagesPreview}),
+          setChatBlocked({chatData: message, messagesPreview}),
       );
     });
   };
@@ -53,7 +50,7 @@ class ChatSocket extends WebSocket {
       if (isNew) {
         messagesPreview.push(preview);
       }
-      this.dispatch(addMessage({message, chatData, messagesPreview}));
+      this.dispatch(postMessage({message, chatData, messagesPreview}));
     });
   };
 

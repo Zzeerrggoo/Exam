@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import Rating from 'react-rating';
 import {
   goToExpandedDialog,
-} from '../../actions/actionCreator';
+} from '../../actions/chatsActionCreators';
 import {
   changeOfferMark,
   clearError,

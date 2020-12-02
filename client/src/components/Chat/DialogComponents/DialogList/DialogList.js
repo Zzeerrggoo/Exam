@@ -3,10 +3,10 @@ import {connect} from 'react-redux';
 import CONSTANTS from '../../../../constants';
 import {
   goToExpandedDialog,
-  changeChatFavorite,
-  changeChatBlock,
-  changeShowAddChatToCatalogMenu,
-} from '../../../../actions/actionCreator';
+  setChatFavorite,
+  setChatBlocked,
+  changeShowAddChatToCatalog,
+} from '../../../../actions/chatsActionCreators';
 import moment from 'moment';
 import DialogBox from '../DialogBox/DialogBox';
 import styles from './DialogList.module.sass';
@@ -104,10 +104,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     goToExpandedDialog: (data) => dispatch(goToExpandedDialog(data)),
-    changeChatFavorite: (data) => dispatch(changeChatFavorite(data)),
-    changeChatBlock: (data) => dispatch(changeChatBlock(data)),
+    changeChatFavorite: (data) => dispatch(setChatFavorite(data)),
+    changeChatBlock: (data) => dispatch(setChatBlocked(data)),
     changeShowAddChatToCatalogMenu: (data) =>
-        dispatch(changeShowAddChatToCatalogMenu(data)),
+        dispatch(changeShowAddChatToCatalog(data)),
   };
 };
 
