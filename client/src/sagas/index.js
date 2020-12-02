@@ -52,6 +52,8 @@ function* rootSaga() {
   yield takeEvery(OFFER_ACTION_TYPES.ADD_NEW_OFFER, OfferSagas.setNewOfferSaga);
   yield takeLatest(OFFER_ACTION_TYPES.SET_OFFER_STATUS,
       OfferSagas.setOffersStatusSaga);
+  yield takeLatest(OFFER_ACTION_TYPES.GET_MODERATING_OFFERS,
+      OfferSagas.getModeratingOffersSaga);
 
   //CHAT
   yield takeLatest(CHATS_ACTION_TYPES.GET_CHAT_PREVIEW, ChatSagas.previewSaga);

@@ -56,3 +56,15 @@ export function* setOffersStatusSaga(action) {
     yield put(OfferActionCreators.setOfferStatusFailed(error));
   }
 }
+
+export function* getModeratingOffersSaga(action) {
+  try {
+    const {payload: {values}} = action;
+    yield put(OfferActionCreators.getModeratingOffersRequest());
+    const {data: {data}} = yield Api.offers.getModeratingOffers(values);
+    yield put(OfferActionCreators.getModeratingOffersSuccess(data));
+
+  } catch (error) {
+    yield put(OfferActionCreators.getModeratingOffersFailed(error));
+  }
+}
