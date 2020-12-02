@@ -1,9 +1,10 @@
 import WebSocket from './WebSocket';
 import CONTANTS from '../../../constants';
 import {
-  postMessage,
-  setChatBlocked,
+  postMessageSuccess,
+  setChatBlockedSuccess,
 } from '../../../actions/chatsActionCreators';
+import {produce} from 'immer';
 
 class ChatSocket extends WebSocket {
 
@@ -14,16 +15,21 @@ class ChatSocket extends WebSocket {
 
   onChangeBlockStatus = () => {
     this.socket.on(CONTANTS.CHANGE_BLOCK_STATUS, data => {
+
       const {message} = data;
       const {messagesPreview} = this.getState().chatStore;
-      messagesPreview.forEach(preview => {
-        if (preview.chatId === message.chatId) {
-          preview.isBlocked = message.isBlocked;
-          preview.isInBlackList = message.isInBlackList;
+
+      const updatedMessagesPreview = produce(messagesPreview, draft => {
+        const index = draft.findIndex(item => item.chatId === message.chatId);
+        if (index !== -1) {
+          draft[index].isBlocked = message.isBlocked;
+          draft[index].isInBlackList = message.isInBlackList;
         }
       });
+
       this.dispatch(
-          setChatBlocked({chatData: message, messagesPreview}),
+          setChatBlockedSuccess(
+              {chatData: message, messagesPreview: updatedMessagesPreview}),
       );
     });
   };
@@ -38,19 +44,19 @@ class ChatSocket extends WebSocket {
         message,
       };
 
-      let isNew = true;
-      messagesPreview.forEach(preview => {
-        if (preview.chatId === message.chatId) {
-          preview.message.body = message.body;
-          preview.message.sender = message.userId;
-          preview.message.createAt = message.createdAt;
-          isNew = false;
+      const updatedMessagesPreview = produce(messagesPreview, draft => {
+        const index = draft.findIndex(item => item.chatId === message.chatId);
+        if (index !== -1) {
+          draft[index].message.body = message.body;
+          draft[index].message.sender = message.userId;
+          draft[index].message.createAt = message.createdAt;
+        } else {
+          draft.push(preview);
         }
       });
-      if (isNew) {
-        messagesPreview.push(preview);
-      }
-      this.dispatch(postMessage({message, chatData, messagesPreview}));
+
+      this.dispatch(postMessageSuccess(
+          {message, chatData, messagesPreview: updatedMessagesPreview}));
     });
   };
 

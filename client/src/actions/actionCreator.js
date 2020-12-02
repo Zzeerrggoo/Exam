@@ -195,14 +195,14 @@ export const changeCatalogName = (data) => {
     data: data,
   };
 };
-
+//REFACTOR
 export const changeProfileModeView = (data) => {
   return {
     type: ACTION.CHANGE_PROFILE_MODE_VIEW,
     data: data,
   };
 };
-
+//REFACTOR
 export const clearUserError = () => {
   return {
     type: ACTION.CLEAR_USER_ERROR,

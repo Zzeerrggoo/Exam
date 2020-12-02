@@ -5,7 +5,7 @@ import contestsReducer from './contestsReducer';
 import singleContestReducer from './singleContestReducer';
 import paymentReducer from './paymentReducer';
 import offersReducer from './offersReducer';
-import chatReducer from './chatReducer';
+import newChatReducer from './newChatReducer';
 import userProfileReducer from './userProfileReducer';
 
 const rootReducer = combineReducers({
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   singleContestStore: singleContestReducer,
   payment: paymentReducer,
   offers: offersReducer,
-  chatStore: chatReducer,
+  chatStore: newChatReducer,
   userProfile: userProfileReducer,
 });
 
