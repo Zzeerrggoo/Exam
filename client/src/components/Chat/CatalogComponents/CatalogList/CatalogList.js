@@ -1,11 +1,11 @@
-import React from "react";
-import { connect } from "react-redux";
-import Catalog from "../Catalog/Catalog";
-import styles from "../CatalogListContainer/CatalogListContainer.module.sass";
+import React from 'react';
+import {connect} from 'react-redux';
+import Catalog from '../Catalog/Catalog';
+import styles from '../CatalogListContainer/CatalogListContainer.module.sass';
 import {
   changeShowModeCatalog,
   deleteCatalog,
-} from "../../../../actions/actionCreator";
+} from '../../../../actions/chatsActionCreators';
 
 const CatalogList = (props) => {
   const goToCatalog = (event, catalog) => {
@@ -14,27 +14,27 @@ const CatalogList = (props) => {
   };
 
   const deleteCatalog = (event, catalogId) => {
-    props.deleteCatalog({ catalogId });
+    props.deleteCatalog({catalogId});
     event.stopPropagation();
   };
 
   const getListCatalog = () => {
-    const { catalogList } = props;
+    const {catalogList} = props;
     const elementList = [];
     catalogList.forEach((catalog) => {
       elementList.push(
-        <Catalog
-          catalog={catalog}
-          key={catalog._id}
-          deleteCatalog={deleteCatalog}
-          goToCatalog={goToCatalog}
-        />
+          <Catalog
+              catalog={catalog}
+              key={catalog.id}
+              deleteCatalog={deleteCatalog}
+              goToCatalog={goToCatalog}
+          />,
       );
     });
     return elementList.length ? (
-      elementList
+        elementList
     ) : (
-      <span className={styles.notFound}>Not found</span>
+        <span className={styles.notFound}>Not found</span>
     );
   };
 

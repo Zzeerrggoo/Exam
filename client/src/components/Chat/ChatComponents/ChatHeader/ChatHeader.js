@@ -1,13 +1,13 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
+import {connect} from 'react-redux';
 import {
   backToDialogList,
-  changeChatFavorite,
-  changeChatBlock,
-} from "../../../../actions/actionCreator";
-import styles from "./ChatHeader.module.sass";
-import CONSTANTS from "../../../../constants";
-import classNames from "classnames";
+  setChatFavorite,
+  setChatBlocked,
+} from '../../../../actions/chatsActionCreators';
+import styles from './ChatHeader.module.sass';
+import CONSTANTS from '../../../../constants';
+import classNames from 'classnames';
 
 const ChatHeader = (props) => {
   const changeFavorite = (data, event) => {
@@ -20,90 +20,82 @@ const ChatHeader = (props) => {
     event.stopPropagation();
   };
 
-  const isFavorite = (chatData, userId) => {
-    const { favoriteList, participants } = chatData;
-    return favoriteList[participants.indexOf(userId)];
-  };
+  const {avatar, firstName} = props.interlocutor;
+  const {backToDialogList, chatData} = props;
 
-  const isBlocked = (chatData, userId) => {
-    const { participants, blackList } = chatData;
-    return blackList[participants.indexOf(userId)];
-  };
-
-  const { avatar, firstName } = props.interlocutor;
-  const { backToDialogList, chatData, userId } = props;
   return (
-    <div className={styles.chatHeader}>
-      <div
-        className={styles.buttonContainer}
-        onClick={() => backToDialogList()}
-      >
-        <img
-          src={`${CONSTANTS.STATIC_IMAGES_PATH}arrow-left-thick.png`}
-          alt="back"
-        />
-      </div>
-      <div className={styles.infoContainer}>
-        <div>
+      <div className={styles.chatHeader}>
+        <div
+            className={styles.buttonContainer}
+            onClick={() => backToDialogList()}
+        >
           <img
-            src={
-              avatar === "anon.png"
-                ? CONSTANTS.ANONYM_IMAGE_PATH
-                : `${CONSTANTS.publicURL}${avatar}`
-            }
-            alt="user"
+              src={`${CONSTANTS.STATIC_IMAGES_PATH}arrow-left-thick.png`}
+              alt="back"
           />
-          <span>{firstName}</span>
         </div>
-        {chatData && (
+        <div className={styles.infoContainer}>
           <div>
-            <i
-              onClick={(event) =>
-                changeFavorite(
-                  {
-                    participants: chatData.participants,
-                    favoriteFlag: !isFavorite(chatData, userId),
-                  },
-                  event
-                )
-              }
-              className={classNames({
-                ["far fa-heart"]: !isFavorite(chatData, userId),
-                ["fas fa-heart"]: isFavorite(chatData, userId),
-              })}
+            <img
+                src={
+                  avatar === 'anon.png'
+                      ? CONSTANTS.ANONYM_IMAGE_PATH
+                      : `${CONSTANTS.publicURL}${avatar}`
+                }
+                alt="user"
             />
-            <i
-              onClick={(event) =>
-                changeBlackList(
-                  {
-                    participants: chatData.participants,
-                    blackListFlag: !isBlocked(chatData, userId),
-                  },
-                  event
-                )
-              }
-              className={classNames({
-                ["fas fa-user-lock"]: !isBlocked(chatData, userId),
-                ["fas fa-unlock"]: isBlocked(chatData, userId),
-              })}
-            />
+            <span>{firstName}</span>
           </div>
-        )}
+          {chatData && (
+              <div>
+                <i
+                    onClick={(event) =>
+                        changeFavorite(
+                            {
+                              favoriteFlag: !chatData?.isFavorite,
+                              chatId: chatData.chatId,
+                            },
+                            event,
+                        )
+                    }
+                    className={classNames({
+                      'far fa-heart': !chatData?.isFavorite,
+                      'fas fa-heart': chatData?.isFavorite,
+                    })}
+                />
+                <i
+                    onClick={(event) =>
+                        changeBlackList(
+                            {
+                              blackListFlag: !chatData?.isInBlackList,
+                              chatId: chatData.chatId,
+                              interlocutorId: props.interlocutor.id,
+                            },
+                            event,
+                        )
+                    }
+                    className={classNames({
+                      'fas fa-user-lock': !chatData?.isInBlackList,
+                      'fas fa-unlock': chatData?.isInBlackList,
+                    })}
+                />
+              </div>
+          )}
+        </div>
       </div>
-    </div>
   );
 };
 
 const mapStateToProps = (state) => {
-  const { interlocutor, chatData } = state.chatStore;
-  return { interlocutor, chatData };
+  const {interlocutor, chatData} = state.chatStore;
+  return {interlocutor, chatData};
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     backToDialogList: () => dispatch(backToDialogList()),
-    changeChatFavorite: (data) => dispatch(changeChatFavorite(data)),
-    changeChatBlock: (data) => dispatch(changeChatBlock(data)),
+    changeChatFavorite: (data) => dispatch(setChatFavorite(data)),
+    changeChatBlock: (data) => dispatch(setChatBlocked(data)),
   };
 };
 

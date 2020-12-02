@@ -4,6 +4,7 @@ import * as Api from './../api/http';
 import * as UserActionCreators from '../actions/userActionCreators';
 import ACTION from '../actions/actionTypes';
 import CONSTANTS from '../constants';
+import {controller} from '../api/ws/socketController';
 
 const createAuthSaga = apiMethod =>
     function* authSaga(action) {
@@ -15,6 +16,7 @@ const createAuthSaga = apiMethod =>
         const {
           data: {data},
         } = yield apiMethod(values);
+        controller.subscribe(data.user.id);
         yield put(AuthActionCreators.authRequestSuccess(data));
       } catch (err) {
         yield put(AuthActionCreators.authRequestFailed(err));

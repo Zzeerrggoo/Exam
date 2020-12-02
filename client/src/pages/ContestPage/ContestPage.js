@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {
   goToExpandedDialog,
-} from '../../actions/actionCreator';
+} from '../../actions/chatsActionCreators';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import Header from '../../components/Header/Header';
 import ContestSideBar from '../../components/ContestSideBar/ContestSideBar';

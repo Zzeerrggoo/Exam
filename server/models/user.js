@@ -1,10 +1,9 @@
-'use strict';
 const { hashSync, compare } = require('bcrypt');
 const { Model } = require('sequelize');
 const {
   permissions: { roles },
 } = require('../configs/config');
-const { SALT_ROUNDS } = require('./../constants');
+const { SALT_ROUNDS } = require('../constants');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -12,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
       return compare(value, this.getDataValue('password'));
     }
 
-    static associate({ Contest, Offer, Rating, RefreshToken }) {
+    static associate({
+      Contest, Offer, Rating, RefreshToken, Catalog, Message, Chat, UserChat,
+    }) {
       // User*(role: customer) 1:n Contest
       User.hasMany(Contest, {
         foreignKey: 'userId',
@@ -29,8 +30,24 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(RefreshToken, {
         foreignKey: 'userId',
       });
+
+      User.hasMany(Catalog, {
+        foreignKey: 'userId',
+      });
+
+      User.hasMany(Message, {
+        foreignKey: 'userId',
+      });
+
+      User.hasMany(UserChat, {
+        foreignKey: 'userId',
+      });
+
+      User.belongsToMany(Chat,
+        { through: UserChat, foreignKey: 'userId', otherKey: 'chatId' });
     }
   }
+
   User.init(
     {
       firstName: {
@@ -97,7 +114,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'User',
-    }
+    },
   );
   return User;
 };

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import FormInput from "../../../FormInput/FormInput";
 import styles from "./CreateCatalog.module.sass";
-import { createCatalog } from "../../../../actions/actionCreator";
+import {createCatalog } from "../../../../actions/chatsActionCreators";
 
 const validate = (values) => {
   const errors = {};

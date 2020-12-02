@@ -1,51 +1,62 @@
 import WebSocket from './WebSocket';
 import CONTANTS from '../../../constants';
 import {
-  addMessage,
-  changeBlockStatusInStore,
-} from '../../../actions/actionCreator';
-import { isEqual } from 'lodash';
+  postMessageSuccess,
+  setChatBlockedSuccess,
+} from '../../../actions/chatsActionCreators';
+import {produce} from 'immer';
 
 class ChatSocket extends WebSocket {
-  constructor(dispatch, getState, room) {
-    super(dispatch, getState, room);
-  }
 
   anotherSubscribes = () => {
     this.onNewMessage();
     this.onChangeBlockStatus();
   };
+
   onChangeBlockStatus = () => {
     this.socket.on(CONTANTS.CHANGE_BLOCK_STATUS, data => {
-      const { message } = data;
-      const { messagesPreview } = this.getState().chatStore;
-      messagesPreview.forEach(preview => {
-        if (isEqual(preview.participants, message.participants))
-          preview.blackList = message.blackList;
+
+      const {message} = data;
+      const {messagesPreview} = this.getState().chatStore;
+
+      const updatedMessagesPreview = produce(messagesPreview, draft => {
+        const index = draft.findIndex(item => item.chatId === message.chatId);
+        if (index !== -1) {
+          draft[index].isBlocked = message.isBlocked;
+          draft[index].isInBlackList = message.isInBlackList;
+        }
       });
+
       this.dispatch(
-        changeBlockStatusInStore({ chatData: message, messagesPreview })
+          setChatBlockedSuccess(
+              {chatData: message, messagesPreview: updatedMessagesPreview}),
       );
     });
   };
 
   onNewMessage = () => {
     this.socket.on('newMessage', data => {
-      const { message, preview } = data.message;
-      const { messagesPreview } = this.getState().chatStore;
-      let isNew = true;
-      messagesPreview.forEach(preview => {
-        if (isEqual(preview.participants, message.participants)) {
-          preview.text = message.body;
-          preview.sender = message.sender;
-          preview.createAt = message.createdAt;
-          isNew = false;
+      const {message, interlocutor, chatData} = data.message;
+      const {messagesPreview} = this.getState().chatStore;
+      const preview = {
+        ...chatData,
+        Interlocutor: {User: interlocutor},
+        message,
+      };
+
+      const updatedMessagesPreview = produce(messagesPreview, draft => {
+        const index = draft.findIndex(item => item.chatId === message.chatId);
+        if (index !== -1) {
+          draft[index].message.body = message.body;
+          draft[index].message.sender = message.userId;
+          draft[index].message.createAt = message.createdAt;
+        } else {
+          draft.push(preview);
         }
       });
-      if (isNew) {
-        messagesPreview.push(preview);
-      }
-      this.dispatch(addMessage({ message, messagesPreview }));
+
+      this.dispatch(postMessageSuccess(
+          {message, chatData, messagesPreview: updatedMessagesPreview}));
     });
   };
 

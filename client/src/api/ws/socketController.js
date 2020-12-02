@@ -6,9 +6,9 @@ export let chatController;
 
 export const initSocket = store => {
   controller = new NotificationSocket(
-    store.dispatch,
-    store.getState,
-    'notifications'
+      store.dispatch,
+      store.getState,
+      '/notifications',
   );
-  chatController = new ChatSocket(store.dispatch, store.getState, 'chat');
+  chatController = new ChatSocket(store.dispatch, store.getState, '/chat');
 };

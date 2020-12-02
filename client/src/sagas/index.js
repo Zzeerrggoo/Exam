@@ -1,29 +1,17 @@
 import {takeLatest, takeEvery} from 'redux-saga/effects';
-import ACTION from '../actions/actionTypes';
 import * as AuthSagas from './authSagas';
 import * as ContestsSagas from './contestsSagas';
 import * as SingleContestSagas from './singleContestSagas';
 import * as PaymentSagas from './paymentSaga';
 import * as OfferSagas from './offerSagas';
-import {
-  previewSaga,
-  getDialog,
-  sendMessage,
-  changeChatFavorite,
-  changeChatBlock,
-  getCatalogListSaga,
-  addChatToCatalog,
-  createCatalog,
-  deleteCatalog,
-  removeChatFromCatalogSaga,
-  changeCatalogName,
-} from './chatSagas';
+import * as ChatSagas from './chatSagas';
 import AUTH_ACTION_TYPES from '../actions/authActionTypes';
 import USER_ACTION_TYPES from '../actions/userActionTypes';
 import CONTEST_ACTION_TYPES from '../actions/contestsActionTypes';
 import SINGLE_CONTEST_ACTION_TYPES from '../actions/singleContestActionTypes';
 import PAYMENT_ACTION_TYPES from '../actions/paymentActionTypes';
 import OFFER_ACTION_TYPES from '../actions/offerActionTypes';
+import CHATS_ACTION_TYPES from '../actions/chatsActionTypes';
 
 function* rootSaga() {
   //SINGLE_CONTEST
@@ -65,21 +53,26 @@ function* rootSaga() {
   yield takeLatest(OFFER_ACTION_TYPES.SET_OFFER_STATUS,
       OfferSagas.setOffersStatusSaga);
 
-  //CHAT LEGACY
-  yield takeLatest(ACTION.GET_PREVIEW_CHAT_ASYNC, previewSaga);
-  yield takeLatest(ACTION.GET_DIALOG_MESSAGES_ASYNC, getDialog);
-  yield takeLatest(ACTION.SEND_MESSAGE_ACTION, sendMessage);
-  yield takeLatest(ACTION.SET_CHAT_FAVORITE_FLAG, changeChatFavorite);
-  yield takeLatest(ACTION.SET_CHAT_BLOCK_FLAG, changeChatBlock);
-  yield takeLatest(ACTION.GET_CATALOG_LIST_ASYNC, getCatalogListSaga);
-  yield takeLatest(ACTION.ADD_CHAT_TO_CATALOG_ASYNC, addChatToCatalog);
-  yield takeLatest(ACTION.CREATE_CATALOG_REQUEST, createCatalog);
-  yield takeLatest(ACTION.DELETE_CATALOG_REQUEST, deleteCatalog);
+  //CHAT
+  yield takeLatest(CHATS_ACTION_TYPES.GET_CHAT_PREVIEW, ChatSagas.previewSaga);
+  yield takeLatest(CHATS_ACTION_TYPES.GET_DIALOG_MESSAGES, ChatSagas.getDialog);
+  yield takeLatest(CHATS_ACTION_TYPES.POST_MESSAGE, ChatSagas.sendMessage);
+  yield takeLatest(CHATS_ACTION_TYPES.SET_CHAT_FAVORITE,
+      ChatSagas.changeChatFavorite);
+  yield takeLatest(CHATS_ACTION_TYPES.SET_CHAT_BLOCKED,
+      ChatSagas.changeChatBlock);
+  yield takeLatest(CHATS_ACTION_TYPES.GET_CATALOG_LIST,
+      ChatSagas.getCatalogListSaga);
+  yield takeLatest(CHATS_ACTION_TYPES.ADD_CHAT_TO_CATALOG,
+      ChatSagas.addChatToCatalog);
+  yield takeLatest(CHATS_ACTION_TYPES.CREATE_CATALOG, ChatSagas.createCatalog);
+  yield takeLatest(CHATS_ACTION_TYPES.DELETE_CATALOG, ChatSagas.deleteCatalog);
   yield takeLatest(
-      ACTION.REMOVE_CHAT_FROM_CATALOG_REQUEST,
-      removeChatFromCatalogSaga,
+      CHATS_ACTION_TYPES.REMOVE_CHAT_FROM_CATALOG,
+      ChatSagas.removeChatFromCatalogSaga,
   );
-  yield takeLatest(ACTION.CHANGE_CATALOG_NAME_REQUEST, changeCatalogName);
+  yield takeLatest(CHATS_ACTION_TYPES.CHANGE_CATALOG_NAME,
+      ChatSagas.changeCatalogName);
 }
 
 export default rootSaga;
