@@ -48,6 +48,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: 'pending',
       },
+      isAllowed: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: null,
+        allowNull: true,
+      },
     },
     {
       sequelize,
