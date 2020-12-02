@@ -7,6 +7,7 @@ import StartContestPage from './pages/StartContestPage/StartContestPage';
 import Dashboard from './pages/Dashboard/Dashboard';
 import NotFound from './components/NotFound/NotFound';
 import Home from './pages/Home/Home';
+import ModerationPage from './pages/ModerationPage';
 import ContestPage from './pages/ContestPage/ContestPage';
 import UserProfile from './pages/UserProfile/UserProfile';
 import 'react-toastify/dist/ReactToastify.css';
@@ -101,13 +102,22 @@ function App() {
             </PrivateRoute>
             <PrivateRoute exact
                           path="/dashboard"
-                          component={Dashboard}/>
+                          component={Dashboard}
+                          roles={{exclude: ['moderator']}}/>
             <PrivateRoute exact
                           path="/contest/:id"
-                          component={ContestPage}/>
+                          component={ContestPage}
+                          roles={{exclude: ['moderator']}}/>
             <PrivateRoute exact
                           path="/account"
-                          component={UserProfile}/>
+                          component={UserProfile}
+                          roles={{exclude: ['moderator']}}/>
+            <PrivateRoute
+                roles={['moderator']}
+                exact
+                path="/moderation"
+                component={ModerationPage}
+            />
             <Route component={NotFound}/>
           </Switch>
         </Suspense>
