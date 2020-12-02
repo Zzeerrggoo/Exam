@@ -37,6 +37,36 @@ module.exports.getOffersForContest = async (req, res, next) => {
   }
 };
 
+module.exports.getModeratingOffers = async (req, res, next) => {
+  try {
+    const { limit, offset } = req.query;
+
+    const offers = await Offer.findAll({
+      where: { isAllowed: null, status: 'pending' },
+      include: [
+        {
+          model: User,
+          required: true,
+          attributes: {
+            exclude: ['role', 'balance', 'password'],
+          },
+        },
+        {
+          model: Rating,
+          required: false,
+          attributes: { exclude: ['offerId', 'userId'] },
+        },
+      ],
+      limit,
+      offset,
+    });
+
+    res.status(200).send({ data: offers });
+  } catch (error) {
+    next(createHttpError(500, 'Server Error'));
+  }
+};
+
 module.exports.changeMark = async (req, res, next) => {
   const {
     creatorId, offerId, mark,
