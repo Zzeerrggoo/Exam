@@ -33,7 +33,7 @@ const helpers = {
   [CHATS_ACTION_TYPES.GET_CHAT_PREVIEW_SUCCESS]: produce(
       (draftState, action) => {
         const {payload: {values}} = action;
-        draftState.messagesPreview = values;
+        draftState.messagesPreview = values.conversations;
         draftState.isFetching = false;
       }),
 
@@ -206,7 +206,7 @@ const helpers = {
   [CHATS_ACTION_TYPES.CHANGE_RENAME_CATALOG_MODE]: produce(
       (draftState) => {
         const {isRenameCatalog} = original(draftState);
-        draftState.isFetching = !isRenameCatalog;
+        draftState.isRenameCatalog = !isRenameCatalog;
       }),
 
   [CHATS_ACTION_TYPES.SET_CHAT_PREVIEW_MODE]: produce(

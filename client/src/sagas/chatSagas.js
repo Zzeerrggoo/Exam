@@ -1,22 +1,23 @@
 import {put, select} from 'redux-saga/effects';
-import ACTION from '../actions/actionTypes';
-import * as restController from '../api/rest/restController';
 import remove from 'lodash/remove';
 import * as ChatsActionCreators from '../actions/chatsActionCreators';
 import * as Api from '../api/http';
 
 export function* previewSaga() {
   try {
+    yield put(ChatsActionCreators.getChatPreviewRequest());
     const {data: {data}} = yield Api.chats.getChatsPreview();
-    yield put({type: ACTION.GET_PREVIEW_CHAT, data: data});
-  } catch (err) {
-    yield put({type: ACTION.GET_PREVIEW_CHAT_ERROR, error: err.response});
+    yield put(ChatsActionCreators.getChatPreviewSuccess(data));
+  } catch (error) {
+    yield put(ChatsActionCreators.getCatalogListFailed(error));
   }
 }
 
 export function* sendMessage(action) {
   try {
-    const {data: {data}} = yield Api.chats.postNewMessage(action.data);
+    yield put(ChatsActionCreators.postMessageRequest());
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.chats.postNewMessage(values);
 
     const {message, interlocutor, chatData} = data;
     const preview = {
@@ -39,90 +40,95 @@ export function* sendMessage(action) {
       messagesPreview.push(preview);
     }
 
-    yield put({
-      type: ACTION.SEND_MESSAGE,
-      data: {message, chatData, messagesPreview},
-    });
-  } catch (err) {
-    yield put({type: ACTION.SEND_MESSAGE_ERROR, error: err.response});
+    yield put(ChatsActionCreators.postMessageSuccess(
+        {message, chatData, messagesPreview}));
+  } catch (error) {
+    yield put(ChatsActionCreators.postMessageFailed(error));
   }
 }
 
 export function* getDialog(action) {
   try {
-    const {data: {data}} = yield Api.chats.getChat(action.data);
-    yield put({type: ACTION.GET_DIALOG_MESSAGES, data: data});
-  } catch (err) {
-    yield put({type: ACTION.GET_DIALOG_MESSAGES_ERROR, error: err.response});
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.chats.getChat(values);
+    yield put(ChatsActionCreators.getDialogMessagesSuccess(data));
+  } catch (error) {
+    yield put(ChatsActionCreators.getDialogMessagesFailed(error));
   }
 }
 
 export function* changeChatBlock(action) {
   try {
-    const {data: {data}} = yield Api.chats.setChatBlocked(action.data);
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.chats.setChatBlocked(values);
     const {messagesPreview} = yield select(state => state.chatStore);
+
     messagesPreview.forEach(preview => {
       if (preview.chatId === data.chatId) {
         preview.isBlocked = data.isBlocked;
         preview.isInBlackList = data.isInBlackList;
       }
     });
-    yield put({
-      type: ACTION.CHANGE_CHAT_BLOCK,
-      data: {messagesPreview, chatData: data},
-    });
-  } catch (err) {
-    yield put({type: ACTION.SET_CHAT_BLOCK_ERROR, error: err.response});
+
+    yield put(ChatsActionCreators.setChatBlockedSuccess(
+        {messagesPreview, chatData: data}));
+  } catch (error) {
+    yield put(ChatsActionCreators.setChatBlockedFailed(error));
   }
 }
 
 export function* changeChatFavorite(action) {
   try {
-    const {data: {data}} = yield Api.chats.setChatFavorite(action.data);
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.chats.setChatFavorite(values);
     const {messagesPreview} = yield select(state => state.chatStore);
+
     messagesPreview.forEach(preview => {
       if (preview.chatId === data.chatId)
         preview.isFavorite = data.isFavorite;
     });
-    yield put({
-      type: ACTION.CHANGE_CHAT_FAVORITE,
-      data: {changedPreview: data, messagesPreview},
-    });
-  } catch (err) {
-    yield put({type: ACTION.SET_CHAT_FAVORITE_ERROR, error: err.response});
+
+    yield put(ChatsActionCreators.setChatFavoriteSuccess(
+        {chatData: data, messagesPreview}));
+  } catch (error) {
+    yield put(ChatsActionCreators.setChatFavoriteFailed(error));
   }
 }
 
 export function* createCatalog(action) {
   try {
-    const {data: {data}} = yield Api.chats.createCatalog(action.data);
-    yield put({type: ACTION.CREATE_CATALOG_SUCCESS, data: data});
-  } catch (err) {
-    yield put({type: ACTION.CREATE_CATALOG_ERROR, error: err.response});
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.chats.createCatalog(values);
+    yield put(ChatsActionCreators.createCatalogSuccess(data));
+  } catch (error) {
+    yield put(ChatsActionCreators.createCatalogFailed(error));
   }
 }
 
 export function* getCatalogListSaga(action) {
   try {
-    const {data: {data}} = yield Api.chats.getCatalogsList(action.data);
-    yield put({type: ACTION.RECEIVE_CATALOG_LIST, data: data});
-  } catch (err) {
-    yield put({type: ACTION.RECEIVE_CATALOG_LIST_ERROR, error: err.response});
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.chats.getCatalogsList(values);
+    yield put(ChatsActionCreators.getCatalogListSuccess(data));
+  } catch (error) {
+    yield put(ChatsActionCreators.getCatalogListFailed(error));
   }
 }
 
 export function* addChatToCatalog(action) {
   try {
-    yield Api.chats.addChatIntoCatalog(action.data);
-    yield put({type: ACTION.ADD_CHAT_TO_CATALOG});
-  } catch (err) {
-    yield put({type: ACTION.ADD_CHAT_TO_CATALOG_ERROR, error: err.response});
+    const {payload: {values}} = action;
+    yield Api.chats.addChatIntoCatalog(values);
+    yield put(ChatsActionCreators.addChatToCatalogSuccess());
+  } catch (error) {
+    yield put(ChatsActionCreators.addChatToCatalogFailed(error));
   }
 }
 
 export function* changeCatalogName(action) {
   try {
-    const {data: {data}} = yield Api.chats.changeCatalogName(action.data);
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.chats.changeCatalogName(values);
     const {catalogList} = yield select(state => state.chatStore);
 
     const index = catalogList.findIndex((item) => item.id === data.id);
@@ -130,18 +136,17 @@ export function* changeCatalogName(action) {
       catalogList[index].catalogName = data.catalogName;
     }
 
-    yield put({
-      type: ACTION.CHANGE_CATALOG_NAME_SUCCESS,
-      data: {catalogList, currentCatalog: data},
-    });
-  } catch (err) {
-    yield put({type: ACTION.CHANGE_CATALOG_NAME_ERROR, error: err.response});
+    yield put(ChatsActionCreators.changeCatalogNameSuccess(
+        {catalogList, currentCatalog: data}));
+  } catch (error) {
+    yield put(ChatsActionCreators.changeCatalogNameFailed(error));
   }
 }
 
 export function* removeChatFromCatalogSaga(action) {
   try {
-    const {data: {data}} = yield Api.chats.removeChatFromCatalog(action.data);
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.chats.removeChatFromCatalog(values);
     const {catalogList} = yield select(state => state.chatStore);
 
     const index = catalogList.findIndex((item) => item.id === data.id);
@@ -149,29 +154,25 @@ export function* removeChatFromCatalogSaga(action) {
       catalogList[index] = data;
     }
 
-    yield put({
-      type: ACTION.REMOVE_CHAT_FROM_CATALOG_SUCCESS,
-      data: {catalogList, currentCatalog: data},
-    });
-  } catch (err) {
-    yield put({
-      type: ACTION.REMOVE_CHAT_FROM_CATALOG_ERROR,
-      error: err.response,
-    });
+    yield put(ChatsActionCreators.removeChatFromCatalogSuccess(
+        {catalogList, currentCatalog: data}));
+  } catch (error) {
+    yield put(ChatsActionCreators.removeChatFromCatalogFailed(error));
   }
 }
 
 export function* deleteCatalog(action) {
   try {
-    yield Api.chats.deleteCatalog(action.data);
+    const {payload: {values}} = action;
+    yield Api.chats.deleteCatalog(values);
     const {catalogList} = yield select(state => state.chatStore);
     const newCatalogList = remove(
         catalogList,
         catalog => action.data.catalogId !== catalog.id,
     );
-    yield put({type: ACTION.DELETE_CATALOG_SUCCESS, data: newCatalogList});
-  } catch (err) {
-    yield put({type: ACTION.DELETE_CATALOG_ERROR, error: err.response});
+    yield put(ChatsActionCreators.deleteCatalogSuccess(newCatalogList));
+  } catch (error) {
+    yield put(ChatsActionCreators.deleteCatalogFailed(error));
   }
 }
 
