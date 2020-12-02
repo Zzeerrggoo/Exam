@@ -1,5 +1,5 @@
 import {put, select} from 'redux-saga/effects';
-import {produce} from 'immer';
+import {produce} from 'immer'
 import * as ChatsActionCreators from '../actions/chatsActionCreators';
 import * as Api from '../api/http';
 
