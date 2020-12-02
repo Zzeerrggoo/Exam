@@ -99,3 +99,28 @@ export const setOfferStatusFailed = error => ({
     error,
   },
 });
+
+export const getModeratingOffers = values => ({
+  type: OFFER_ACTION_TYPES.GET_MODERATING_OFFERS,
+  payload: {
+    values,
+  },
+});
+
+export const getModeratingOffersRequest = () => ({
+  type: OFFER_ACTION_TYPES.GET_MODERATING_OFFERS_REQUEST,
+});
+
+export const getModeratingOffersSuccess = values => ({
+  type: OFFER_ACTION_TYPES.GET_MODERATING_OFFERS_SUCCESS,
+  payload: {
+    values,
+  },
+});
+
+export const getModeratingOffersFailed = error => ({
+  type: OFFER_ACTION_TYPES.GET_MODERATING_OFFERS_FAILED,
+  payload: {
+    error,
+  },
+});
