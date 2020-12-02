@@ -13,7 +13,7 @@ class OffersApi {
 
   getModeratingOffers = ({limit, offset}) => {
     return this.#_client.get(
-        `${this.url}/moderating?limit=${limit}&offset=${offset}`);
+        `${this.url}/moderating/offers?limit=${limit}&offset=${offset}`);
   };
 
   addNewOffer = (data) => {

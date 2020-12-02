@@ -8,10 +8,14 @@ offersRouter.post('/', upload.uploadLogoFiles,
 
 offersRouter.get('/:contestId', controller.getOffersForContest);
 
-offersRouter.patch('/:offerId/status', basicMiddlewares.onlyForCustomerWhoCreateContest,
+offersRouter.patch('/:offerId/status',
+  basicMiddlewares.onlyForCustomerWhoCreateContest,
   controller.setOfferStatus);
 
 offersRouter.put('/:offerId/rating', basicMiddlewares.onlyForCustomer,
   controller.changeMark);
+
+offersRouter.get('/moderating/offers', basicMiddlewares.onlyForModerator,
+  controller.getModeratingOffers);
 
 module.exports = offersRouter;
