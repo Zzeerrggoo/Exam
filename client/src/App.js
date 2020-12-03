@@ -51,9 +51,10 @@ function App() {
         />
         <Suspense fallback={<Spinner/>}>
           <Switch>
-            <Route exact
-                   path="/"
-                   component={Home}/>
+            <PrivateRoute exact
+                          path="/"
+                          component={Home}
+                          roles={{exclude: ['moderator']}}/>
             <Route path={['/login', '/signup']}
                    component={AuthPage}/>
             {/*<Route exact path="/login" component={LoginPage} />
