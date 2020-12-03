@@ -4,6 +4,7 @@ const {
   User,
   Offer,
   Rating,
+  Contest,
 } = require('../models');
 const contestQueries = require('./queries/contestQueries');
 const userQueries = require('./queries/userQueries');
@@ -52,9 +53,9 @@ module.exports.getModeratingOffers = async (req, res, next) => {
           },
         },
         {
-          model: Rating,
-          required: false,
-          attributes: { exclude: ['offerId', 'userId'] },
+          model: Contest,
+          attributes: ['contestType'],
+          raw: true,
         },
       ],
       limit,
@@ -64,6 +65,18 @@ module.exports.getModeratingOffers = async (req, res, next) => {
     res.status(200).send({ data: offers });
   } catch (error) {
     next(createHttpError(500, 'Server Error'));
+  }
+};
+
+module.exports.moderateOffer = async (req, res, next) => {
+  try {
+    const { offerId, isAllowed } = req.body;
+    await Offer.update({ isAllowed },
+      { where: { id: offerId }, returning: true });
+
+    res.status(200).send({ data: { isAllowed, offerId } });
+  } catch (error) {
+    next(error);
   }
 };
 
