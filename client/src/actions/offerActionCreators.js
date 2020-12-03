@@ -124,3 +124,24 @@ export const getModeratingOffersFailed = error => ({
     error,
   },
 });
+
+export const moderateOffer = values => ({
+  type: OFFER_ACTION_TYPES.MODERATE_OFFER,
+  payload: {
+    values,
+  },
+});
+
+export const moderateOfferSuccess = values => ({
+  type: OFFER_ACTION_TYPES.MODERATE_OFFER_SUCCESS,
+  payload: {
+    values,
+  },
+});
+
+export const moderateOfferFailed = error => ({
+  type: OFFER_ACTION_TYPES.MODERATE_OFFER_FAILED,
+  payload: {
+    error,
+  },
+});
