@@ -24,6 +24,10 @@ class OffersApi {
     return this.#_client.patch(`${this.url}/${data.offerId}/status`, data);
   };
 
+  moderateOffer = (data) => {
+    return this.#_client.patch(`${this.url}/${data.offerId}/moderate`, data);
+  };
+
   changeOfferMark = (data) => {
     return this.#_client.put(`${this.url}/${data.offerId}/rating`, data);
   };

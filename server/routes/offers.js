@@ -15,6 +15,9 @@ offersRouter.patch('/:offerId/status',
 offersRouter.put('/:offerId/rating', basicMiddlewares.onlyForCustomer,
   controller.changeMark);
 
+offersRouter.patch('/:offerId/moderate', basicMiddlewares.onlyForModerator,
+  controller.moderateOffer);
+
 offersRouter.get('/moderating/offers', basicMiddlewares.onlyForModerator,
   controller.getModeratingOffers);
 
