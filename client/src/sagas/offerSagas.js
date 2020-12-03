@@ -68,3 +68,14 @@ export function* getModeratingOffersSaga(action) {
     yield put(OfferActionCreators.getModeratingOffersFailed(error));
   }
 }
+
+export function* moderateOfferSaga(action) {
+  try {
+    const {payload: {values}} = action;
+    const {data: {data}} = yield Api.offers.moderateOffer(values);
+    yield put(OfferActionCreators.moderateOfferSuccess(data));
+
+  } catch (error) {
+    yield put(OfferActionCreators.moderateOfferFailed(error));
+  }
+}

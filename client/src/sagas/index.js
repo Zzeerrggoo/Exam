@@ -54,6 +54,7 @@ function* rootSaga() {
       OfferSagas.setOffersStatusSaga);
   yield takeLatest(OFFER_ACTION_TYPES.GET_MODERATING_OFFERS,
       OfferSagas.getModeratingOffersSaga);
+  yield takeLatest(OFFER_ACTION_TYPES.MODERATE_OFFER, OfferSagas.moderateOfferSaga);
 
   //CHAT
   yield takeLatest(CHATS_ACTION_TYPES.GET_CHAT_PREVIEW, ChatSagas.previewSaga);
