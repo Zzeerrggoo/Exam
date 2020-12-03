@@ -146,6 +146,23 @@ const helpers = {
       (draftState) => {
         draftState.error = null;
       }),
+
+  [OFFER_ACTION_TYPES.MODERATE_OFFER_SUCCESS]: produce(
+      (draftState, action) => {
+        const {payload: {values}} = action;
+        const index = draftState.offers.findIndex(
+            offer => offer.id === values.offerId);
+        if (index !== -1) {
+          draftState.offers[index].isAllowed = values.isAllowed;
+        }
+      }),
+
+  [OFFER_ACTION_TYPES.MODERATE_OFFER_FAILED]: produce(
+      (draftState, action) => {
+        const {payload: {error}} = action;
+        draftState.error = error;
+      }),
+
 };
 
 const offersReducer = createReducer(initialState, helpers);
