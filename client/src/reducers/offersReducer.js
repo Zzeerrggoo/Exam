@@ -43,7 +43,8 @@ const helpers = {
   [OFFER_ACTION_TYPES.GET_MODERATING_OFFERS_SUCCESS]: produce(
       (draftState, action) => {
         const {payload: {values}} = action;
-        draftState.offers = values;
+        draftState.offers = values.rows;
+        draftState.paginationCount = values.count;
         draftState.isFetching = false;
       }),
 
