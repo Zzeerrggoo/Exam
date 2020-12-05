@@ -1,0 +1,21 @@
+
+.optionButton {
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  margin: 10px 15px;
+  align-self: stretch;
+  text-align: center;
+  color: #46568a;
+  font-size: 18px;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.currentOption {
+  @extend .optionButton;
+  transition: 0.5s background-color;
+  background-color: #4e618d;
+  color: white;
+}
