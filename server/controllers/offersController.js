@@ -54,7 +54,7 @@ module.exports.getModeratingOffers = async (req, res, next) => {
         },
         {
           model: Contest,
-          attributes: ['contestType'],
+          attributes: ['contestType', 'title'],
           raw: true,
         },
       ],
@@ -70,11 +70,19 @@ module.exports.getModeratingOffers = async (req, res, next) => {
 
 module.exports.moderateOffer = async (req, res, next) => {
   try {
-    const { offerId, isAllowed } = req.body;
+    const { offerId, isAllowed, contestName } = req.body;
     await Offer.update({ isAllowed },
       { where: { id: offerId }, returning: true });
 
-    res.status(200).send({ data: { isAllowed, offerId } });
+    req.emailMessage = {
+      text: `Your offer was ${isAllowed
+        ? 'successfully moderated'
+        : 'rejected by moderator'}`,
+      subject: `Squadhelp, offer for "${contestName}" contest`,
+    };
+
+    req.data = { isAllowed, offerId };
+    next();
   } catch (error) {
     next(error);
   }
