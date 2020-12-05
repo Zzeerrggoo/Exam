@@ -13,9 +13,18 @@ const CONSTANTS = require('../constants');
 
 module.exports.getOffersForContest = async (req, res, next) => {
   try {
-    const offers = await Offer.findAll({
+    const { userRole, userId } = req.tokenPayload;
+    const roleConstraints = userRole === CONSTANTS.CUSTOMER
+      ? { isAllowed: true }
+      : { userId };
 
-      where: { contestId: req.params.contestId },
+    const predicate = {
+      contestId: req.params.contestId,
+      ...roleConstraints,
+    };
+
+    const offers = await Offer.findAll({
+      where: predicate,
       include: [
         {
           model: User,
@@ -34,7 +43,7 @@ module.exports.getOffersForContest = async (req, res, next) => {
 
     res.status(200).send({ data: offers });
   } catch (error) {
-    next(createHttpError(500, 'Server Error'));
+    next(error);
   }
 };
 
