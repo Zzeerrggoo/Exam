@@ -49,10 +49,12 @@ module.exports.getOffersForContest = async (req, res, next) => {
 
 module.exports.getModeratingOffers = async (req, res, next) => {
   try {
-    const { limit, offset } = req.query;
+    const { limit, offset, filter } = req.query;
+    const boolFilter = filter === 'true';
+    const predicate = boolFilter ? { isAllowed: null, status: 'pending' } : {};
 
     const offers = await Offer.findAll({
-      where: { isAllowed: null, status: 'pending' },
+      where: predicate,
       include: [
         {
           model: User,

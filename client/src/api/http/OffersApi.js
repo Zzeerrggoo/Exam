@@ -11,9 +11,9 @@ class OffersApi {
     return this.#_client.get(`${this.url}/${contestId}`);
   };
 
-  getModeratingOffers = ({limit, offset}) => {
+  getModeratingOffers = ({limit, offset, filter}) => {
     return this.#_client.get(
-        `${this.url}/moderating/offers?limit=${limit}&offset=${offset}`);
+        `${this.url}/moderating/offers?limit=${limit}&offset=${offset}&filter=${filter}`);
   };
 
   addNewOffer = (data) => {
