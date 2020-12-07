@@ -86,3 +86,28 @@ export const logoutRequest = () => ({
 export const logoutRequestSuccess = () => ({
   type: AUTH_ACTION_TYPES.LOGOUT_REQUEST_SUCCESS,
 });
+
+export const restorePassword = values => ({
+  type: AUTH_ACTION_TYPES.RESTORE_PASSWORD,
+  payload: {
+    values,
+  },
+});
+
+export const restorePasswordRequest = () => ({
+  type: AUTH_ACTION_TYPES.RESTORE_PASSWORD_REQUEST,
+});
+
+export const restorePasswordSuccess = values => ({
+  type: AUTH_ACTION_TYPES.RESTORE_PASSWORD_REQUEST_SUCCESS,
+  payload: {
+    values,
+  },
+});
+
+export const restorePasswordFailed = error => ({
+  type: AUTH_ACTION_TYPES.RESTORE_PASSWORD_REQUEST_FAILED,
+  payload: {
+    error,
+  },
+});
