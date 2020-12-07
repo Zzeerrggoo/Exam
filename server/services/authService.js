@@ -71,3 +71,16 @@ exports.refreshSession = async (refreshTokenInstance) => {
     },
   };
 };
+
+exports.createRestoreToken = async (
+  userInstance, passwordHash,
+) => JwtService.sign(
+  {
+    userId: userInstance.get('id'),
+    passwordHash,
+  },
+  tokenSecret,
+  {
+    expiresIn: tokenExpiresIn,
+  },
+);
