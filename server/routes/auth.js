@@ -5,6 +5,7 @@ const AuthController = require('../controllers/authController');
 const UsersController = require('../controllers/userController');
 const checkAuthorization = require('../middlewares/checkAuthorization');
 const { uploadAvatar } = require('../utils/fileUpload');
+const nodemailer = require('../middlewares/nodemailer');
 
 authRouter.post(
   '/login',
@@ -17,6 +18,9 @@ authRouter.post('/signup', validateBody(ValidationSchemas.signUpSchema),
 
 authRouter.post('/refresh', AuthController.refresh);
 
+authRouter.post('/restore', AuthController.restorePasswordRequest,
+  nodemailer.sendEmail);
+
 authRouter.patch(
   '/user/:userId',
   checkAuthorization,
@@ -24,4 +28,5 @@ authRouter.patch(
   uploadAvatar,
   UsersController.updateUser,
 );
+
 module.exports = authRouter;

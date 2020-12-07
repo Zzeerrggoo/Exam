@@ -65,6 +65,11 @@ class AuthApi {
     localStorage.removeItem(REFRESH_TOKEN_KEY);
   };
 
+  restorePassword = (data) => {
+    console.log(data);
+    return this.#_client.post(`${this.url}/restore`, data);
+  };
+
   updateUser = ({id, formData}) => {
     return this.#_client.patch(`${this.url}/user/${id}`, formData);
   };
