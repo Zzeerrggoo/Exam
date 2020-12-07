@@ -39,6 +39,8 @@ function* rootSaga() {
       AuthSagas.refreshAuthSaga,
   );
   yield takeLatest(AUTH_ACTION_TYPES.LOGOUT_REQUEST, AuthSagas.logoutSaga);
+  yield takeLatest(AUTH_ACTION_TYPES.RESTORE_PASSWORD,
+      AuthSagas.restorePasswordSaga);
 
   //PAYMENT
   yield takeLatest(PAYMENT_ACTION_TYPES.PAYMENT, PaymentSagas.paymentSaga);
@@ -54,7 +56,8 @@ function* rootSaga() {
       OfferSagas.setOffersStatusSaga);
   yield takeLatest(OFFER_ACTION_TYPES.GET_MODERATING_OFFERS,
       OfferSagas.getModeratingOffersSaga);
-  yield takeLatest(OFFER_ACTION_TYPES.MODERATE_OFFER, OfferSagas.moderateOfferSaga);
+  yield takeLatest(OFFER_ACTION_TYPES.MODERATE_OFFER,
+      OfferSagas.moderateOfferSaga);
 
   //CHAT
   yield takeLatest(CHATS_ACTION_TYPES.GET_CHAT_PREVIEW, ChatSagas.previewSaga);
