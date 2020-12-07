@@ -7,6 +7,7 @@ import createReducer from './helpers/createReducer';
 const initialState = {
   user: null,
   isFetching: false,
+  restoreActionSuccess: false,
   error: null,
 };
 
@@ -32,6 +33,24 @@ const handlers = {
   }),
   [AUTH_ACTION_TYPES.LOGOUT_REQUEST_SUCCESS]: () => ({
     ...initialState,
+  }),
+
+  [AUTH_ACTION_TYPES.RESTORE_PASSWORD_REQUEST]: produce(draftState => {
+    draftState.isFetching = true;
+  }),
+
+  [AUTH_ACTION_TYPES.RESTORE_PASSWORD_REQUEST_SUCCESS]: produce(
+      (draftState) => {
+        draftState.isFetching = false;
+        draftState.restoreActionSuccess = true;
+      }),
+  [AUTH_ACTION_TYPES.AUTH_REQUEST_FAILED]: produce((draftState, action) => {
+    const {
+      payload: {error},
+    } = action;
+    draftState.isFetching = false;
+    draftState.restoreActionSuccess = false;
+    draftState.error = error;
   }),
 
   [USER_ACTION_TYPES.USER_UPDATE_REQUEST]: produce(draftState => {
