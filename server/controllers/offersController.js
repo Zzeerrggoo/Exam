@@ -86,14 +86,14 @@ module.exports.moderateOffer = async (req, res, next) => {
     await Offer.update({ isAllowed },
       { where: { id: offerId }, returning: true });
 
-    req.emailMessage = {
+    req.body.emailMessage = {
       text: `Your offer was ${isAllowed
         ? 'successfully moderated'
         : 'rejected by moderator'}`,
       subject: `Squadhelp, offer for "${contestName}" contest`,
     };
 
-    req.data = { isAllowed, offerId };
+    req.body.dataToSend = { isAllowed, offerId };
     next();
   } catch (error) {
     next(error);

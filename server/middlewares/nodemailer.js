@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 
 module.exports.sendEmail = async (req, res, next) => {
   try {
-    const { emailMessage: { text, subject } } = req;
+    const { emailMessage: { text, subject, html } } = req.body;
     const { userId } = req.body;
 
     const { email: userEmail } = await User.findOne(
@@ -28,9 +28,10 @@ module.exports.sendEmail = async (req, res, next) => {
       to: user,
       subject,
       text,
+      html,
     });
 
-    res.status(200).send({ data: req.data });
+    res.status(req.body?.status ?? 200).send({ data: req.body?.dataToSend });
   } catch (error) {
     next(error);
   }
