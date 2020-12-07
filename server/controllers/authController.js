@@ -38,7 +38,7 @@ exports.restorePasswordRequest = async (req, res, next) => {
     );
     const newPassHash = hashSync(newPass, SALT_ROUNDS);
     const restoreToken = await createRestoreToken(user, newPassHash);
-    const link = `${CONSTANTS.BASE_URL}/restoreRequest?token=${restoreToken}`;
+    const link = `${CONSTANTS.FRONT_URL}/restoreVerification?token=${restoreToken}`;
 
     req.body.userId = user.get('id');
     req.body.emailMessage = {

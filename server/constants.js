@@ -33,5 +33,5 @@ module.exports = {
   NEW_MESSAGE: 'newMessage',
   CHANGE_BLOCK_STATUS: 'CHANGE_BLOCK_STATUS',
   DEVICES_PER_USER_LIMIT: 3,
-  BASE_URL: `http://${serverIP}:5000/api`,
+  FRONT_URL: `http://${serverIP}:3000`,
 };
