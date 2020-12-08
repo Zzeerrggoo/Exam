@@ -38,6 +38,7 @@ function AuthPage() {
         <Link to={isLogin ? '/signup' : '/login'}>
           {isLogin ? 'SIGN UP' : 'LOGIN'}
         </Link>
+        <Link to="/restore">FORGET PASSWORD ?</Link>
         <Form onSubmit={handleSubmit}/>
       </>
   );

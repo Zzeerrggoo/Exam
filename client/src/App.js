@@ -20,6 +20,8 @@ import ChatContainer
 import PrivateRoute from './components/PrivateRoute';
 import Spinner from './components/Spinner/Spinner';
 import {refreshAuthRequest} from './actions/authActionCreators';
+import PasswordRestore from './pages/PasswordRestore';
+import PasswordVerification from './pages/PasswordVerification';
 
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 
@@ -57,6 +59,13 @@ function App() {
                           roles={{exclude: ['moderator']}}/>
             <Route path={['/login', '/signup']}
                    component={AuthPage}/>
+            <Route exact
+                   path='/restore'
+                   component={PasswordRestore}/>
+            <Route exact
+                   path='/restoreVerification'
+                   component={PasswordVerification}/>
+
             {/*<Route exact path="/login" component={LoginPage} />
         <Route exact path="/signup" component={RegistrationPage} />*/}
             <PrivateRoute
