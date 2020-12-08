@@ -7,6 +7,17 @@
   flex-direction: column;
 }
 
+.header {
+  margin-top: 20px;
+  margin-bottom: 10px;
+
+  font-size: 33px;
+  font-weight: 900;
+
+  color: white;
+  text-transform: uppercase;
+}
+
 .bodyContainer {
   @extend .flex-column;
   width: 100vw;
@@ -18,11 +29,11 @@
   padding: 1rem;
 }
 
-p{
+p {
   font-size: 2rem;
 }
 
-.error{
+.error {
   color: red;
   font-weight: bold;
 }

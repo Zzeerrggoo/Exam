@@ -17,7 +17,7 @@ const PasswordRestore = () => {
 
   return (
       <div className={styles.bodyContainer}>
-        <h1>Restoration</h1>
+        <h1 className={styles.header}>Restoration</h1>
 
         {error?.response?.status === 403 &&
         <p className={styles.error}>{error?.response?.data?.errors[0].message}</p>}
