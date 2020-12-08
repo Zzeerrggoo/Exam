@@ -18,15 +18,16 @@ const PasswordRestore = () => {
   return (
       <div className={styles.bodyContainer}>
         <h1 className={styles.header}>Restoration</h1>
+        <div className={styles.infoContainer}>
+          {error?.response?.status === 403 &&
+          <p className={styles.error}>{error?.response?.data?.errors[0].message}</p>}
 
-        {error?.response?.status === 403 &&
-        <p className={styles.error}>{error?.response?.data?.errors[0].message}</p>}
-
-        {!error && isFetching ? <Spinner/> :
-            !restoreActionSuccess ?
-                <PasswordRestoreForm handleSubmit={handleSubmit}/>
-                : <p>Check your email</p>
-        }
+          {!error && isFetching ? <Spinner/> :
+              !restoreActionSuccess ?
+                  <PasswordRestoreForm handleSubmit={handleSubmit}/>
+                  : <p>Check your email</p>
+          }
+        </div>
       </div>
   );
 };
