@@ -111,3 +111,11 @@ export const restorePasswordFailed = error => ({
     error,
   },
 });
+
+export const passwordVerification = values => ({
+  type: AUTH_ACTION_TYPES.PASSWORD_VERIFICATION,
+  payload: {
+    values,
+  },
+});
+
