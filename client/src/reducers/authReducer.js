@@ -36,6 +36,7 @@ const handlers = {
   }),
 
   [AUTH_ACTION_TYPES.RESTORE_PASSWORD_REQUEST]: produce(draftState => {
+    draftState.error = null;
     draftState.isFetching = true;
   }),
   [AUTH_ACTION_TYPES.RESTORE_PASSWORD_REQUEST_SUCCESS]: produce(
@@ -43,14 +44,15 @@ const handlers = {
         draftState.isFetching = false;
         draftState.restoreActionSuccess = true;
       }),
-  [AUTH_ACTION_TYPES.AUTH_REQUEST_FAILED]: produce((draftState, action) => {
-    const {
-      payload: {error},
-    } = action;
-    draftState.isFetching = false;
-    draftState.restoreActionSuccess = false;
-    draftState.error = error;
-  }),
+  [AUTH_ACTION_TYPES.RESTORE_PASSWORD_REQUEST_FAILED]: produce(
+      (draftState, action) => {
+        const {
+          payload: {error},
+        } = action;
+        draftState.isFetching = false;
+        draftState.restoreActionSuccess = false;
+        draftState.error = error;
+      }),
 
   [USER_ACTION_TYPES.USER_UPDATE_REQUEST]: produce(draftState => {
     draftState.isFetching = true;
