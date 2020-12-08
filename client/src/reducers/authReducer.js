@@ -38,7 +38,6 @@ const handlers = {
   [AUTH_ACTION_TYPES.RESTORE_PASSWORD_REQUEST]: produce(draftState => {
     draftState.isFetching = true;
   }),
-
   [AUTH_ACTION_TYPES.RESTORE_PASSWORD_REQUEST_SUCCESS]: produce(
       (draftState) => {
         draftState.isFetching = false;
@@ -58,10 +57,7 @@ const handlers = {
   }),
   [USER_ACTION_TYPES.USER_UPDATE_SUCCESS]: produce((draftState, action) => {
     const {payload: {values}} = action;
-
-    const preparedUser = _.omit(values, ['password']);
-
-    draftState.user = preparedUser;
+    draftState.user = _.omit(values, ['password']);
     draftState.isFetching = false;
   }),
   [USER_ACTION_TYPES.USER_UPDATE_BALANCE]: produce((draftState, action) => {
