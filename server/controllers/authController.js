@@ -1,10 +1,16 @@
 const createHttpError = require('http-errors');
-const { hashSync, compare } = require('bcrypt');
-const { User, RefreshToken } = require('../models');
+const { hashSync } = require('bcrypt');
+const { sequelize, User, RefreshToken } = require('../models');
 const AuthService = require('../services/authService');
 const { SALT_ROUNDS } = require('../constants');
 const { createRestoreToken } = require('../services/authService');
 const CONSTANTS = require('../constants');
+const JwtService = require('../services/jwtService');
+const config = require('../configs/config');
+
+const {
+  jwt: { tokenSecret },
+} = config;
 
 exports.login = async (req, res, next) => {
   try {
@@ -49,7 +55,22 @@ exports.restorePasswordRequest = async (req, res, next) => {
 
     next();
   } catch (error) {
-    next(createHttpError(403, 'This email doesn\'t  exists'));
+    next(error);
+  }
+};
+
+exports.passwordVerification = async (req, res, next) => {
+  try {
+    const { token } = req.body;
+    const { userId, passwordHash } = await JwtService.verify(token, tokenSecret);
+    // Use raw query because of User setter, which tries to hash your already hashed password
+    await sequelize.query(
+      `UPDATE "Users" SET "passwordHash"='${passwordHash}' WHERE id=${userId}`,
+    );
+
+    res.status(200).send();
+  } catch (error) {
+    next(error);
   }
 };
 
