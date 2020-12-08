@@ -41,6 +41,8 @@ function* rootSaga() {
   yield takeLatest(AUTH_ACTION_TYPES.LOGOUT_REQUEST, AuthSagas.logoutSaga);
   yield takeLatest(AUTH_ACTION_TYPES.RESTORE_PASSWORD,
       AuthSagas.restorePasswordSaga);
+  yield takeLatest(AUTH_ACTION_TYPES.PASSWORD_VERIFICATION,
+      AuthSagas.verificationPasswordSaga);
 
   //PAYMENT
   yield takeLatest(PAYMENT_ACTION_TYPES.PAYMENT, PaymentSagas.paymentSaga);

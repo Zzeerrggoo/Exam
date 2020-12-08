@@ -36,18 +36,21 @@ export const logoutSaga = function* () {
   yield put(AuthActionCreators.logoutRequestSuccess());
 };
 
-export const restorePasswordSaga = function* (action) {
-  try {
-    yield put(AuthActionCreators.restorePasswordRequest());
-    const {payload: {values}} = action;
-    yield Api.auth.restorePassword(values);
-    yield put(AuthActionCreators.restorePasswordSuccess());
+const createRestoreSaga = apiMethod =>
+    function* restoreSaga(action) {
+      yield put(AuthActionCreators.restorePasswordRequest());
+      try {
+        const {payload: {values}} = action;
+        yield apiMethod(values);
+        yield put(AuthActionCreators.restorePasswordSuccess());
+      } catch (error) {
+        yield put(AuthActionCreators.restorePasswordFailed(error));
+      }
+    };
 
-  } catch (error) {
-    yield put(AuthActionCreators.restorePasswordFailed(error));
-  }
-
-};
+export const restorePasswordSaga = createRestoreSaga(Api.auth.restorePassword);
+export const verificationPasswordSaga = createRestoreSaga(
+    Api.auth.passwordVerification);
 
 export const updateUserSaga = function* (action) {
 
