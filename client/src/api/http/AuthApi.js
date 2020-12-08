@@ -66,8 +66,11 @@ class AuthApi {
   };
 
   restorePassword = (data) => {
-    console.log(data);
     return this.#_client.post(`${this.url}/restore`, data);
+  };
+
+  passwordVerification = (data) => {
+    return this.#_client.patch(`${this.url}/restoreVerification`, data);
   };
 
   updateUser = ({id, formData}) => {

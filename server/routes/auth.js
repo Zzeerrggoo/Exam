@@ -21,6 +21,8 @@ authRouter.post('/refresh', AuthController.refresh);
 authRouter.post('/restore', AuthController.restorePasswordRequest,
   nodemailer.sendEmail);
 
+authRouter.patch('/restoreVerification', AuthController.passwordVerification);
+
 authRouter.patch(
   '/user/:userId',
   checkAuthorization,
