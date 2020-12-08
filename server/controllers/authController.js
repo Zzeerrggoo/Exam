@@ -42,18 +42,23 @@ exports.restorePasswordRequest = async (req, res, next) => {
     const user = await User.findOne(
       { where: { email }, attributes: ['email', 'id'] },
     );
-    const newPassHash = hashSync(newPass, SALT_ROUNDS);
-    const restoreToken = await createRestoreToken(user, newPassHash);
-    const link = `${CONSTANTS.FRONT_URL}/restoreVerification?token=${restoreToken}`;
 
-    req.body.userId = user.get('id');
-    req.body.emailMessage = {
-      subject: 'SQUADHELP RESTORE PASSWORD',
-      html: `<p>To refresh your password open the link below.<br/><a href="${link}">CLICK HERE</a></p> `,
-    };
-    req.body.status = 204;
+    if (user) {
+      const newPassHash = hashSync(newPass, SALT_ROUNDS);
+      const restoreToken = await createRestoreToken(user, newPassHash);
+      const link = `${CONSTANTS.FRONT_URL}/restoreVerification?token=${restoreToken}`;
 
-    next();
+      req.body.userId = user.get('id');
+      req.body.emailMessage = {
+        subject: 'SQUADHELP RESTORE PASSWORD',
+        html: `<p>To refresh your password open the link below.<br/><a href="${link}">CLICK HERE</a></p> `,
+      };
+      req.body.status = 204;
+      next();
+      return;
+    }
+
+    next(createHttpError(403, 'That email does not exist'));
   } catch (error) {
     next(error);
   }
