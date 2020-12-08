@@ -72,10 +72,9 @@ exports.passwordVerification = async (req, res, next) => {
     await sequelize.query(
       `UPDATE "Users" SET "passwordHash"='${passwordHash}' WHERE id=${userId}`,
     );
-
     res.status(200).send();
   } catch (error) {
-    next(error);
+    next(createHttpError(403, 'Invalid token !'));
   }
 };
 
