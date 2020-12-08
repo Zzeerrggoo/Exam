@@ -3,7 +3,7 @@ import valid from 'card-validator';
 
 export default {
   PasswordRestoreSchema: yup.object().shape({
-    email: yup.string().email(),
+    email: yup.string().email('Invalid email'),
     newPass: yup.string()
         .min(5, 'New password must be at least 5 characters')
         .max(64, 'New password must be at most 64 characters'),
