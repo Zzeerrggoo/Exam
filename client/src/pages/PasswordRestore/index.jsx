@@ -15,14 +15,17 @@ const PasswordRestore = () => {
     dispatch(restorePassword(values));
   };
 
+  const errorMessage = error?.response?.status === 403
+      ? error?.response?.data?.errors[0].message : null;
+
   return (
       <div className={styles.bodyContainer}>
         <h1 className={styles.header}>Restoration</h1>
         <div className={styles.infoContainer}>
-          {error?.response?.status === 403 &&
-          <p className={styles.error}>{error?.response?.data?.errors[0].message}</p>}
+          {errorMessage &&
+          <p className={styles.error}>{errorMessage}</p>}
 
-          {!error && isFetching ? <Spinner/> :
+          {!errorMessage && isFetching ? <Spinner/> :
               !restoreActionSuccess ?
                   <PasswordRestoreForm handleSubmit={handleSubmit}/>
                   : <p>Check your email</p>
