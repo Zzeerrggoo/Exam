@@ -93,7 +93,7 @@ class AuthApi {
     } = response;
 
     if (url.includes(this.url) &&
-        url.includes('/(login)|(signup)|(refresh)/')) {
+        !url.includes('/(user)|(restoreVerification)|(restore)/')) {
       const {
         data: {
           tokenPair: {accessToken, refreshToken},
