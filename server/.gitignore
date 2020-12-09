@@ -3,3 +3,4 @@
 uploadFiles/
 /public/
 .env
+logFile.json

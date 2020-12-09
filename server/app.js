@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const router = require('./router');
 const errorHandlers = require('./handlerError/handler');
+const logger = require('./middlewares/logger');
 
 function createApp() {
   const app = express();
@@ -13,6 +14,7 @@ function createApp() {
   app.use('/api', router);
 
   app.use(
+    logger.loggerJSON,
     errorHandlers.yupErrorHandler,
     errorHandlers.sequelizeErrorHandler,
     errorHandlers.httpErrorHandler,
