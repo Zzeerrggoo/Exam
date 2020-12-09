@@ -4,3 +4,4 @@ uploadFiles/
 /public/
 .env
 logFile.json
+/logBackup/
