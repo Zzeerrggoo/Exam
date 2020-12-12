@@ -15,30 +15,28 @@ const BrandLi = props => {
   const value = isExpired ? fullTime : date.differenceInMilliseconds(
       currentTime,
       new Date(start));
-  const timeLeft = isExpired ? 'Finished' : date.formatDistanceStrict(fullTime,
-      value);
 
-  const progressId = `${description}${start}`;
-  const progressClassName = classNames(styles.brandingProgress,
-      {[styles.brandingProgressFinished]: isExpired});
+  const timeLeft = isExpired ? '' : date.formatDistanceStrict(fullTime, value);
 
   const handleDelete = () => {
-
     const searchArray = isExpired ? expiredTimers : tickingTimers;
     const index = searchArray.findIndex(item => item.start === start);
     if (index !== -1) {
       searchArray.splice(index, 1);
     }
-
     window.localStorage.setItem('counters',
         JSON.stringify({expiredTimers, tickingTimers}));
-
   };
+
+  const progressId = `${description}${start}`;
+  const progressClassName = classNames(styles.brandingProgress,
+      {[styles.brandingProgressFinished]: isExpired});
 
   return (
       <li className={styles.container}>
         <label htmlFor={progressId}
-               className={styles.brandingLabel}>{description}</label>
+               className={styles.brandingLabel}
+               title={description}>{description}</label>
         <progress id={progressId}
                   max={fullTime}
                   value={value}
