@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import {addNotifications} from '../../actions/brandingEventsActionCreators';
+import {useDispatch} from 'react-redux';
 
 export const CurrentTime = React.createContext(null);
 
@@ -14,6 +16,9 @@ const GeneralCounter = (props) => {
   const store = window.localStorage.getItem('counters');
   const {expiredTimers, tickingTimers} = JSON.parse(store);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const dispatch = useDispatch();
+
+  useEffect(() => {dispatch(addNotifications(expiredTimers.length));}, []);
 
   useEffect(() => {
     const calculateExpiredTimers = () => {
@@ -24,6 +29,7 @@ const GeneralCounter = (props) => {
           expiredTimers.unshift(earliestTimer);
           window.localStorage.setItem('counters',
               JSON.stringify({expiredTimers, tickingTimers}));
+          dispatch(addNotifications(expiredTimers.length));
         }
       }
     };

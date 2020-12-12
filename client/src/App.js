@@ -41,107 +41,107 @@ function App() {
   }, []);
 
   return (
+      <GeneralCounter>
+        <Router history={browserHistory}>
+          <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={true}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnVisibilityChange
+              draggable
+              pauseOnHover
+          />
+          <Suspense fallback={<Spinner/>}>
+            <Switch>
+              <PrivateRoute exact
+                            path="/"
+                            component={Home}
+                            roles={{exclude: ['moderator']}}/>
+              <Route path={['/login', '/signup']}
+                     component={AuthPage}/>
+              <Route exact
+                     path='/restore'
+                     component={PasswordRestore}/>
+              <Route exact
+                     path='/restoreVerification'
+                     component={PasswordVerification}/>
 
-      <Router history={browserHistory}>
-        <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={true}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnVisibilityChange
-            draggable
-            pauseOnHover
-        />
-        <Suspense fallback={<Spinner/>}>
-          <Switch>
-            <PrivateRoute exact
-                          path="/"
-                          component={Home}
-                          roles={{exclude: ['moderator']}}/>
-            <Route path={['/login', '/signup']}
-                   component={AuthPage}/>
-            <Route exact
-                   path='/restore'
-                   component={PasswordRestore}/>
-            <Route exact
-                   path='/restoreVerification'
-                   component={PasswordVerification}/>
-
-            {/*<Route exact path="/login" component={LoginPage} />
+              {/*<Route exact path="/login" component={LoginPage} />
         <Route exact path="/signup" component={RegistrationPage} />*/}
-            <PrivateRoute
-                roles={['customer']}
-                exact
-                path="/events">
-              <GeneralCounter children={<EventsPage/>}/>
-            </PrivateRoute>
-            <PrivateRoute
-                roles={['customer']}
-                exact
-                path="/payment"
-                component={Payment}
-            />
-            <PrivateRoute
-                roles={['customer']}
-                exact
-                path="/startContest"
-                component={StartContestPage}
-            />
-            <PrivateRoute
-                roles={['customer']}
-                exact
-                path="/startContest/nameContest"
-            >
-              <ContestCreationPage
-                  contestType={CONSTANTS.NAME_CONTEST}
-                  title="Company Name"
+              <PrivateRoute
+                  roles={['customer']}
+                  exact
+                  path="/events"
+                  component={EventsPage}/>
+              <PrivateRoute
+                  roles={['customer']}
+                  exact
+                  path="/payment"
+                  component={Payment}
               />
-            </PrivateRoute>
-            <PrivateRoute
-                roles={['customer']}
-                exact
-                path="/startContest/taglineContest"
-            >
-              <ContestCreationPage
-                  contestType={CONSTANTS.TAGLINE_CONTEST}
-                  title="TAGLINE"
+              <PrivateRoute
+                  roles={['customer']}
+                  exact
+                  path="/startContest"
+                  component={StartContestPage}
               />
-            </PrivateRoute>
-            <PrivateRoute
-                roles={['customer']}
-                exact
-                path="/startContest/logoContest"
-            >
-              <ContestCreationPage
-                  contestType={CONSTANTS.LOGO_CONTEST}
-                  title="LOGO"
+              <PrivateRoute
+                  roles={['customer']}
+                  exact
+                  path="/startContest/nameContest"
+              >
+                <ContestCreationPage
+                    contestType={CONSTANTS.NAME_CONTEST}
+                    title="Company Name"
+                />
+              </PrivateRoute>
+              <PrivateRoute
+                  roles={['customer']}
+                  exact
+                  path="/startContest/taglineContest"
+              >
+                <ContestCreationPage
+                    contestType={CONSTANTS.TAGLINE_CONTEST}
+                    title="TAGLINE"
+                />
+              </PrivateRoute>
+              <PrivateRoute
+                  roles={['customer']}
+                  exact
+                  path="/startContest/logoContest"
+              >
+                <ContestCreationPage
+                    contestType={CONSTANTS.LOGO_CONTEST}
+                    title="LOGO"
+                />
+              </PrivateRoute>
+              <PrivateRoute exact
+                            path="/dashboard"
+                            component={Dashboard}
+                            roles={{exclude: ['moderator']}}/>
+              <PrivateRoute exact
+                            path="/contest/:id"
+                            component={ContestPage}
+                            roles={{exclude: ['moderator']}}/>
+              <PrivateRoute exact
+                            path="/account"
+                            component={UserProfile}
+                            roles={{exclude: ['moderator']}}/>
+              <PrivateRoute
+                  roles={['moderator']}
+                  exact
+                  path="/moderation"
+                  component={ModerationPage}
               />
-            </PrivateRoute>
-            <PrivateRoute exact
-                          path="/dashboard"
-                          component={Dashboard}
-                          roles={{exclude: ['moderator']}}/>
-            <PrivateRoute exact
-                          path="/contest/:id"
-                          component={ContestPage}
-                          roles={{exclude: ['moderator']}}/>
-            <PrivateRoute exact
-                          path="/account"
-                          component={UserProfile}
-                          roles={{exclude: ['moderator']}}/>
-            <PrivateRoute
-                roles={['moderator']}
-                exact
-                path="/moderation"
-                component={ModerationPage}
-            />
-            <Route component={NotFound}/>
-          </Switch>
-        </Suspense>
-        <ChatContainer/>
-      </Router>
+              <Route component={NotFound}/>
+            </Switch>
+          </Suspense>
+          <ChatContainer/>
+        </Router>
+      </GeneralCounter>
   );
 }
 
