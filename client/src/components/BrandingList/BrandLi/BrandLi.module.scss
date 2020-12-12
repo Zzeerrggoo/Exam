@@ -1,0 +1,83 @@
+$border-radius: 6px;
+$container-height: 3.5rem;
+
+.container {
+  height: $container-height;
+  position: relative;
+  margin: 0 1rem 1rem;
+  display: flex;
+  align-items: center;
+  border-radius: $border-radius;
+  overflow: hidden;
+
+  &:first-child {
+    margin-top: 1rem;
+  }
+
+}
+
+.brandingLabel, .expiringTime {
+  position: absolute;
+  font-size: 1.3rem;
+  font-family: sans-serif;
+
+  @media(max-width: 680px) {
+    font-size: 0.8rem;
+  }
+}
+
+.brandingLabel {
+  left: 2rem;
+  width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media(max-width: 680px) {
+    left: 0.2rem;
+  }
+}
+
+.expiringTime {
+  right: 2rem;
+  @media(max-width: 680px) {
+    right: 0.2rem;
+  }
+}
+
+.brandingProgress {
+  width: 100%;
+  height: 100%;
+
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.brandingProgress::-webkit-progress-bar {
+  background-color: #c9cfd4;
+}
+
+.brandingProgress::-webkit-progress-value {
+  background-color: #8aca6b;
+}
+
+.brandingProgressFinished::-webkit-progress-value {
+  background-color: #ff0151;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+
+  border: none;
+  background: transparent;
+}
+
+.deleteButton:hover {
+  svg {
+    color: white;
+  }
+}
