@@ -1,35 +1,52 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {Formik, Form, Field} from 'formik';
 import {CurrentTime} from '../../GeneralCounter';
-import {differenceInMilliseconds, format, addDays} from 'date-fns';
+import * as date from 'date-fns';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const initialValues = {
   description: '',
-  end: '',
 };
 
 const BrandingForm = () => {
+  const [endDate, setEndDate] = useState(
+      date.addHours(new Date(), 1));
 
   const {expiredTimers, tickingTimers} = useContext(CurrentTime);
-  const handleSubmit = ({description, end}) => {
-    const timer = {start: new Date(), end: new Date(end), description};
+  const handleSubmit = ({description}, e) => {
+    e.resetForm();
+    const timer = {start: new Date(), end: new Date(endDate), description};
     tickingTimers.push(timer);
     tickingTimers.sort(
-        (a, b) => differenceInMilliseconds(new Date(a.end), new Date(b.end)));
+        (a, b) => date.differenceInMilliseconds(new Date(a.end),
+            new Date(b.end)));
     window.localStorage.setItem('counters',
         JSON.stringify({expiredTimers, tickingTimers}));
+  };
+
+  const filterPassedTime = time => {
+    return (new Date().getTime() < new Date(time).getTime());
   };
 
   return (
       <Formik initialValues={initialValues}
               onSubmit={handleSubmit}>
         <Form>
-          <Field type='date'
-                 name='end'
-                 min={format(addDays(new Date(), 1), 'yyyy-MM-dd')}/>
+          <DatePicker
+              selected={endDate}
+              onChange={date => setEndDate(date)}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={1}
+              dateFormat="MM/dd/yyyy -- HH:mm"
+              minDate={new Date()}
+              filterTime={filterPassedTime}
+          />
           <Field name='description'/>
           <button type='submit'>SUBMIT</button>
         </Form>
+
       </Formik>
   );
 
