@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import Header from '../../components/Header/Header';
-import Footer from '../../components/Footer/Footer';
 import BrandingList from '../../components/BrandingList';
 import BrandingForm from '../../components/forms/BrandingForm';
 import SelectModeAside from '../../components/SelectModeAside';
-import styles from './EventsPage.module.scss'
+import styles from './EventsPage.module.scss';
 
 const modes = {
   list: 'list',
@@ -29,7 +28,6 @@ const EventsPage = () => {
                              {text: 'Add new', filter: modes.form}]}/>
           {mode === modes.list ? <BrandingList/> : <BrandingForm/>}
         </div>
-        <Footer/>
       </>
   );
 };
