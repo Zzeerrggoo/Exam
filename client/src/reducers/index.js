@@ -6,6 +6,7 @@ import singleContestReducer from './singleContestReducer';
 import paymentReducer from './paymentReducer';
 import offersReducer from './offersReducer';
 import chatReducer from './chatReducer';
+import brandingEventsReducer from './brandingEventsReducer';
 import userProfileReducer from './userProfileReducer';
 
 const rootReducer = combineReducers({
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   offers: offersReducer,
   chatStore: chatReducer,
   userProfile: userProfileReducer,
+  branding: brandingEventsReducer,
 });
 
 export default rootReducer;
