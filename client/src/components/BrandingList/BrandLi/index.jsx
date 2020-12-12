@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import * as date from 'date-fns';
 import {useContext} from 'react';
@@ -12,6 +12,7 @@ const BrandLi = props => {
   const {currentTime, expiredTimers, tickingTimers} = useContext(CurrentTime);
   const {start, end, description, isExpired} = props;
   const dispatch = useDispatch();
+  const [isDelete, setIsDelete] = useState(false);
 
   const fullTime = date.differenceInMilliseconds(new Date(end),
       new Date(start));
@@ -21,11 +22,12 @@ const BrandLi = props => {
   const timeLeft = isExpired ? '' : date.formatDistanceStrict(fullTime, value);
 
   const handleDelete = () => {
+    setIsDelete(true);
     const searchArray = isExpired ? expiredTimers : tickingTimers;
     const index = searchArray.findIndex(item => item.start === start);
     if (index !== -1) {
       searchArray.splice(index, 1);
-      dispatch(removeNotification());
+      isExpired && dispatch(removeNotification());
     }
     window.localStorage.setItem('counters',
         JSON.stringify({expiredTimers, tickingTimers}));
@@ -35,8 +37,11 @@ const BrandLi = props => {
   const progressClassName = classNames(styles.brandingProgress,
       {[styles.brandingProgressFinished]: isExpired});
 
+  const liClassName = classNames(styles.container,
+      {[styles.deletingLi]: isDelete});
+
   return (
-      <li className={styles.container}>
+      <li className={liClassName}>
         <label htmlFor={progressId}
                className={styles.brandingLabel}
                title={description}>{description}</label>
