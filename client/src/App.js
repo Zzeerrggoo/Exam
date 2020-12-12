@@ -22,6 +22,8 @@ import Spinner from './components/Spinner/Spinner';
 import {refreshAuthRequest} from './actions/authActionCreators';
 import PasswordRestore from './pages/PasswordRestore';
 import PasswordVerification from './pages/PasswordVerification';
+import GeneralCounter from './components/GeneralCounter';
+import EventsPage from './pages/EventsPage';
 
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 
@@ -39,6 +41,7 @@ function App() {
   }, []);
 
   return (
+
       <Router history={browserHistory}>
         <ToastContainer
             position="top-center"
@@ -68,6 +71,12 @@ function App() {
 
             {/*<Route exact path="/login" component={LoginPage} />
         <Route exact path="/signup" component={RegistrationPage} />*/}
+            <PrivateRoute
+                roles={['customer']}
+                exact
+                path="/events">
+              <GeneralCounter children={<EventsPage/>}/>
+            </PrivateRoute>
             <PrivateRoute
                 roles={['customer']}
                 exact
