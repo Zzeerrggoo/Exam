@@ -1,14 +1,17 @@
 import React from 'react';
+import {useDispatch} from 'react-redux';
 import * as date from 'date-fns';
 import {useContext} from 'react';
 import {CurrentTime} from '../../GeneralCounter';
 import classNames from 'classnames';
 import styles from './BrandLi.module.scss';
+import {removeNotification} from '../../../actions/brandingEventsActionCreators';
 
 const BrandLi = props => {
 
   const {currentTime, expiredTimers, tickingTimers} = useContext(CurrentTime);
   const {start, end, description, isExpired} = props;
+  const dispatch = useDispatch();
 
   const fullTime = date.differenceInMilliseconds(new Date(end),
       new Date(start));
@@ -22,6 +25,7 @@ const BrandLi = props => {
     const index = searchArray.findIndex(item => item.start === start);
     if (index !== -1) {
       searchArray.splice(index, 1);
+      dispatch(removeNotification());
     }
     window.localStorage.setItem('counters',
         JSON.stringify({expiredTimers, tickingTimers}));
