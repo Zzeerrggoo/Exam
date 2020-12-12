@@ -2,6 +2,7 @@ import React from 'react';
 import BrandLi from './BrandLi';
 import {useContext} from 'react';
 import {CurrentTime} from '../GeneralCounter';
+import styles from './BrandList.module.scss';
 
 const BrandingList = () => {
 
@@ -9,7 +10,7 @@ const BrandingList = () => {
   const {expiredTimers, tickingTimers} = timers;
 
   return (
-      <ul>
+      <ul className={styles.list}>
         {
           [...expiredTimers].map(
               (item) => <BrandLi key={item.start}
