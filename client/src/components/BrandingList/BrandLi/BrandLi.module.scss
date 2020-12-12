@@ -31,17 +31,10 @@ $container-height: 3.5rem;
   width: 70%;
   overflow: hidden;
   text-overflow: ellipsis;
-
-  @media(max-width: 680px) {
-    left: 0.2rem;
-  }
 }
 
 .expiringTime {
   right: 2rem;
-  @media(max-width: 680px) {
-    right: 0.2rem;
-  }
 }
 
 .brandingProgress {

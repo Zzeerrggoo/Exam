@@ -15,7 +15,6 @@ const BrandLi = props => {
   const value = isExpired ? fullTime : date.differenceInMilliseconds(
       currentTime,
       new Date(start));
-
   const timeLeft = isExpired ? '' : date.formatDistanceStrict(fullTime, value);
 
   const handleDelete = () => {
