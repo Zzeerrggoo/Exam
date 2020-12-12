@@ -4,6 +4,7 @@ import {CurrentTime} from '../../GeneralCounter';
 import * as date from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import styles from './BrandingForm.module.scss';
 
 const initialValues = {
   description: '',
@@ -30,24 +31,43 @@ const BrandingForm = () => {
   };
 
   return (
-      <Formik initialValues={initialValues}
-              onSubmit={handleSubmit}>
-        <Form>
-          <DatePicker
-              selected={endDate}
-              onChange={date => setEndDate(date)}
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={1}
-              dateFormat="MM/dd/yyyy -- HH:mm"
-              minDate={new Date()}
-              filterTime={filterPassedTime}
-          />
-          <Field name='description'/>
-          <button type='submit'>SUBMIT</button>
-        </Form>
+      <div className={styles.mainContainer}>
+        <Formik initialValues={initialValues}
+                onSubmit={handleSubmit}>
+          <Form className={styles.container}>
 
-      </Formik>
+            <div className={styles.inputContainer}>
+              <label htmlFor="brandingTimePicker"
+                     className={styles.label}>Ending time</label>
+              <DatePicker
+                  id='brandingTimePicker'
+                  selected={endDate}
+                  onChange={date => setEndDate(date)}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  timeIntervals={1}
+                  dateFormat="MM/dd/yyyy -- HH:mm"
+                  minDate={new Date()}
+                  filterTime={filterPassedTime}
+                  className={styles.info}
+              />
+            </div>
+            <div className={styles.inputContainer}>
+              <label htmlFor="brandingDescription"
+                     className={styles.label}>Description</label>
+              <Field id='brandingDescription'
+                     className={styles.info}
+                     name='description'
+                     placeholder='Description'
+                     required/>
+            </div>
+            <button type='submit'
+                    className={styles.submitButton}>SUBMIT
+            </button>
+
+          </Form>
+        </Formik>
+      </div>
   );
 
 };
