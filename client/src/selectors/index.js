@@ -13,3 +13,5 @@ export const paymentSelector = state => state.payment;
 export const offersSelector = state => state.offers;
 
 export const chatSelector = state => state.chatStore;
+
+export const brandingSelector = state => state.branding;
