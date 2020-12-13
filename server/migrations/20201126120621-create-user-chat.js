@@ -12,16 +12,16 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'Users',
-          onDelete: 'CASCADE',
         },
+        onDelete: 'CASCADE',
       },
       chatId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Chats',
-          onDelete: 'CASCADE',
         },
+        onDelete: 'CASCADE',
       },
       isBlocked: {
         type: Sequelize.BOOLEAN,
