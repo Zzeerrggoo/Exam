@@ -13,6 +13,14 @@ const useStyles = makeStyles({
     '& .MuiPaginationItem-sizeLarge': {
       fontSize: '1.5rem',
     },
+    '@media (max-width: 960px)': {
+      '& .MuiPaginationItem-sizeLarge': {
+        fontSize: '1rem',
+      },
+      '& .MuiPagination-ul li': {
+        width: '2rem',
+      },
+    },
   },
 });
 
