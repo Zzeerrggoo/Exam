@@ -1,0 +1,71 @@
+$info-dark-color: #77838f;
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+.pillSpan {
+  padding: 7px 15px;
+  margin-bottom: 1rem;
+
+  color: white;
+  border-radius: 10rem;
+  background-color: $info-dark-color;
+  font-size: 75%;
+  font-weight: 500;
+  line-height: 1;
+  transition: all 0.2s ease-in-out;
+}
+
+.description {
+  margin-bottom: 0.25rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.5;
+  color: $info-dark-color;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+
+.container {
+  padding: 1rem;
+  margin: 0 .9375rem 2rem;
+
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+
+  border: 1px solid #e7eaf3;
+  border-radius: .3125rem;
+  text-align: center;
+  transition: 0.3s;
+
+  &Checked {
+    border-color: rgba(44, 185, 183, .5);
+    box-shadow: 0 0 5px rgba(44, 185, 183, .125);
+    border-width: 3px;
+
+    .pillSpan {
+      background-color: #2cb9b7;
+    }
+
+    .description {
+      color: #555C6B;
+    }
+  }
+
+  @media(max-width: 992px) {
+    flex-basis: auto;
+  }
+
+  @media(max-width: 768px) {
+    flex-direction: row;
+    .pillSpan {
+      margin-bottom: 0;
+      margin-right: 20px;
+    }
+  }
+
+}
+
