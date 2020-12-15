@@ -1,0 +1,109 @@
+@import '../../common/styles/fonts';
+@import 'src/common/styles/lineClamp';
+@import 'src/common/styles/colors';
+
+.mainContainer {
+  h1, h2, h3, h4, h5, h6 {
+    color: $primaryDark;
+    margin-bottom: 20px;
+  }
+
+  margin-bottom: 50px;
+}
+
+.stepsContainer {
+  text-align: center;
+}
+
+.stepsHeader, .questionsHeader {
+  padding: 50px 0;
+
+  font-family: 'Raleway', sans-serif;
+  font-size: 2.25rem;
+
+  @extend .line-clamp;
+  -webkit-line-clamp: 2;
+
+  max-height: 7.8rem;
+}
+
+.frequentQuestionHeader {
+  padding: 30px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #e1e1e1;
+  margin-bottom: 10px;
+}
+
+.questionsHeader {
+  padding: 10px 15px 10px;
+
+  font-size: 1.875rem;
+  display: inline-block;
+  max-height: 4.5rem;
+
+  @media (max-width: 480px) {
+    font-size: 22px;
+    padding-bottom: 0;
+    max-height: 4.9rem;
+  }
+
+}
+
+.questionsSymbol {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  text-align: center;
+  font-family: 'Raleway-Regular', sans-serif;
+  border: 2px solid $secondary;
+  color: $secondary;
+  background: $primary;
+  font-size: 36px;
+  line-height: 60px;
+}
+
+.cardsList {
+  margin-bottom: 55px;
+  padding-top: 25px;
+}
+
+.startContestButton {
+  margin: 0 -53px;
+  margin-bottom: 37px;
+  background: $secondary;
+  text-align: center;
+  padding: 35px 0;
+
+  a {
+    padding: 18px 0;
+    margin: 0 auto;
+    min-height: 60px;
+
+    display: block;
+    text-decoration: none;
+    border: 2px solid $primary;
+    font-family: 'Raleway', sans-serif;
+    color: $primary;
+    border-radius: 5px;
+    font-size: 20px;
+    width: 235px;
+    text-transform: uppercase;
+    background: $secondary;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1300px) {
+    margin: 0 0 37px;
+  }
+
+  @media (max-width: 768px) {
+    margin: 0;
+  }
+
+}
+
