@@ -24,6 +24,7 @@ import PasswordRestore from './pages/PasswordRestore';
 import PasswordVerification from './pages/PasswordVerification';
 import GeneralCounter from './components/GeneralCounter';
 import EventsPage from './pages/EventsPage';
+import HowItWorks from './pages/HowItWorks';
 
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 
@@ -68,6 +69,9 @@ function App() {
               <Route exact
                      path='/restoreVerification'
                      component={PasswordVerification}/>
+              <Route exact
+                     path='/howitworks'
+                     component={HowItWorks}/>
 
               {/*<Route exact path="/login" component={LoginPage} />
         <Route exact path="/signup" component={RegistrationPage} />*/}
