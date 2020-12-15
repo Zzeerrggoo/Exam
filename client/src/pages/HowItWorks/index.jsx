@@ -8,7 +8,7 @@ import HowDoesItWorkVideo from '../../components/HowDoesItWorkVideo';
 import STEP_CARDS_TEXT from '../../components/StepCard/stepCardConstants';
 import FREQUENT_QUESTIONS_TEXT
   from '../../components/FrequentQuestion/frequentQuestionsConstants';
-import gridStyles from '../../common/styles/grid.module.scss';
+import gridStyles from '../../common/styles/_grid.module.scss';
 import styles from './HowItWorks.module.scss';
 import classNames from 'classnames';
 

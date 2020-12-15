@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import CONSTANTS from '../../constants';
-import gridStyles from '../../common/styles/grid.module.scss';
+import gridStyles from '../../common/styles/_grid.module.scss';
 import styles from './HowDoesItWorkVideo.module.scss';
 
 function HowDoesItWorkVideo() {

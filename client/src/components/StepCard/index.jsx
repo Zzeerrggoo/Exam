@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import gridStyles from '../../common/styles/grid.module.scss';
+import gridStyles from '../../common/styles/_grid.module.scss';
 import styles from './StepCard.module.scss';
 
 function StepCard(props) {
