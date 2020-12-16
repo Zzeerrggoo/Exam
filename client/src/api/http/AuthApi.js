@@ -92,8 +92,9 @@ class AuthApi {
       data,
     } = response;
 
-    if (url.includes(this.url) &&
-        !url.includes('/(user)|(restoreVerification)|(restore)/')) {
+    const reg = RegExp('/(user)|(restoreVerification)|(restore)/');
+
+    if (url.includes(this.url) && !reg.test(url)) {
       const {
         data: {
           tokenPair: {accessToken, refreshToken},
