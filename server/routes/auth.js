@@ -13,7 +13,8 @@ authRouter.post(
   AuthController.login,
 );
 
-authRouter.post('/signup', validateBody(ValidationSchemas.signUpSchema),
+authRouter.post('/signup',
+  validateBody(ValidationSchemas.signUpSchema),
   AuthController.signUp);
 
 authRouter.post('/refresh', AuthController.refresh);
@@ -25,9 +26,10 @@ authRouter.patch('/restoreVerification', AuthController.passwordVerification);
 
 authRouter.patch(
   '/user/:userId',
-  checkAuthorization,
-  // validateBody(ValidationSchemas.updateUserSchema),
+  // DO NOT MOVE THIS MIDDLEWARE! IT PARSE formData to readable object in req.body !
   uploadAvatar,
+  checkAuthorization,
+  validateBody(ValidationSchemas.updateUserSchema),
   UsersController.updateUser,
 );
 

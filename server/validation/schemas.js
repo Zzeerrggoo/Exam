@@ -28,7 +28,6 @@ exports.updateUserSchema = yup.object({
   firstName: yup.string().trim().required(),
   lastName: yup.string().trim().required(),
   displayName: yup.string().trim().required(),
-  file: yup.object(),
 });
 
 exports.contestSchema = yup.object().shape({
