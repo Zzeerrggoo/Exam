@@ -6,12 +6,11 @@ import SelectModeAside from '../../components/SelectModeAside';
 import MaterialUiPagination from '../../components/MaterialUiPagination';
 import {useDispatch, useSelector} from 'react-redux';
 import {offersSelector} from '../../selectors';
-import styles from '../ContestPage/ContestPage.module.sass';
-
 import {
   getModeratingOffers,
   moderateOffer,
 } from '../../actions/offerActionCreators';
+import styles from '../ContestPage/ContestPage.module.sass';
 
 const ModerationPage = (props) => {
 

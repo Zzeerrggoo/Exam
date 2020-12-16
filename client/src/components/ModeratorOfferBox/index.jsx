@@ -1,21 +1,17 @@
-import React, {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
+import React, {useCallback, useState} from 'react';
 import classNames from 'classnames';
 import styles from '../OfferBox/OfferBox.module.sass';
 import CONSTANTS from '../../constants';
 import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import '../OfferBox/confirmStyle.css';
-import {
-  changeShowImage,
-} from '../../actions/singleContestActionCreators';
+import LightBox from 'react-image-lightbox';
 
 const ModeratorOfferBox = props => {
 
   const {offer} = props;
-  const {Contest: {contestType, title}, isAllowed} = offer;
+  const {Contest: {contestType, title}, isAllowed, fileName} = offer;
   const {avatar, firstName, lastName, email, id: userId} = props.offer.User;
-
   const isOfferAllowed = useCallback((isAllowed) => {
     return () => {
       confirmAlert({
@@ -36,7 +32,6 @@ const ModeratorOfferBox = props => {
       });
     };
   }, [props.setOfferStatus]);
-
   const offerStatus = () => {
     //Because it can be null
     if (isAllowed === false) {
@@ -57,59 +52,64 @@ const ModeratorOfferBox = props => {
     return null;
   };
 
-  const dispatch = useDispatch();
+  const [showOnFull, setShowOnFull] = useState(false);
+
   return (
-      <div className={styles.offerContainer}>
-        {offerStatus()}
-        <div className={styles.mainInfoContainer}>
-          <div className={styles.userInfo}>
-            <div className={styles.creativeInfoContainer}>
-              <img
-                  src={
-                    avatar === 'anon.png'
-                        ? CONSTANTS.ANONYM_IMAGE_PATH
-                        : `${CONSTANTS.publicURL}${avatar}`
-                  }
-                  alt="user"
-              />
-              <div className={styles.nameAndEmail}>
-                <span>{firstName + ' ' + lastName}</span>
-                <span>{email}</span>
+      <>
+        {showOnFull && (
+            <LightBox
+                mainSrc={`${CONSTANTS.publicURL}${fileName}`}
+                onCloseRequest={() => setShowOnFull(false)
+                }
+            />
+        )}
+
+        <div className={styles.offerContainer}>
+          {offerStatus()}
+          <div className={styles.mainInfoContainer}>
+            <div className={styles.userInfo}>
+              <div className={styles.creativeInfoContainer}>
+                <img
+                    src={
+                      avatar === 'anon.png'
+                          ? CONSTANTS.ANONYM_IMAGE_PATH
+                          : `${CONSTANTS.publicURL}${avatar}`
+                    }
+                    alt="user"
+                />
+                <div className={styles.nameAndEmail}>
+                  <span>{firstName + ' ' + lastName}</span>
+                  <span>{email}</span>
+                </div>
+              </div>
+              <div className={styles.creativeRating}>
+                <span className={styles.userScoreLabel}>Creative Rating </span>
               </div>
             </div>
-            <div className={styles.creativeRating}>
-              <span className={styles.userScoreLabel}>Creative Rating </span>
+            <div className={styles.responseConainer}>
+              {contestType === CONSTANTS.LOGO_CONTEST ? (
+                  <img onClick={() => setShowOnFull(true)}
+                       className={styles.responseLogo}
+                       src={`${CONSTANTS.publicURL}${offer.fileName}`}
+                       alt="logo"
+                  />
+              ) : (
+                  <span className={styles.response}>{offer.text}</span>
+              )}
             </div>
           </div>
-          <div className={styles.responseConainer}>
-            {contestType === CONSTANTS.LOGO_CONTEST ? (
-                <img
-                    onClick={() =>
-                        dispatch(changeShowImage({
-                          imagePath: offer.fileName,
-                          isShowOnFull: true,
-                        }))
-                    }
-                    className={styles.responseLogo}
-                    src={`${CONSTANTS.publicURL}${offer.fileName}`}
-                    alt="logo"
-                />
-            ) : (
-                <span className={styles.response}>{offer.text}</span>
-            )}
+          <div className={styles.btnsContainer}>
+            <button onClick={isOfferAllowed(true)}
+                    className={styles.resolveBtn}>
+              Resolve
+            </button>
+            <button onClick={isOfferAllowed(false)}
+                    className={styles.rejectBtn}>
+              Reject
+            </button>
           </div>
         </div>
-        <div className={styles.btnsContainer}>
-          <button onClick={isOfferAllowed(true)}
-                  className={styles.resolveBtn}>
-            Resolve
-          </button>
-          <button onClick={isOfferAllowed(false)}
-                  className={styles.rejectBtn}>
-            Reject
-          </button>
-        </div>
-      </div>
+      </>
   );
 };
 
