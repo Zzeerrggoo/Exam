@@ -82,7 +82,6 @@ class AuthApi {
     if (this.#_token) {
       config.headers['Authorization'] = `Bearer ${this.#_token}`;
     }
-    alert();
     return config;
   };
 

@@ -18,7 +18,6 @@ function PrivateRoute({ roles, ...rest }) {
     if (roles && !checkRole(user.role, roles)) {
       alert('Forbidden route'); // need pretty popup
       history.goBack();
-      return;
     }
 
     return <Route {...rest} />;
