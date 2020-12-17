@@ -25,8 +25,8 @@ import PasswordVerification from './pages/PasswordVerification';
 import GeneralCounter from './components/GeneralCounter';
 import EventsPage from './pages/EventsPage';
 import HowItWorks from './pages/HowItWorks';
-
-const AuthPage = lazy(() => import('./pages/AuthPage'));
+import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
+import LoginPage from './pages/LoginPage/LoginPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -61,8 +61,13 @@ function App() {
                             path="/"
                             component={Home}
                             roles={{exclude: ['moderator']}}/>
-              <Route path={['/login', '/signup']}
-                     component={AuthPage}/>
+
+              <Route exact
+                     path="/login"
+                     component={LoginPage}/>
+              <Route exact
+                     path="/signup"
+                     component={RegistrationPage}/>
               <Route exact
                      path='/restore'
                      component={PasswordRestore}/>
@@ -73,8 +78,6 @@ function App() {
                      path='/howitworks'
                      component={HowItWorks}/>
 
-              {/*<Route exact path="/login" component={LoginPage} />
-        <Route exact path="/signup" component={RegistrationPage} />*/}
               <PrivateRoute
                   roles={['customer']}
                   exact
