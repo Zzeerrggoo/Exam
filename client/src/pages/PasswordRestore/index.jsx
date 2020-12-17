@@ -5,8 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {authSelector} from '../../selectors';
 import Spinner from '../../components/Spinner/Spinner';
 import PasswordRestoreForm from '../../components/forms/PasswordRestoreForm';
-import CONSTANTS from '../../constants';
-import {Link} from 'react-router-dom';
+import HeaderLinksStrip from '../../components/HeaderLinksStrip';
 
 const PasswordRestore = () => {
 
@@ -23,16 +22,7 @@ const PasswordRestore = () => {
   return (
       <div className={styles.bodyContainer}>
         <div className={styles.loginContainer}>
-          <div className={styles.headerSignUpPage}>
-            <img src={`${CONSTANTS.STATIC_IMAGES_PATH}logo.png`}
-                 alt="logo"/>
-            <div className={styles.linkLoginContainer}>
-              <Link to="/login"
-                    style={{textDecoration: 'none'}}>
-                <span>Login</span>
-              </Link>
-            </div>
-          </div>
+          <HeaderLinksStrip links={['Login']}/>
           <div className={styles.infoContainer}>
             <h1 className={styles.header}>Restoration</h1>
             {errorMessage &&

@@ -53,36 +53,3 @@
   color: red;
   font-weight: bold;
 }
-
-.headerSignUpPage {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 26px;
-  padding-left: 45px;
-  padding-right: 100px;
-  @media (max-width: 600px) {
-    padding-right: 45px;
-    flex-wrap: wrap;
-  }
-}
-
-.linkLoginContainer {
-  margin: 10px;
-  border: 1px solid white;
-  min-width: 80px;
-  padding: 0 10px;
-  border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  font-weight: bold;
-  height: 40px;
-  text-decoration: none;
-
-  span {
-    color: white
-  }
-}

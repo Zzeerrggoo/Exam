@@ -6,11 +6,9 @@ import PasswordVerificationForm
   from '../../components/forms/PasswordVerificationForm';
 import {authSelector} from '../../selectors';
 import Spinner from '../../components/Spinner/Spinner';
-import CONSTANTS from '../../constants';
-import {Link} from 'react-router-dom';
+import HeaderLinksStrip from '../../components/HeaderLinksStrip';
 
 const PasswordVerification = () => {
-
   const dispatch = useDispatch();
   const {isFetching, restoreActionSuccess, error} = useSelector(authSelector);
 
@@ -21,16 +19,7 @@ const PasswordVerification = () => {
   return (
       <div className={styles.bodyContainer}>
         <div className={styles.verifyContainer}>
-          <div className={styles.headerSignUpPage}>
-            <img src={`${CONSTANTS.STATIC_IMAGES_PATH}logo.png`}
-                 alt="logo"/>
-            <div className={styles.linkLoginContainer}>
-              <Link to="/login"
-                    style={{textDecoration: 'none'}}>
-                <span>Login</span>
-              </Link>
-            </div>
-          </div>
+          <HeaderLinksStrip links={['Login']}/>
           <div className={styles.infoContainer}>
             <h1 className={styles.header}>Verification</h1>
             {error &&
