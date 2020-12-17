@@ -9,7 +9,7 @@ import chatReducer from './chatReducer';
 import brandingEventsReducer from './brandingEventsReducer';
 import userProfileReducer from './userProfileReducer';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   form: formReducer,
   auth: authReducer,
   contestsList: contestsReducer,
@@ -21,4 +21,9 @@ const rootReducer = combineReducers({
   branding: brandingEventsReducer,
 });
 
+const rootReducer = (state, action) =>
+    appReducer(action.type === 'LOGOUT_REQUEST_SUCCESS' ? undefined : state, action);
+
 export default rootReducer;
+
+//export default rootReducer;
