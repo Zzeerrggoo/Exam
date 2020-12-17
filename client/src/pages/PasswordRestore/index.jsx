@@ -5,6 +5,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {authSelector} from '../../selectors';
 import Spinner from '../../components/Spinner/Spinner';
 import PasswordRestoreForm from '../../components/forms/PasswordRestoreForm';
+import CONSTANTS from '../../constants';
+import {Link} from 'react-router-dom';
 
 const PasswordRestore = () => {
 
@@ -20,16 +22,28 @@ const PasswordRestore = () => {
 
   return (
       <div className={styles.bodyContainer}>
-        <h1 className={styles.header}>Restoration</h1>
-        <div className={styles.infoContainer}>
-          {errorMessage &&
-          <p className={styles.error}>{errorMessage}</p>}
+        <div className={styles.loginContainer}>
+          <div className={styles.headerSignUpPage}>
+            <img src={`${CONSTANTS.STATIC_IMAGES_PATH}logo.png`}
+                 alt="logo"/>
+            <div className={styles.linkLoginContainer}>
+              <Link to="/login"
+                    style={{textDecoration: 'none'}}>
+                <span>Login</span>
+              </Link>
+            </div>
+          </div>
+          <div className={styles.infoContainer}>
+            <h1 className={styles.header}>Restoration</h1>
+            {errorMessage &&
+            <p className={styles.error}>{errorMessage}</p>}
 
-          {!errorMessage && isFetching ? <Spinner/> :
-              !restoreActionSuccess ?
-                  <PasswordRestoreForm handleSubmit={handleSubmit}/>
-                  : <p>Check your email</p>
-          }
+            {!errorMessage && isFetching ? <Spinner/> :
+                !restoreActionSuccess ?
+                    <PasswordRestoreForm handleSubmit={handleSubmit}/>
+                    : <p>Check your email</p>
+            }
+          </div>
         </div>
       </div>
   );

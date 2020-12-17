@@ -5,29 +5,44 @@
 
 .header {
   margin-top: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 28px;
 
-  font-size: 33px;
-  font-weight: 900;
+  font-size: 34px;
+
 
   color: white;
   text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .bodyContainer {
   @extend .flex-column;
   width: 100vw;
-  height: 100vh;
-  justify-content: center;
+  min-height: 100vh;
+  justify-content: flex-start;
   align-items: center;
   background: #3EA9F5;
   color: white;
-  padding: 1rem;
+  padding-top: 40px;
 }
 
+.loginContainer {
+  background-color: #3ea9f5;
+  min-width: 200px;
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+
 .infoContainer {
+
+  padding: 80px 10px;
   min-height: 400px;
+
   text-align: center;
+  align-self: center;
 
   p {
     font-size: 2rem;
@@ -38,4 +53,38 @@
 .error {
   color: red;
   font-weight: bold;
+}
+
+
+.headerSignUpPage {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 26px;
+  padding-left: 45px;
+  padding-right: 100px;
+  @media (max-width: 600px) {
+    padding-right: 45px;
+    flex-wrap: wrap;
+  }
+}
+
+.linkLoginContainer {
+  margin: 10px;
+  border: 1px solid white;
+  min-width: 80px;
+  padding: 0 10px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+  height: 40px;
+  text-decoration: none;
+
+  span {
+    color: white
+  }
 }
