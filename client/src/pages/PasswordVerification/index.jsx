@@ -6,6 +6,8 @@ import PasswordVerificationForm
   from '../../components/forms/PasswordVerificationForm';
 import {authSelector} from '../../selectors';
 import Spinner from '../../components/Spinner/Spinner';
+import CONSTANTS from '../../constants';
+import {Link} from 'react-router-dom';
 
 const PasswordVerification = () => {
 
@@ -16,21 +18,28 @@ const PasswordVerification = () => {
     dispatch(passwordVerification(values));
   };
 
-  const errorMessage = error?.response?.status === 403
-      ? error?.response?.data?.errors[0].message : null;
-
   return (
       <div className={styles.bodyContainer}>
-        <h1 className={styles.header}>Verification</h1>
-
-        <div className={styles.infoContainer}>
-          {errorMessage &&
-          <p className={styles.error}>{errorMessage}</p>}
-
-          {!errorMessage && isFetching ? <Spinner/> :
-              !restoreActionSuccess ?
-                  <PasswordVerificationForm handleSubmit={handleSubmit}/> :
-                  <p>Your password was successfully changed !</p>}
+        <div className={styles.verifyContainer}>
+          <div className={styles.headerSignUpPage}>
+            <img src={`${CONSTANTS.STATIC_IMAGES_PATH}logo.png`}
+                 alt="logo"/>
+            <div className={styles.linkLoginContainer}>
+              <Link to="/login"
+                    style={{textDecoration: 'none'}}>
+                <span>Login</span>
+              </Link>
+            </div>
+          </div>
+          <div className={styles.infoContainer}>
+            <h1 className={styles.header}>Verification</h1>
+            {error &&
+            <p className={styles.error}>Invalid token</p>}
+            {!error && isFetching ? <Spinner/> :
+                !restoreActionSuccess ?
+                    <PasswordVerificationForm handleSubmit={handleSubmit}/> :
+                    <p>Your password was successfully changed !</p>}
+          </div>
         </div>
       </div>
   );
