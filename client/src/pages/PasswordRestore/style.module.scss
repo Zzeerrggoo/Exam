@@ -8,8 +8,6 @@
   margin-bottom: 28px;
 
   font-size: 34px;
-
-
   color: white;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -35,11 +33,9 @@
   flex-direction: column;
 }
 
-
 .infoContainer {
-
   padding: 80px 10px;
-  min-height: 400px;
+  min-width: 500px;
 
   text-align: center;
   align-self: center;
@@ -48,13 +44,15 @@
     font-size: 2rem;
   }
 
+  @media (max-width: 501px) {
+    min-width: 0;
+  }
 }
 
 .error {
   color: red;
   font-weight: bold;
 }
-
 
 .headerSignUpPage {
   display: flex;

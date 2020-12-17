@@ -2,7 +2,7 @@ import React from 'react';
 import {Formik, Form} from 'formik';
 import styles from './PasswordRestoreForm.module.scss';
 import schema from '../../../validators/validationSchems';
-import FormField from './FormField';
+import FormField from '../FormField';
 
 const initialValues = {
   email: '',

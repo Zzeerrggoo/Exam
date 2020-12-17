@@ -37,7 +37,6 @@ const PasswordRestore = () => {
             <h1 className={styles.header}>Restoration</h1>
             {errorMessage &&
             <p className={styles.error}>{errorMessage}</p>}
-
             {!errorMessage && isFetching ? <Spinner/> :
                 !restoreActionSuccess ?
                     <PasswordRestoreForm handleSubmit={handleSubmit}/>
