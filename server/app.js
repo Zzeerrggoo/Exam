@@ -14,11 +14,11 @@ function createApp() {
   app.use('/api', router);
 
   app.use(
+    logger.loggerJSON,
     errorHandlers.yupErrorHandler,
     errorHandlers.sequelizeErrorHandler,
     errorHandlers.httpErrorHandler,
     errorHandlers.errorHandler,
-    logger.loggerJSON,
   );
   return app;
 }
