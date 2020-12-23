@@ -2,12 +2,14 @@
 @import 'src/common/styles/colors';
 
 .sectionContainer {
-  display: flex;
-
-  justify-content: center;
-  background: $background-dark;
   padding: 35px 0;
+
+  display: flex;
+  justify-content: center;
+
+  background: $background-dark;
   color: $primary;
+  font-family: 'Raleway', sans-serif;
 }
 
 .envelope {
@@ -16,12 +18,13 @@
   margin-left: 15px;
   margin-right: 25px;
 
-  border-radius: 50%;
-  background: $primary;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+
+  border-radius: 50%;
+  background: $primary;
 
   svg {
     width: 50px;
@@ -46,12 +49,12 @@
   padding: 0 15px;
 
   &Header {
-    font-size: 25px;
-    color: $primary;
-    font-family: 'Raleway', sans-serif;
     padding-top: 12px;
     padding-bottom: 20px;
     margin-bottom: 20px;
+
+    font-size: 25px;
+    color: $primary;
   }
 
   &Paragraph {
@@ -83,16 +86,13 @@
   min-width: 222px;
   min-height: 68px;
 
-
   border: 2px solid $primary;
-  font-family: 'Raleway', sans-serif;
   color: $primary;
+  background-color: $background-dark;
   border-radius: 5px;
   font-size: 20px;
   text-transform: uppercase;
   text-decoration: none;
-  background-color: $background-dark;
-
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
