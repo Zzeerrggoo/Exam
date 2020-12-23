@@ -34,4 +34,6 @@ module.exports = {
   CHANGE_BLOCK_STATUS: 'CHANGE_BLOCK_STATUS',
   DEVICES_PER_USER_LIMIT: 3,
   FRONT_URL: `http://${serverIP}:3000`,
+  BACKUP_TIME: '13:00:00',
+  LOGGING_PATH: './logFile.json',
 };

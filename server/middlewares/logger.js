@@ -1,5 +1,6 @@
 const fs = require('fs');
 const util = require('util');
+const { LOGGING_PATH } = require('../constants');
 
 const read = util.promisify(fs.readFile);
 const write = util.promisify(fs.writeFile);
@@ -23,4 +24,4 @@ const logger = (file) => async (error, req, res, next) => {
   next();
 };
 
-module.exports.loggerJSON = logger('./logFile.json');
+module.exports.loggerJSON = logger(LOGGING_PATH);

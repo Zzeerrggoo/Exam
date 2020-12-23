@@ -2,6 +2,7 @@ const {format, getTime} = require('date-fns');
 const fs = require('fs');
 const util = require('util');
 const _ = require('lodash');
+const {BACKUP_TIME} = require('../constants');
 
 const read = util.promisify(fs.readFile);
 const write = util.promisify(fs.writeFile);
@@ -37,7 +38,7 @@ class BackupUtil {
   checkData = async () => {
     clearTimeout(this.timeoutId);
     const currentTime = format(new Date(), 'HH:mm:ss');
-    if (currentTime === '13:00:00') {
+    if (currentTime === BACKUP_TIME) {
       await this.makeBackup();
     }
     this.timeoutId = setTimeout(this.checkData, 1000);

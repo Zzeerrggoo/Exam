@@ -1,5 +1,5 @@
-$info-dark-color: #77838f;
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+$info-dark-color: #77838f;
 
 .pillSpan {
   padding: 7px 15px;
@@ -16,6 +16,7 @@ $info-dark-color: #77838f;
 
 .description {
   margin-bottom: 0.25rem;
+
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
   font-size: 12px;
@@ -66,6 +67,5 @@ $info-dark-color: #77838f;
       margin-right: 20px;
     }
   }
-
 }
 

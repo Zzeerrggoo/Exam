@@ -82,13 +82,13 @@ module.exports.getChatsPreview = async (req, res, next) => {
     });
 
     const chatsId = conversations.map((item) => item?.chatId);
-    const preparedChatsIs = chatsId[0] ? chatsId : null;
+    const preparedChatsId = chatsId[0] ? chatsId : null;
     const previewMessages = await sequelize.query(`
             SELECT *
             FROM "Messages" AS m
             WHERE m."createdAt" IN (SELECT MAX("createdAt") AS "createdAt"
                                     FROM "Messages"
-                                    WHERE "chatId" IN (${preparedChatsIs})
+                                    WHERE "chatId" IN (${preparedChatsId})
                                     GROUP BY "chatId")
             ORDER BY m."chatId" DESC;`, {
       plain: false,
